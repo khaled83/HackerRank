@@ -278,7 +278,6 @@ public class EvernoteSearch {
 		}
 		
 
-		@Override
 		public int compareTo(EvernoteDocIndex o) {
 			// TODO Auto-generated method stub
 			return 0;

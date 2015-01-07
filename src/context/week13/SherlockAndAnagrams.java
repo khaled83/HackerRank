@@ -20,15 +20,16 @@ public class SherlockAndAnagrams {
             {
                 int numSubStrings = sArr.length - subStrLength + 1;
                 int[] subStrAscii = new int[numSubStrings];
-                System.out.println("subStrLength=" + subStrLength + ", subStrAscii.length="+subStrAscii.length);
+                System.out.println("subStrLength="+subStrLength+", numSubStrings="+numSubStrings);
                 
                 for(int i=0; i<sArr.length && i+subStrLength <= sArr.length; i++)
                 {
                    for(int j=i, k=0; k<subStrAscii.length; j++, k++) {
-                       System.out.println("i="+i+",j="+j);
-                       System.out.println("k="+k);
-                       System.out.println(subStrAscii[k]);
-                       System.out.println(sArr[j]);
+                	   System.out.print(k + ": ");
+                	   System.out.println(subStrAscii[k]);
+                	   System.out.print(j + ": ");
+                	   System.out.println(sArr[j]);
+                	   System.out.println();
                 	   subStrAscii[k]+= (int) sArr[j];
                    }
                 }

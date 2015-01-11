@@ -9,44 +9,12 @@ public class SherlockAndAnagrams {
 		Scanner sc = new Scanner(System.in);
         int numCases = sc.nextInt();
         
-        String s;
-        int totalAnagrams = 0;
-        
         for(int caseNum=1; caseNum<=numCases; caseNum++)
         {
-            s = sc.next();
+            int totalAnagrams = 0;
+        	
+            String s = sc.next();
             char[] sArr = s.toCharArray();  
-            
-            /**
-             * abba
-             * 0123
-             * 
-             * subStrLength
-             * 1 .. 4
-             * 
-             * subStrLength
-             * 2
-             * 
-             * i
-             * 0 .. 2
-             * 
-             * 
-             * subStrAscii.length=3
-             * 
-             * k
-             * 0 1 2
-             * 
-             * j(min)
-             * 0 1 2
-             * 
-             * j(max)
-             * 2 3 4
-             * 
-             *  
-             */
-            
-            for(int i=0; i<sArr.length;i++)
-            	System.out.print(sArr[i] + ",");
             
             for(int subStrLength = 1; subStrLength < s.length(); subStrLength++)
             {
@@ -55,42 +23,53 @@ public class SherlockAndAnagrams {
                 for(int i=0; i<subStrAscii.length;i++)
                 	subStrAscii[i] = 0;
                 
-                System.out.println();
-                System.out.println("subStrLength="+subStrLength+", numSubStrings="+numSubStrings);
-                
                 for(int i=0; i <= sArr.length - subStrLength; i++)
                 {
-                   for(int j=i, k=0; j <= sArr.length - subStrLength; j++, k++) // k<subStrAscii.length
-                   {
-                	   System.out.println("add sArr[" + j + "] to subStrAscii[" + i + "]");
-                	   subStrAscii[i]+= (int) sArr[j];
-                   }
+                	for(int j=i, k=0; j < i + subStrLength; j++, k++) // k<subStrAscii.length
+                		subStrAscii[i]+= (int) sArr[j];
                 }
                 
                 Arrays.sort(subStrAscii);
                 
-                System.out.println();
-                System.out.print("[");
-                for(int i=0; i<subStrAscii.length;i++)
-                	System.out.print(subStrAscii[i] + ",");
-                System.out.println("]");
-                
                 int cur = subStrAscii[0];
+                int n = 1;
                 for(int i=1; i<subStrAscii.length; i++)
                 {
                     if(subStrAscii[i] == cur)
-                        totalAnagrams++;
+                    {
+                    	n++;
+                    }
                     else
-                        cur = subStrAscii[i];
+                    {
+                    	cur = subStrAscii[i];
+                    	// n! / k! (n-k)!
+                    	if(n > 1)
+                    	{
+                    		totalAnagrams+= factorial(n) / ( factorial(2) * factorial(n - 2) );
+                    	}
+                    		
+                    	n=1;
+                    }
                 }
+                
+                if( n > 1)
+                {
+                	totalAnagrams+= factorial(n) / ( factorial(2) * factorial(n - 2) );
+                }
+                
             }
+            
+            System.out.println(totalAnagrams);
             
         }
         
-        System.out.println("totalAnagrams=" + totalAnagrams);
-        
         sc.close();
 
+	}
+	
+	private static int factorial(int n)
+	{
+		return n == 1 || n == 0 ? 1 : n * factorial(n-1);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class CookingTheBooks {
 	
 	public static void main(String[] args) {
+		System.out.println("My CookingTheBooks Application");
 		Scanner sc = new Scanner(System.in);
 		int numCases = sc.nextInt(); 
 				
@@ -14,7 +15,7 @@ public class CookingTheBooks {
 			int number = sc.nextInt();
 			int remaining = number;
 			
-			int smallest = number % 10, largest = number % 10;
+			int smallest = 9, largest = number % 10;
 			int indexSmallest = 0, indexLargest = 0;
 			
 			int index = 0;

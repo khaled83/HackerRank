@@ -1,3 +1,4 @@
+import java.util.*;
 
 public class Experiments {
 
@@ -5,6 +6,8 @@ public class Experiments {
 		
 		String s;
 		char[] arr;
+		
+		BitSet bset = new BitSet(100);
 		/**
 		 * abba
 		 * 

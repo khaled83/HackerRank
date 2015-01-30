@@ -7,7 +7,8 @@ public class Experiments {
 		String s;
 		char[] arr;
 		
-		BitSet bset = new BitSet(100);
+		for(int i=0; i<15;i++)
+			System.out.println(Integer.toBinaryString(i*i));
 		/**
 		 * abba
 		 * 

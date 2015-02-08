@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -33,6 +34,11 @@ public class Test {
 		
 		sc.close();
 
+	}
+	
+	private static void method(Integer x)
+	{
+		x = x+1;
 	}
 
 }

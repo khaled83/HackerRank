@@ -1,6 +1,11 @@
 package com.hackerrank.warmup;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class ManasaAndStones {
@@ -12,49 +17,33 @@ public class ManasaAndStones {
         for(int caseNum = 1; caseNum <= numCases; caseNum++) 
         {
             int numStones = sc.nextInt();
-            int treeSize = (int) Math.pow(2, numStones) - 1;
             int dif1 = sc.nextInt();
             int dif2 = sc.nextInt();
             
-            System.out.println("start executing...");
-            TreeSet<Long> values = new TreeSet<Long>();
-            for(int i=0; i<treeSize/2;i++)
+            int steps = 1;
+            Set<Long> lastStones = new HashSet<Long>();
+            List<Long> curStones = null;
+            lastStones.add(0L);
+            
+            while(steps++ < numStones)
             {
-            	values.add((long)i);
-            }
-            // 0 1 2 3 4 5 6
-            // 0 1 2 2 3 
-            System.out.println("treeSize="+values.size());
-
-//            TreeSet<Long> values = new TreeSet<Long>();
-            
-            for(int i=treeSize/2; i<treeSize;i++) {
+            	curStones = new ArrayList<Long>(lastStones);
+            	lastStones.clear();
+            	for(Long stone : curStones) {
+            		lastStones.add(stone + dif1);
+            		lastStones.add(stone + dif2);
+            	}
             }
             
-            for(Long value : values) {
-                System.out.print(value + " ");
-            }
+            curStones = new ArrayList<Long>(lastStones);
+            Collections.sort(curStones);
+            for(Long stone : curStones)
+            	System.out.print(stone + " ");
             
-            System.out.println();   
-            System.out.println("Done");
-            
-            
-            /**
-            4 10 100
-            0 10 20 30
-            0 10 20 120
-            0 10 110 210
-            0 100 200 300
-            
-            [0, 10, 100, 20, 110, 110, 200,...]
-            [0,  1,   2,  3,   4,   5,   6,...]
-            
-              0
-         10        100
-     20   110   110    200       size=7
- 30  120 120 210 ....            size=15
-            */
+            System.out.println();
         }
+        
+        sc.close();
 	}
 	
 	/**

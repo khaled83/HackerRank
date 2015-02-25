@@ -16,6 +16,8 @@ public static void main(String[] args) {
         
         insertSort(arr); 
         
+        sc.close();
+        
     }
     
     private static void insertSort(int[] arr)

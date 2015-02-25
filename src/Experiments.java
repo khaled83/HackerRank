@@ -5,7 +5,6 @@ public class Experiments {
 
 	public static void main(String[] args) {
 		
-		String s;
 		double[] arr = new double[100000];
 		DecimalFormat format = new DecimalFormat("#");
         format.setMaximumFractionDigits(0);
@@ -13,6 +12,20 @@ public class Experiments {
 		System.out.println( format.format( Double.MAX_VALUE % Math.pow(10, 14) ) );
 		
 		System.out.println(Integer.toBinaryString(0xffffffff));
+		
+		System.out.println( ( Math.pow(10, 100) * ((int)'z') ) < Double.MAX_VALUE);
+		
+		String[] values = { "ehxxdsuhoowxpbxiwxjrhe", "ehxxdsuhoowxpbxiwxrjhe", "ehxxdsuhoowxpbxiwxrehj" };
+		System.out.println("1");
+		for(String s : values)
+			System.out.println(s);
+		System.out.println("2");
+		for(String s : values)
+			System.out.println(s);
+		Arrays.sort(values);
+		System.out.println("3");
+		for(String s : values)
+			System.out.println(s);
 		/**
 		 * abba
 		 * 

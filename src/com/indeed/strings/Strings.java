@@ -9,6 +9,10 @@ public class Strings {
 		System.out.println( firsNonRepeatingChar("teeter") );
 		System.out.println( firsNonRepeatingCharUnicode("total") );
 		System.out.println( firsNonRepeatingCharUnicode("teeter") );
+		System.out.println( removeChars("Battle of the Vowels: Hawaii vs. Grozny", "aeiou") );
+		assert( removeChars("Battle of the Vowels: Hawaii vs. Grozny", "aeiou").equals("Bttl f th Vwls: Hw vs. Grzny") );
+		System.out.println( removeChars2("Battle of the Vowels: Hawaii vs. Grozny", "aeiou") );
+		assert( removeChars2("Battle of the Vowels: Hawaii vs. Grozny", "aeiou").equals("Bttl f th Vwls: Hw vs. Grzny") );
 		
 	}
 	
@@ -67,6 +71,45 @@ public class Strings {
         }
         
         return null;
+    }
+    
+    public static String removeChars( String str, String remove )
+    {
+        
+        boolean[] isRemove = new boolean[128];
+        for(char c : remove.toCharArray())
+            isRemove[c] = true;
+            
+        StringBuilder sb = new StringBuilder();
+        for(char c : str.toCharArray())
+            if(!isRemove[c])
+                sb.append(c);
+                
+        return new String( sb );
+    }
+    
+    public static String removeChars2(String str, String remove)
+    {
+        boolean[] isRemove = new boolean[128];
+        for(char c : remove.toCharArray())
+            isRemove[c] = true;
+            
+        char[] strArr = str.toCharArray();
+        
+        int src, dst;
+        for(src=0, dst=0;
+            src < strArr.length;
+            src++
+           )
+        {
+            int charIndx = strArr[src];
+            if(!isRemove[charIndx]) {
+                strArr[dst] = strArr[src];
+                dst++;
+            }
+        }
+        
+        return new String(strArr, 0, dst);
     }
     
     private static class NoAnswerException extends Exception

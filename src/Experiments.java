@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -50,6 +51,14 @@ public class Experiments {
 		 * 
 		 */
 
+	}
+	
+	private static BigDecimal fact(double n) {
+		BigDecimal fact = new BigDecimal(1);
+		for(double i=n; i>=1; i--) {
+			fact = fact.multiply(new BigDecimal(i));
+		}
+		return fact;
 	}
 
 }

@@ -1,8 +1,9 @@
 package com.indeed.strings;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
-public class Strings {
+public class StringUtils {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println( firsNonRepeatingChar("total") );
@@ -14,7 +15,122 @@ public class Strings {
 		System.out.println( removeChars2("Battle of the Vowels: Hawaii vs. Grozny", "aeiou") );
 		assert( removeChars2("Battle of the Vowels: Hawaii vs. Grozny", "aeiou").equals("Bttl f th Vwls: Hw vs. Grzny") );
 		
+		assert( hasUniqueChars("abcdefg") );
+		
+		assert( isPermutation("acad a", "d caaa") );
+		
+		String s = "a b c de";
+		char[] chars = Arrays.copyOf(s.toCharArray(), s.length()+6) ;
+		System.out.println(chars.length);
+		System.out.println(chars);
+		replaceSpaces(chars, s.length());
+		System.out.println(chars);
+		
+		assert( isPanagram("acceaca") );
+		
 	}
+	
+	public static boolean isPanagram(String s)
+	{
+		for(int start = 0, end = s.length() - 1; start < end; start++, end-- )
+			if(s.charAt(start) != s.charAt(end))
+				return false;
+		
+		return true;
+	}
+	
+	
+	public static void replaceSpaces(char[] chars, int length)
+	{
+		// replace ' ' with 20%
+		//a b d----
+		//        d
+		//    s
+		
+		for(int src = length-1, dst = chars.length -1; 
+				src != dst; 
+				src--)
+		{
+			if( chars[src] == ' ' )
+			{
+				chars[dst] = '%';
+				chars[dst-1] = '0';
+				chars[dst-2] = '2';
+				dst = dst - 3;
+			}
+			else
+			{
+				chars[dst] = chars[src];
+				dst--;
+			}
+		}
+	}
+	
+	public static boolean isPermutation(String s1, String s2)
+	{
+		if(s1.length() != s2.length())
+			return false;
+		
+		int[] charCount1 = new int[256];
+		int[] charCount2 = new int[256];
+		
+		for(char c : s1.toCharArray())
+			charCount1[c]++;
+		
+		for(char c : s2.toCharArray())
+			charCount2[c]++;
+		
+		for(int i=0; i<256; i++)
+			if(charCount1[i] != charCount2[i])
+				return false;
+		
+		return true;
+	}
+	
+	public static boolean hasUniqueChars(String s)
+	{
+		boolean hasUniqueChars = true;
+		
+		char[] charArr = s.toCharArray();
+		Arrays.sort(charArr);
+		
+		char cur = 0;
+		if(charArr[0] == cur)
+			cur = 1;
+		
+		for(char c : charArr)
+		{
+			if(c == cur)
+			{
+				hasUniqueChars = false;
+				break;
+			}
+			else
+			{
+				cur = c;
+			}
+		}
+			
+		return hasUniqueChars;
+	}
+	
+	public static boolean isBalancedBraces(String s)
+    {
+        int numLeftBraces = 0;
+        for(char c : s.toCharArray())
+            if(c == '{')
+                numLeftBraces++;
+            else if(c == '}')
+            {
+                if(numLeftBraces == 0)
+                    return false;
+                
+                numLeftBraces--;   
+            }
+            
+        return numLeftBraces == 0;
+    }
+
 	
 	// O(n) + O(n) = O(2n) = O(n)
     public static char firsNonRepeatingChar(String s) throws NoAnswerException

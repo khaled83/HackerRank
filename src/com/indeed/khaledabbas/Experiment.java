@@ -15,6 +15,7 @@ import com.indeed.khaledabbas.datastructures.stack.SetOfStacks;
 import com.indeed.khaledabbas.datastructures.stack.StackException;
 import com.indeed.khaledabbas.datastructures.stack.StackUtility;
 import com.indeed.khaledabbas.datastructures.stack.node.Stack;
+import com.indeed.khaledabbas.datastructures.trees.BinarySearchTree;
 import com.indeed.khaledabbas.sort.ArraysSortUtils;
 import com.indeed.khaledabbas.sort.ArraysSortUtils2;
 import com.indeed.strings.StringUtils;
@@ -22,6 +23,14 @@ import com.indeed.strings.StringUtils;
 public class Experiment {
 
 	public static void main(String[] args) throws Exception {
+		
+//		/** Trees
+		 
+		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
+		bst.add(1);
+		bst.traverseInorder();
+		
+//		*/
 		
 		/**
 		Queue<Integer> queue = new Queue<Integer>();
@@ -194,14 +203,14 @@ public class Experiment {
 		System.out.println(list);
 		*/
 		
-		int[] arr = {29, 10, 14, 13, 37};
-		printArray(arr);
+//		int[] arr = {29, 10, 14, 13, 37};
+//		printArray(arr);
 //		MyArrays.selectionSort(arr);
 //		MyArrays.bubbleSort(arr);
 //		MyArrays.insertionSort(arr);
 //		ArraysSortUtils.mergeSort(arr);
-		ArraysSortUtils.quickSort(arr);
-		printArray(arr);
+//		ArraysSortUtils.quickSort(arr);
+//		printArray(arr);
 		
 		// 0 1 2 3 4
 		// 1 4 6 - -

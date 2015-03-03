@@ -25,10 +25,31 @@ public class Experiment {
 	public static void main(String[] args) throws Exception {
 		
 //		/** Trees
-		 
+		
+		// 60 20 10 40 30 50 70
 		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
-		bst.add(1);
-		bst.traverseInorder();
+		bst.insert(60);
+		bst.insert(20);
+		bst.insert(10);
+		bst.insert(40);
+		bst.insert(30);
+		bst.insert(50);
+		bst.insert(70);
+//		bst.delete(20);
+		// 90, 150, 170, 130
+		
+		System.out.println(" size = " + bst.size() 
+							+ "\n maxDepth = "+bst.maxDepth()
+							+ "\n minValue = "+bst.minValue()
+							+ "\n hasSum = "+bst.hasPathSum(130)
+						  );
+		bst.traversePreorder();
+//		System.out.println();
+//		System.out.println("Inorder");
+//		bst.traverseInorder();
+//		System.out.println();
+//		System.out.println("Postorder");
+//		bst.traversePostorder();
 		
 //		*/
 		

@@ -8,7 +8,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		
 		private Node<E> leftChild;
 		private Node<E> rightChild;
-		private Node<E> parent;
 		
 		public Node() {}
 		
@@ -24,43 +23,144 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		}
 	}
 	
-	private Node<E> root = null;
+	private Node<E> root;
 	
-	private int size;
-	
-	public int size() { return size; }
-	
-	public boolean empty() { return size == 0; }
-	
-	public void add(E e)
+	public BinarySearchTree()
 	{
-		Node<E> newNode = findNode(e);
-		newNode = new Node<E>(e, null, null);
-		if(newNode.parent == null)
-			newNode.parent = root;
-		System.out.println("Root after adding " + e + " : " + root);
+		root = null;
 	}
 	
-	public E remove(E e)
+	public void insert(E e)
 	{
-		return null;
+		root = insert(root, e);
 	}
 	
-	private Node<E> findNode(E e)
-	{
-		return findNode(root, e);
-	}
-	
-	private Node<E> findNode(Node<E> node, E e)
+	private Node<E> insert(Node<E> node, E e)
 	{
 		if(node == null)
-			return null;
-		else if(node.element == e)
-			return node;
-		else if(e.compareTo( node.element ) < 0)
-			return findNode(node.leftChild, e);
+			node = new Node<E>(e, null, null);
+		else if(e.compareTo(node.element) < 0)
+			node.leftChild = insert(node.leftChild, e);
 		else
-			return findNode(node.rightChild, e);
+			node.rightChild = insert(node.rightChild, e);
+		
+		return node;
+	}
+	
+	public void delete(E e)
+	{
+		root = delete(root, e);
+	}
+	
+	private Node<E> delete(Node<E> node, E e)
+	{
+		if(node != null)
+		{
+			if(node.element == e)
+				node = deleteNode(node);
+			else if(e.compareTo(node.element) < 0)
+				node.leftChild = delete(node.leftChild, e);
+			else
+				node.rightChild = delete(node.rightChild, e);
+		}
+		
+		return node;
+	}
+	
+	private Node<E> deleteNode(Node<E> node)
+	{
+		// no children
+		if(node.leftChild == null && node.rightChild == null)
+		{
+			node = null;
+		}
+		// has two children
+		else if(node.leftChild != null && node.rightChild != null)
+		{
+			node.element = getLeftMostElement(node.rightChild);
+			node.rightChild = deleteLeftMost(node.rightChild);
+		}
+		// has one child only
+		else
+		{
+			Node<E> child = node.leftChild != null
+							? node.leftChild
+							: node.rightChild;
+			
+			Node<E> delNode = node;
+			node = child;
+			delNode = null;
+		}
+		
+		return node;
+	}
+	
+	private E getLeftMostElement(Node<E> node)
+	{
+		if(node.leftChild == null)
+			return node.element;
+		else
+			return getLeftMostElement(node.leftChild);
+	}
+	
+	private Node<E> deleteLeftMost(Node<E> node)
+	{
+		// base case
+		if(node.leftChild == null)
+		{
+			node = deleteNode(node);
+		}
+		else
+			node.leftChild = deleteLeftMost(node.leftChild);
+		
+		return node;
+	}
+	
+	public boolean empty() { return root == null; }
+	
+	public int size() {
+		return size(root);
+	}
+	
+	private int size(Node<E> node)
+	{
+		if(node == null)
+			return 0;
+		else
+			return 1 + size(node.leftChild) + size(node.rightChild);
+	}
+	
+	public int maxDepth()
+	{
+		return maxDepth(root);
+	}
+	
+	private int maxDepth(Node<E> node)
+	{
+		if(node == null)
+			return 0;
+		else
+			return 1 + Math.max( maxDepth(node.leftChild), 
+									maxDepth(node.rightChild) );
+	}
+	
+	public E minValue()
+	{
+		return getLeftMostElement(root);
+	}
+	
+	public boolean hasPathSum(int sum)
+	{
+		return hasPathSum(root, sum);
+	}
+	
+	public boolean hasPathSum(Node<E> node, int sum)
+	{
+		if(node == null)
+			return sum == 0;
+		else
+			return hasPathSum(node.leftChild, sum - (Integer)node.element)
+								|| hasPathSum(node.rightChild, sum - (Integer)node.element);
 	}
 	
 	public void traverseInorder()
@@ -78,12 +178,40 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		}
 	}
 	
-	private void visit(Node<E> node)
+	public void traversePreorder()
 	{
-		System.out.println(node.element.toString());
+		traversePreorder(root);
 	}
 	
+	private void traversePreorder(Node<E> node)
+	{
+		if(node != null)
+		{
+			visit(node);
+			traversePreorder(node.leftChild);
+			traversePreorder(node.rightChild);
+		}
+	}
 	
+	public void traversePostorder()
+	{
+		traversePostorder(root);
+	}
+	
+	private void traversePostorder(Node<E> node)
+	{
+		if(node != null)
+		{
+			traversePostorder(node.leftChild);
+			traversePostorder(node.rightChild);
+			visit(node);
+		}
+	}
+	
+	private void visit(Node<E> node)
+	{
+		System.out.print(node.element.toString() + " ");
+	}
 
 }
 

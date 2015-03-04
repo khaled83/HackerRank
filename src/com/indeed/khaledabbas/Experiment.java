@@ -44,6 +44,35 @@ public class Experiment {
 							+ "\n hasSum = "+bst.hasPathSum(130)
 						  );
 		bst.traversePreorder();
+//		bst.storeTreeExactShape();
+		
+		System.out.println();
+		
+//		int[] arr = {10, 14, 29, 13, 37};
+//		printArray(arr);
+//		BinarySearchTree.treeSort(arr);
+//		printArray(arr);
+		
+//		BinarySearchTree bst2 = BinarySearchTree.restoreTreeExactShape();
+		bst.traverseInorder();
+		/**
+		 // 10 20 30 40 50 60 70
+		 
+		 40
+      20     60
+	10  30  50  70	 
+		 
+		 */
+		
+		System.out.println();
+		System.out.println("Balanced tree:");
+		BinarySearchTree balanced = bst.buildTreeBalanced();
+		balanced.traversePreorder();
+		
+		
+		
+//		System.out.println();
+//		bst.printPaths();
 //		System.out.println();
 //		System.out.println("Inorder");
 //		bst.traverseInorder();

@@ -327,7 +327,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
 			node = new Node();
 			node.leftChild = readBalanced(node.leftChild, reader, size/2);
 			node.element = (E) reader.readLine();
-			node.rightChild = readBalanced(node.rightChild, reader, size/2);
+			node.rightChild = readBalanced(node.rightChild, reader, (size-1)/2);
 		}
 		
 		return node;

@@ -16,6 +16,7 @@ import com.indeed.khaledabbas.datastructures.stack.StackException;
 import com.indeed.khaledabbas.datastructures.stack.StackUtility;
 import com.indeed.khaledabbas.datastructures.stack.node.Stack;
 import com.indeed.khaledabbas.datastructures.trees.BinarySearchTree;
+import com.indeed.khaledabbas.datastructures.trees.Heap;
 import com.indeed.khaledabbas.sort.ArraysSortUtils;
 import com.indeed.khaledabbas.sort.ArraysSortUtils2;
 import com.indeed.strings.StringUtils;
@@ -24,7 +25,27 @@ public class Experiment {
 
 	public static void main(String[] args) throws Exception {
 		
-//		/** Trees
+		// Heaps
+		/*
+		Heap<Integer> heap = new Heap<Integer>();
+		heap.insert(3);
+		heap.insert(2);
+		heap.insert(6);
+		heap.insert(5);
+		heap.insert(9);
+		heap.insert(10);
+		System.out.println(heap);
+		heap.delete();
+		System.out.println(heap);
+		*/
+		
+		Integer[] arr = { 6, 3, 5, 9, 2, 10 };
+		printArray(arr);
+		Heap.heapsort(arr);
+		printArray(arr);
+		
+		
+		/** Trees
 		
 		// 60 20 10 40 30 50 70
 		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
@@ -62,13 +83,12 @@ public class Experiment {
       20     60
 	10  30  50  70	 
 		 
-		 */
-		
 		System.out.println();
 		System.out.println("Balanced tree:");
 		BinarySearchTree balanced = bst.buildTreeBalanced();
 		balanced.traversePreorder();
 		
+		*/
 		
 		
 //		System.out.println();
@@ -283,6 +303,16 @@ public class Experiment {
 		sb.append("}");
 		
 		System.out.println(new String(sb));
+	}
+	
+	private static void printArray(Object[] arr)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		for(Object o : arr)
+			sb.append(o).append(" ");
+		sb.append("}");
+		System.out.println( new String(sb) );
 	}
 
 }

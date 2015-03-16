@@ -27,16 +27,34 @@ public class Experiment {
 	
 	public static void main(String[] args) throws Exception {
 		
+//		Graph G = new Graph();
+//		G.addEdge("A", "B", 1);
+//		G.addEdge("A", "C", 1);
+//		G.addEdge("C", "D", 1);
+//		G.addEdge("D", "E", 1);
+//		G.addEdge("D", "G", 1);
+//		G.addEdge("E", "G", 1);
+//		G.addVertex("H");
+//		// print out graph
+//		System.out.println(G);
+		
 		Graph G = new Graph();
-		G.addEdge("A", "B", 1);
-		G.addEdge("A", "C", 1);
-		G.addEdge("C", "D", 1);
-		G.addEdge("D", "E", 1);
-		G.addEdge("D", "G", 1);
-		G.addEdge("E", "G", 1);
-		G.addVertex("H");
+		G.addEdge("1", "2", 1);
+		G.addEdge("1", "3", 1);
+		G.addEdge("1", "6", 1);
+		
+		G.addEdge("2", "7", 1);
+		G.addEdge("2", "5", 1);
+		
+		G.addEdge("3", "4", 1);
+		
+		G.addEdge("6", "8", 1);
+		
+		G.addEdge("8", "9", 1);
+		G.addEdge("8", "10", 1);
 		// print out graph
 		System.out.println(G);
+		System.out.println( "maxToForest = " +  G.getMaxEdgesToForest());
 		
 		// Heaps
 		/*
@@ -301,6 +319,9 @@ public class Experiment {
 //		ArraysSortUtils.mergeSort(arr);
 //		ArraysSortUtils.quickSort(arr);
 //		printArray(arr);
+		
+//		java.util.ArrayList<Integer> list = new java.util.ArrayList<Integer>(2);
+//		list.get(1);
 		
 		// 0 1 2 3 4
 		// 1 4 6 - -

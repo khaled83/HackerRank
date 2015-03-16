@@ -20,9 +20,10 @@ import com.indeed.khaledabbas.datastructures.trees.Heap;
 import com.indeed.khaledabbas.sort.ArraysSortUtils;
 import com.indeed.khaledabbas.sort.ArraysSortUtils2;
 import com.indeed.strings.StringUtils;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 public class Experiment {
-
+	
 	public static void main(String[] args) throws Exception {
 		
 		// Heaps
@@ -44,6 +45,11 @@ public class Experiment {
 		Heap.heapsort(arr);
 		printArray(arr);
 		
+		LinkedList<Integer> list;
+		Arrays.sort(null, java.util.Collections.reverseOrder());
+		
+		Integer x = 0, y = 0;
+		System.out.println(x - y);
 		
 		/** Trees
 		

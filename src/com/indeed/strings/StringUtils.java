@@ -2,6 +2,7 @@ package com.indeed.strings;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.*;
 
 public class StringUtils {
 
@@ -28,6 +29,56 @@ public class StringUtils {
 		
 		assert( isPanagram("acceaca") );
 		
+		perm("abc");
+		
+		List<String> combi = combi("abc");
+		Collections.sort( combi );
+		for(String x : combi)
+			System.out.println(x);
+		
+	}
+	
+	/**
+	 * {@link http://www.growingwiththeweb.com/2013/06/algorithm-all-combinations-of-set.html}
+	 * alt: {@link http://javahungry.blogspot.com/2014/03/algorithm-to-find-permutations-of-string-using-recursion-in-java.html}
+	 */
+    private static List<String> combi(String s)
+    {
+    	ArrayList<String> combi = new ArrayList<String>();
+        for(int i=0; i<s.length();i++)
+        {
+        	int length = combi.size();
+            for(int j=0; j<length; j++)
+            {
+                combi.add( combi.get(j) + s.charAt(i) );
+            }
+            combi.add(Character.toString( s.charAt(i)) );
+        }
+        return combi;
+    }
+	
+	public static void perm(String s)
+	{
+	    perm(s.toCharArray(), 0, s.length() -1);
+	}
+
+	private static void perm(char[] chars, int start, int end)
+	{
+	    if(start == end)
+	        System.out.println(new String(chars) );
+	    for(int i=start; i<=end; i++)
+	    {
+	        swap(chars, i, start);
+	        perm(chars, start+1, end);
+	        swap(chars, i, start); // backtrack
+	    }
+	}
+	
+	private static void swap(char[] arr, int indx1, int indx2)
+	{
+		char tmp = arr[indx1];
+		arr[indx1] = arr[indx2];
+		arr[indx2] = tmp;
 	}
 	
 	public static boolean isPanagram(String s)

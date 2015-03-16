@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 
 import com.indeed.khaledabbas.datastructures.ArrayList;
+import com.indeed.khaledabbas.datastructures.graph.Graph;
 import com.indeed.khaledabbas.datastructures.linkedlist.LinkedListExtended;
 import com.indeed.khaledabbas.datastructures.linkedlist.LinkedListSingly;
 import com.indeed.khaledabbas.datastructures.queue.QueueWithTwoStacks;
@@ -26,6 +27,17 @@ public class Experiment {
 	
 	public static void main(String[] args) throws Exception {
 		
+		Graph G = new Graph();
+		G.addEdge("A", "B", 1);
+		G.addEdge("A", "C", 1);
+		G.addEdge("C", "D", 1);
+		G.addEdge("D", "E", 1);
+		G.addEdge("D", "G", 1);
+		G.addEdge("E", "G", 1);
+		G.addVertex("H");
+		// print out graph
+		System.out.println(G);
+		
 		// Heaps
 		/*
 		Heap<Integer> heap = new Heap<Integer>();
@@ -40,6 +52,7 @@ public class Experiment {
 		System.out.println(heap);
 		*/
 		
+		/**
 		Integer[] arr = { 6, 3, 5, 9, 2, 10 };
 		printArray(arr);
 		Heap.heapsort(arr);
@@ -50,6 +63,7 @@ public class Experiment {
 		
 		Integer x = 0, y = 0;
 		System.out.println(x - y);
+		**/
 		
 		/** Trees
 		

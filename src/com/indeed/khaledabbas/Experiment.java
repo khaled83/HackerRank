@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import com.indeed.khaledabbas.concurrency.Concurrency;
 import com.indeed.khaledabbas.datastructures.ArrayList;
 import com.indeed.khaledabbas.datastructures.graph.Graph;
 import com.indeed.khaledabbas.datastructures.linkedlist.LinkedListExtended;
@@ -27,16 +28,18 @@ public class Experiment {
 	
 	public static void main(String[] args) throws Exception {
 		
-		Graph G = new Graph();
-		G.addEdge("A", "B", 1);
-		G.addEdge("A", "C", 1);
-		G.addEdge("C", "D", 1);
-		G.addEdge("D", "E", 1);
-		G.addEdge("D", "G", 1);
-		G.addEdge("E", "G", 1);
-		G.addVertex("H");
-		// print out graph
-		System.out.println(G);
+		Concurrency.main();
+		
+//		Graph G = new Graph();
+//		G.addEdge("A", "B", 1);
+//		G.addEdge("A", "C", 1);
+//		G.addEdge("C", "D", 1);
+//		G.addEdge("D", "E", 1);
+//		G.addEdge("D", "G", 1);
+//		G.addEdge("E", "G", 1);
+//		G.addVertex("H");
+//		// print out graph
+//		System.out.println(G);
 		
 		// Heaps
 		/*

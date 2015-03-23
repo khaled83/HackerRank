@@ -5,7 +5,6 @@ public class GraphUtils {
 	public static int maxRemoveEdgesToCreateForest(Graph g)
 	{
 		return 0;
-		
 	}
 	
 }

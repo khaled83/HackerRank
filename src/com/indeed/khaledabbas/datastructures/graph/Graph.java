@@ -1,6 +1,9 @@
 package com.indeed.khaledabbas.datastructures.graph;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Graph {
 	
@@ -44,9 +47,12 @@ public class Graph {
 	
 	public boolean hasEdge(String from, String to)
 	{
+		Vertex v = vertices.get(from);
+		Vertex w = vertices.get(to);
+		
 		return vertices.containsKey(from)
 				&& vertices.containsKey(to)
-				&& adjList.get(from).containsKey( vertices.get(to) );
+				&& adjList.get(v).containsKey( w );
 	}
 	
 	public void addEdge(String from, String to, Integer weight)
@@ -98,12 +104,13 @@ public class Graph {
 		return numVertices;
 	}
 	
-//	int maxEdgesToForest()
-//	{
-//		
-//	}
 	
-	int subtreesCount(Vertex v)
+	private int maxEdgesToForest = 0;
+	
+	/**
+	 * {@link https://www.hackerrank.com/challenges/even-tree}
+	 */
+	int dfsForMaxEdgesToForest(Vertex v)
 	{
 		int value = 0;
 		if( adjList.get(v).keySet().size() == 0 )
@@ -112,11 +119,44 @@ public class Graph {
 		{
 			for(Vertex w : adjList.get(v).keySet())
 			{
-				value += 1 + subtreesCount(w);
+				int subtreeCount = 1 + dfsForMaxEdgesToForest(w);
+				value += subtreeCount;
+				if(subtreeCount % 2 == 0)
+				{
+					maxEdgesToForest++;
+				}
+					
 			}
+			
 		}
 		
 		return value;
+	}
+	
+	private Vertex getTreeRoot()
+	{
+		for(Vertex root : vertices.values())
+		{
+			boolean hasParentSoFar = false;
+			for(Vertex v : vertices.values())
+			{
+				if( ! v.equals(root) && this.hasEdge(v.name, root.name))
+				{
+					hasParentSoFar = true;
+					break;
+				}
+			}
+			if(!hasParentSoFar)
+				return root;
+		}
+		
+		return null;
+	}
+	
+	public int getMaxEdgesToForest() 
+	{
+		dfsForMaxEdgesToForest( getTreeRoot() );
+		return maxEdgesToForest; 
 	}
 	
 	@Override

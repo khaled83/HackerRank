@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import com.indeed.khaledabbas.concurrency.Concurrency;
 import com.indeed.khaledabbas.datastructures.ArrayList;
 import com.indeed.khaledabbas.datastructures.graph.Graph;
 import com.indeed.khaledabbas.datastructures.linkedlist.LinkedListExtended;
@@ -26,6 +27,8 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 public class Experiment {
 	
 	public static void main(String[] args) throws Exception {
+		
+		Concurrency.main();
 		
 //		Graph G = new Graph();
 //		G.addEdge("A", "B", 1);

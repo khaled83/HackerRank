@@ -3,6 +3,7 @@ package com.indeed.khaledabbas.datastructures.trees;
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
+import java.util.HashMap;
 
 public class BinarySearchTree<E extends Comparable<E>> {
 	
@@ -176,6 +177,72 @@ public class BinarySearchTree<E extends Comparable<E>> {
 	 
 	 * */
 	
+	/***
+	    60
+	   /  \
+	 20    70
+	/  \
+	10  40
+	  /  \
+	 30  50
+	*/
+	
+	public boolean isBlanced() {
+		return isBalanced(root);
+	}
+
+	private boolean isBalanced(Node<E> node) {
+		// leaf
+		if (node == null)
+			return true;
+		else
+			return isBalanced(node.leftChild) && isBalanced(node.rightChild)
+					&& Math.abs(height(node.leftChild) - height(node.rightChild)) <= 1;
+	}
+
+	HashMap<Node<E>, Integer> heightsMap = new HashMap<Node<E>, Integer>();
+	// reset to true after tree structural changes
+
+	private int height(Node<E> node) {
+		if (node == null)
+			return 0;
+
+		// caching
+		Integer height = heightsMap.get(node);
+		if (height == null) {
+			height = 1 + Math.max(height(node.leftChild), height(node.rightChild));
+			heightsMap.put(node, height);
+		}
+
+		return height;
+	}
+	
+	private static class Range {
+		private int min, max;
+
+		Range(int min, int max) {
+			this.min = min;
+			this.max = max;
+		}
+	}
+
+	public boolean isBST() {
+		return isBST((Node<Integer>)root, new Range(Integer.MIN_VALUE, Integer.MAX_VALUE));
+	}
+
+	public boolean isBST(Node<Integer> node, Range range)
+	{
+		if(node == null)
+		return true;
+	
+		return node.element.compareTo( range.min ) >= 0
+				&& node.element.compareTo( range.max ) <= 0
+				&& isBST( node.leftChild, new Range( range.min, node.element ) ) 
+				&& isBST( node.rightChild, new Range( node.element, range.max ) );
+	}
+
+
+	
 	// 
 	public void printPaths()
 	{
@@ -231,16 +298,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
 			
 		return arrIndx;
 	}
-	
-	/***
-    60
-   /  \
- 20    70
-/  \
-10  40
-  /  \
- 30  50
-	*/
 	
 	private static final String PATH = "C:\\Development\\prototype\\workspace\\HackerRank\\src\\com\\indeed\\khaledabbas\\datastructures\\trees\\tree.txt";
 	
@@ -331,6 +388,25 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		}
 		
 		return node;
+	}
+	
+	public static BinarySearchTree<Integer> getBalancedTree(int[] arr) {
+		BinarySearchTree bst = new BinarySearchTree();
+		bst.root = balancedTree( arr, 0, arr.length - 1 );
+		return bst;
+	}
+
+	private static Node<Integer> balancedTree(int[] arr, int start, int end) {
+		if( start <= end) 
+		{
+			int mid = (start + end) / 2;
+			Node<Integer> root = new Node<Integer>( arr[mid] );
+			root.leftChild = balancedTree( arr, start, mid - 1 );
+			root.rightChild = balancedTree( arr, mid + 1, end );
+			return root;
+		}
+		
+		return null;
 	}
 	
 	private void storeTreeInorder(Node<E> node, BufferedWriter writer) throws IOException

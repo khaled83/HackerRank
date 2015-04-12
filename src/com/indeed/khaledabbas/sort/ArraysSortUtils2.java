@@ -1,51 +1,133 @@
 package com.indeed.khaledabbas.sort;
 
+import java.util.Arrays;
+
+import java.util.ArrayList;
+
 public class ArraysSortUtils2 {
 
-	public static void mergeWithInsertion(int[] a, int[] b)
-	{
+	public static void main(String[] args) {
+		// 11 12 10 13 13 13 16
+		int[] arr = { 15, 13, 11, 12, 13, 13, 16, 10 };
+		quickSortSpecial(arr, 1);
+		System.out.println(print(arr));
+		
+		int[] arr1 = { 8, 9, 10, 11, 16, 17, 18 };
+		int[] arr2 = { 11, 12, 13, 14, 16, 29, 49 };
+		System.out.println( print( intersect(arr1, arr2) ));
+	}
+
+	public static Integer[] intersect(int[] arr1, int[] arr2) {
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		int p1 = 0;
+		int p2 = 0;
+
+		while (p1 < arr1.length && p2 < arr2.length) {
+			System.out.println("looping");
+			int x = arr1[p1];
+			int y = arr2[p2];
+
+			if (x == y) {
+				result.add(x);
+				p1++;
+				p2++;
+			} else if (x < y) {
+				p1 = Arrays.binarySearch(arr1, p1, arr1.length, y);
+				if (p1 < 0) {
+					p1 = (-p1) - 1;
+				} // else let the next while operation handle success
+			} else {
+				p2 = Arrays.binarySearch(arr2, p2, arr2.length, x);
+				if (p2 < 0) {
+					p2 = (-p2) - 1;
+				} // else let the next while operation handle success
+			}
+		}
+
+		return result.toArray( new Integer[result.size()] );
+	}
+
+	public static void mergeWithInsertion(int[] a, int[] b) {
 		int unsorted = a.length - b.length;
 		int n = a.length;
-		
-		for( int bIndx = 0 ; unsorted<n; unsorted++)
-		{
+
+		for (int bIndx = 0; unsorted < n; unsorted++) {
 			int next = b[bIndx++];
-			
+
 			int insertionIndx;
-			for( insertionIndx = unsorted; insertionIndx > 0 && a[insertionIndx-1] > next; insertionIndx--)
-				a[insertionIndx] = a[insertionIndx-1];
+			for (insertionIndx = unsorted; insertionIndx > 0
+					&& a[insertionIndx - 1] > next; insertionIndx--)
+				a[insertionIndx] = a[insertionIndx - 1];
 			a[insertionIndx] = next;
 		}
-		
+
 	}
-	
+
 	// 0 1 2 3 4
 	// 0 2 3 4 5
 	// 3 5
-	//     u
-	//   a 
-	//b
-	//     iA
-	//   iB
-	//   m
-	public static void merge(int[] a, int b[])
-	{
+	// u
+	// a
+	// b
+	// iA
+	// iB
+	// m
+	public static void merge(int[] a, int b[]) {
 		int unsorted = a.length - b.length;
 		int indxA = unsorted - 1;
 		int indxB = b.length - 1;
-		
-		for( int mergeIndx = a.length - 1; mergeIndx >= unsorted; mergeIndx-- )
-		{
-			if(a[indxA] > b[indxB])
-			{
+
+		for (int mergeIndx = a.length - 1; mergeIndx >= unsorted; mergeIndx--) {
+			if (a[indxA] > b[indxB]) {
 				a[mergeIndx] = a[indxA--];
 				unsorted--;
-			}
-			else
-			{
+			} else {
 				a[mergeIndx] = b[indxB--];
 			}
 		}
 	}
+
+	public static void quickSortSpecial(int[] arr, int keyIndx) {
+		int pivot = arr[keyIndx];
+		int lastS1 = -1;
+		int lastS2 = -1;
+		int unknown = 0;
+
+		for (; unknown < arr.length; unknown++) {
+			if (arr[unknown] < pivot) {
+				lastS1++;
+				swap(arr, lastS1, unknown);
+				lastS2++;
+			} else if (arr[unknown] == pivot) {
+				lastS2++;
+			} else {
+			}
+		}
+	}
+
+	private static void swap(int[] arr, int indx1, int indx2) {
+		int tmp = arr[indx1];
+		arr[indx1] = arr[indx2];
+		arr[indx2] = tmp;
+	}
 	
+	public static String print(Object[] arr) 
+	{ 
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		for (Object x : arr)
+			sb.append(x.toString()).append(" ");
+		sb.append("}");
+		return new String(sb);
+	}
+
+	public static String print(int[] arr) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		for (int x : arr)
+			sb.append(x).append(" ");
+		sb.append("}");
+		return new String(sb);
+	}
+
 }

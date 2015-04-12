@@ -61,26 +61,12 @@ public class StackUtility {
 	// 2
 	// t
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	/**
+	 * @see	StackExtended#sort() 
+	 */
 	public static Stack<Comparable> sort(Stack<Comparable> stack) throws StackException
 	{
-		Stack<Comparable> sorted = new Stack<Comparable>();
-		
-		while(!stack.empty())
-		{
-			Comparable e = stack.pop();
-			if( sorted.empty() || e.compareTo(sorted.top()) > 0)
-				sorted.push(e);
-			else
-			{
-				while(!sorted.empty())
-					stack.push( sorted.pop() );
-				sorted.push(e);
-			}
-				
-		}
-		
-		return sorted;
+		return null;
 	}
 
 }

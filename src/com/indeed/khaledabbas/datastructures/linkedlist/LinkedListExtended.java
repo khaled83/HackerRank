@@ -6,6 +6,17 @@ import com.indeed.khaledabbas.datastructures.stack.adt.Stack;
 
 public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingly<E> {
 	
+	public static void main(String[] args) {
+		LinkedListExtended<Integer> list = new LinkedListExtended<Integer>();
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		System.out.println( list.toString() );
+		System.out.println( "result=" + list.kthToLast(5) );
+	}
+	
 	public void writeString()
 	{
 		System.out.print("{");
@@ -65,10 +76,6 @@ public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingl
 		return true;
 	}
 	
-	
-	
-	
-	
 	public void partition(E e)
 	{
 	    Node<E> prev = head;
@@ -108,6 +115,36 @@ public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingl
 		return i;
 	}
 	
+	public E kthToLast(int k) {
+		if (head == null)
+			return null;
+		
+		int[] kSoFar = {0};
+		Node<E> node = kthToLast(head, k, kSoFar); 
+		return node != null ? node.element : null;
+	}
+
+	// revisit code
+	public Node<E> kthToLast(Node<E> head, int k, int[] kSoFar) {
+		// last element
+		Node<E> node = head;
+		if (head == null) {
+			kSoFar[0] = -1;
+			return null;
+		}
+		else {
+			node = kthToLast(head.next, k, kSoFar);
+			kSoFar[0]++;
+			System.out.println( kSoFar[0] + " <> " + k );
+			if ( kSoFar[0] == k)
+				return head;
+			System.out.println("Didn't return...");
+		}
+
+		return node;
+	}
+
+	
 	public void removeKthToLast(int k) throws Exception
 	{
 	    Node<E> prev = head;
@@ -142,7 +179,6 @@ public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingl
 	    del = null;
 	        
 	}
-	
 	
 	public void removeDuplicatesWithoutBuffer()
 	{

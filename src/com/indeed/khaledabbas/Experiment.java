@@ -38,23 +38,66 @@ public class Experiment {
 //		// print out graph
 //		System.out.println(G);
 		
+//		/** Graphs
+//		Graph G = new Graph();
+//		G.addEdge("1", "2", 1);
+//		G.addEdge("1", "3", 1);
+//		G.addEdge("1", "6", 1);
+//		G.addEdge("2", "7", 1);
+//		G.addEdge("2", "5", 1);
+//		G.addEdge("3", "4", 1);
+//		G.addEdge("6", "8", 1);
+//		G.addEdge("8", "9", 1);
+//		G.addEdge("8", "10", 1);
+//		// print out graph
+//		System.out.println(G);
+//		System.out.println( "maxToForest = " +  G.getMaxEdgesToForest());
+//		*/
+		
+		/** 
 		Graph G = new Graph();
-		G.addEdge("1", "2", 1);
-		G.addEdge("1", "3", 1);
-		G.addEdge("1", "6", 1);
-		
-		G.addEdge("2", "7", 1);
-		G.addEdge("2", "5", 1);
-		
-		G.addEdge("3", "4", 1);
-		
-		G.addEdge("6", "8", 1);
-		
-		G.addEdge("8", "9", 1);
-		G.addEdge("8", "10", 1);
-		// print out graph
+		G.addEdge("A", "B", 1);
+		G.addEdge("A", "C", 1);
+		G.addEdge("A", "D", 1);
+		G.addEdge("B", "E", 1);
+		G.addEdge("B", "F", 1);
+		G.addEdge("E", "K", 1);
+		G.addEdge("E", "L", 1);
+		G.addEdge("K", "S", 1);
+		G.addEdge("L", "T", 1);
+		G.addEdge("F", "L", 1);
+		G.addEdge("F", "M", 1);
+		G.addEdge("L", "T", 1);
+		G.addEdge("C", "G", 1);
+		G.addEdge("C", "H", 1);
+		G.addEdge("G", "N", 1);
+		G.addEdge("H", "O", 1);
+		G.addEdge("H", "P", 1);
+		G.addEdge("P", "U", 1);
+		G.addEdge("D", "I", 1);
+		G.addEdge("D", "J", 1);
+		G.addEdge("I", "P", 1);
+		G.addEdge("I", "Q", 1);
+		G.addEdge("J", "R", 1);
 		System.out.println(G);
-		System.out.println( "maxToForest = " +  G.getMaxEdgesToForest());
+		G.bfs();
+		System.out.println();
+		G.dfs();
+		System.out.println();
+		
+		
+		Graph G = new Graph();
+		G.addEdge("0", "1", 8);
+		G.addEdge("0", "3", 9);
+		G.addEdge("0", "4", 4);
+		G.addEdge("1", "2", 1);
+		G.addEdge("2", "1", 2);
+		G.addEdge("2", "3", 3);
+		G.addEdge("3", "4", 7);
+		G.addEdge("3", "2", 2);
+		G.addEdge("4", "2", 1);
+		System.out.println( G.hasPath( "0", "2" ) );
+		*/
 		
 		// Heaps
 		/*
@@ -83,14 +126,19 @@ public class Experiment {
 		System.out.println(x - y);
 		**/
 		
-		/** Trees
+		///** Trees
 		
 		// 60 20 10 40 30 50 70
+		/**
 		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
-		bst.insert(60);
-		bst.insert(20);
-		bst.insert(10);
 		bst.insert(40);
+		
+		bst.insert(20);
+		bst.insert(60);
+		
+		
+		bst.insert(10);
+		
 		bst.insert(30);
 		bst.insert(50);
 		bst.insert(70);
@@ -114,6 +162,11 @@ public class Experiment {
 		
 //		BinarySearchTree bst2 = BinarySearchTree.restoreTreeExactShape();
 		bst.traverseInorder();
+		System.out.println();
+		System.out.println("isBalanced=" + bst.isBlanced());
+		System.out.println("isBST="+bst.isBST());
+		**/
+		
 		/**
 		 // 10 20 30 40 50 60 70
 		 
@@ -127,6 +180,11 @@ public class Experiment {
 		balanced.traversePreorder();
 		
 		*/
+		
+		int[] arr = { 10, 20, 30, 40, 50, 60, 70 };
+		BinarySearchTree bst = BinarySearchTree.getBalancedTree(arr);
+		bst.traversePreorder();
+		System.out.println(bst.isBlanced());
 		
 		
 //		System.out.println();

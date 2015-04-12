@@ -1,12 +1,13 @@
 package com.indeed.strings;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.*;
+
+import com.indeed.khaledabbas.sort.ArraysSortUtils2;
 
 public class StringUtils {
 
 	public static void main(String[] args) throws Exception {
+		/**
 		System.out.println( firsNonRepeatingChar("total") );
 		System.out.println( firsNonRepeatingChar("teeter") );
 		System.out.println( firsNonRepeatingCharUnicode("total") );
@@ -27,7 +28,7 @@ public class StringUtils {
 		replaceSpaces(chars, s.length());
 		System.out.println(chars);
 		
-		assert( isPanagram("acceaca") );
+		assert( isPanagram("accecca") );
 		
 		perm("abc");
 		
@@ -36,7 +37,115 @@ public class StringUtils {
 		for(String x : combi)
 			System.out.println(x);
 		
+		System.out.println( integerToString(Integer.MIN_VALUE + 1) );
+		*/
+		
+		System.out.println( levenshteinDistance("sitting", "kitten") );
 	}
+	
+	public static int levenshteinDistance(String s1, String s2) {
+		int rows = s1.length() + 1;
+		int cols = s2.length() + 1;
+		int[][] matrix = new int[rows][cols];
+
+		// initialize first row
+		for (int col = 0; col < cols; col++)
+			matrix[0][col] = col;
+		// initialize first column
+		for (int row = 0; row < rows; row++)
+			matrix[row][0] = row;
+
+		for (int row = 1; row < rows; row++) {
+			for (int col = 1; col < cols; col++) {
+				if (s1.charAt(row-1) == s2.charAt(col-1))
+					matrix[row][col] = matrix[row - 1][col - 1];
+				else {
+					matrix[row][col] = min(1 + matrix[row - 1][col - 1],
+							1 + matrix[row - 1][col], 1 + matrix[row][col - 1]);
+				}
+			}
+		}
+
+		return matrix[rows - 1][cols - 1];
+	}
+	
+	private static int min(int x, int y, int z) {
+		int min = x;
+		if (y < min)
+			min = y;
+		if (z < min)
+			min = z;
+		return min;
+	}
+	
+	public static String integerToString(int x)
+	{
+		// 256
+		char[] chars = new char[10]; // 10 is arbitrary
+		int count = 0;
+		String neg = "";
+		if(x < 0) {
+			neg = "-";
+			x = -x;
+		}
+	
+		while(x > 0)
+		{
+			int cur = x % 10;
+			char c = (char) ('0' + cur);
+			chars = ensureCapacity(chars, count+1);
+			chars[count++] = c;
+			x = x / 10;
+			count++;
+		}
+	
+		// reverse chars
+		for(int start=0, end=count-1;
+			start < end;
+			start++, end--)
+		{
+			swap(chars, start, end);
+		}
+	
+		return neg + String.valueOf( chars, 0, count );
+	}
+
+	private static char[] ensureCapacity(char[] arr, int minCapacity) {
+		int oldCapacity = arr.length;
+
+		if (minCapacity > oldCapacity) {
+			// 1.5 * old capacity
+			int newCapacity = oldCapacity + (oldCapacity >> 1);
+			// copy into a new array
+			char[] newArr = new char[newCapacity];
+			System.arraycopy(arr, 0, newArr, 0, oldCapacity);
+			return newArr;
+		}
+
+		return arr;
+	}
+	
+	public static int stringToInteger(String s)
+	{
+		int value = 0;
+		int neg = 1; // multiplied by absolute value at the end for negation
+	
+		int indx = 0;
+		char[] chars = s.toCharArray();
+		if(chars[0] == '-') {
+			neg = -1;
+			indx++;
+		}
+	
+		for( ; indx < chars.length; indx++) {
+			int d = chars[indx] - '0';
+			value = (value * 10) + d;
+		}
+	
+		return ( neg * value );
+	}
+
+	
 	
 	/**
 	 * {@link http://www.growingwiththeweb.com/2013/06/algorithm-all-combinations-of-set.html}

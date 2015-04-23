@@ -38,9 +38,32 @@ public class StringUtils {
 			System.out.println(x);
 		
 		System.out.println( integerToString(Integer.MIN_VALUE + 1) );
-		*/
 		
 		System.out.println( levenshteinDistance("sitting", "kitten") );
+		
+		perm("abc");
+		*/
+		
+		System.out.println(encrypt("abcaad  "));
+	}
+	
+	public static String encrypt(String s) {
+		char[] chars = s.toCharArray();
+		int length = chars.length;
+		int src = length - 1;
+		int dst = length - 1;
+
+		for (; src >= 0; src--) {
+			char c = chars[src];
+			if (c == 'b' || c == ' ')
+				continue;
+			else if (c == 'a') {
+				chars[dst--] = 'd';
+				chars[dst--] = 'd';
+			} else
+				chars[dst--] = c;
+		}
+		return new String(chars);
 	}
 	
 	public static int levenshteinDistance(String s1, String s2) {

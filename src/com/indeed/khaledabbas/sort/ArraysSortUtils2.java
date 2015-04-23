@@ -1,13 +1,14 @@
 package com.indeed.khaledabbas.sort;
 
-import java.util.Arrays;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class ArraysSortUtils2 {
 
 	public static void main(String[] args) {
 		// 11 12 10 13 13 13 16
+		/**
 		int[] arr = { 15, 13, 11, 12, 13, 13, 16, 10 };
 		quickSortSpecial(arr, 1);
 		System.out.println(print(arr));
@@ -15,6 +16,63 @@ public class ArraysSortUtils2 {
 		int[] arr1 = { 8, 9, 10, 11, 16, 17, 18 };
 		int[] arr2 = { 11, 12, 13, 14, 16, 29, 49 };
 		System.out.println( print( intersect(arr1, arr2) ));
+		
+		String[] arr4 = { "abc", "def", "efd", "cba", "wwf", "cab", "dfe" };
+		sortAnagrams( arr4 );
+		System.out.println( print( arr4 ) );
+		**/
+		
+		int[] arr5 = { 60, 70, 10, 20, 30, 40, 50 };
+		System.out.println("  0  1  2  3  4  5  6");
+		System.out.println( print(arr5));
+		System.out.println( binarySearchAfterRotation(arr5, 65) );
+	}
+	
+	public static int binarySearchAfterRotation(int[] arr, int key) {
+		int start = 0;
+		int length = arr.length;
+		for (int i = 1; i < length; i++)
+			if (arr[i] < arr[i - 1]) {
+				start = i;
+				break;
+			}
+		int end = start - 1;
+
+		return binarySearch(arr, start, end, length, key);
+	}
+
+	private static int binarySearch(int[] arr, int start, int end, int length, int key) {
+		if (length == 0)
+			return (-start) - 1;
+
+		int mid = (start + (length / 2)) % arr.length;
+		if (arr[mid] == key)
+			return mid;
+
+		else if (key < arr[mid])
+			return binarySearch(arr, start, mid - 1, length / 2, key);
+		else
+			return binarySearch(arr, mid + 1, end, (length - 1) / 2, key);
+	}
+	
+	public static void sortAnagrams(String[] arr) {
+		Arrays.sort(arr, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				int[] charCount = new int[58];
+				for (char c : o1.toCharArray())
+					charCount[c - 'A'] += (int) c;
+				for (char c : o2.toCharArray())
+					charCount[c - 'A'] -= (int) c;
+				
+				int diff = 0;
+				for (int count : charCount)
+					diff += count;
+
+				return diff;
+			}
+		});
 	}
 
 	public static Integer[] intersect(int[] arr1, int[] arr2) {

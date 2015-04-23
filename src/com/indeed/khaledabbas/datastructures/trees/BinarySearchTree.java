@@ -100,12 +100,70 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		return node;
 	}
 	
+	
+	
 	private E getLeftMostElement(Node<E> node)
 	{
 		if(node.leftChild == null)
 			return node.element;
 		else
 			return getLeftMostElement(node.leftChild);
+	}
+	
+	public E findInorderSuccessor(E e) {
+		// special case: root
+		if (root != null && root.element.equals( e ) )
+			return leftMost(root.rightChild).element;
+
+		Node<E> parent = findParent(e);
+
+		Node<E> node = parent.leftChild;
+		if (parent.rightChild != null && e.equals( parent.rightChild.element ) )
+			node = parent.rightChild;
+
+		if (node.rightChild != null)
+			return leftMost(node.rightChild).element;
+		else
+			return parent.element;
+	}
+
+	private Node<E> findParent(E e) {
+		return findParent(root, e);
+	}
+
+	private Node<E> findParent(Node<E> root, E e) {
+		if (root == null)
+			return null;
+		else if (root.leftChild.element.equals( e ) || root.rightChild.element.equals( e ) )
+			return root;
+		else if (e.compareTo(root.element) < 0)
+			return findParent(root.leftChild, e);
+		else
+			return findParent(root.rightChild, e);
+	}
+
+	private Node<E> leftMost(Node<E> node) {
+		if (node == null)
+			return null;
+		if (node.leftChild == null)
+			return node;
+		else
+			return leftMost(node.leftChild);
+	}
+
+	private Node<E> findNode(E e) {
+		return findNode(root, e);
+	}
+
+	private Node<E> findNode(Node<E> root, E e) {
+		if (root == null)
+			return null;
+		if (root.element == e)
+			return root;
+		else if (e.compareTo(root.element) < 0)
+			return findNode(root.leftChild, e);
+		else
+			return findNode(root.rightChild, e);
 	}
 	
 	private Node<E> deleteLeftMost(Node<E> node)

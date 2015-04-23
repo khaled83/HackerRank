@@ -188,6 +188,7 @@ public class Experiment {
 		BinarySearchTree bst = BinarySearchTree.getBalancedTree(arr);
 		bst.traversePreorder();
 		System.out.println(bst.isBlanced());
+		System.out.println( bst.findInorderSuccessor(30) );
 		
 		
 //		System.out.println();

@@ -8,6 +8,10 @@ public class BitUtils {
 		System.out.println(parity(Integer.MAX_VALUE));
 		System.out.println(parity(Integer.MAX_VALUE));
 		System.out.println(counter);
+		
+		System.out.println( Integer.toBinaryString( 0b100000000 ) );
+		System.out.println( Integer.toBinaryString( 0b10011 ) );
+		System.out.println( Integer.toBinaryString( insert( 0b1001111100, 0b10011, 2, 6 ) ) );
 	}
 	
 	private static int wordSize = 4;
@@ -20,6 +24,25 @@ public class BitUtils {
 		for (int i = 0; i < 16; i++)
 			cach[i] = -1;
 	}
+	
+	public static int insert(int N, int M, int i, int j) {
+		int length = j - i + 1;
+		int mask = 1;
+		while (mask < N)
+			mask = (mask << 1) + 1;
+		int windowOnes = ((1 << length) - 1) << i;
+		mask ^= windowOnes;
+
+		// clear bits [i..j]
+		N &= mask;
+		// shift M to [i..j]
+		M <<= i;
+		// insert M into N
+		N |= M;
+		
+		return N;
+	}
+
 
 	public static int parity(int x)
 	{

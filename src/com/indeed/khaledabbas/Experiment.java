@@ -28,7 +28,7 @@ public class Experiment {
 	
 	public static void main(String[] args) throws Exception {
 		
-		Concurrency.main();
+//		Concurrency.main();
 		
 //		Graph G = new Graph();
 //		G.addEdge("A", "B", 1);
@@ -182,13 +182,40 @@ public class Experiment {
 		BinarySearchTree balanced = bst.buildTreeBalanced();
 		balanced.traversePreorder();
 		
-		*/
-		
 		int[] arr = { 10, 20, 30, 40, 50, 60, 70 };
 		BinarySearchTree bst = BinarySearchTree.getBalancedTree(arr);
 		bst.traversePreorder();
 		System.out.println(bst.isBlanced());
 		System.out.println( bst.findInorderSuccessor(30) );
+		
+		BinarySearchTree<Character> bst2 = new BinarySearchTree<Character>();
+		bst2.insert('H');
+		bst2.insert('D');
+		bst2.insert('B');
+		bst2.insert('A');
+		bst2.insert('C');
+		bst2.insert('E');
+		bst2.insert('F');
+		bst2.insert('G');
+		bst2.insert('N');
+		bst2.insert('I');
+		bst2.insert('L');
+		bst2.insert('J');
+		bst2.insert('K');
+		bst2.insert('M');
+		bst2.insert('O');
+		bst2.insert('P');
+		bst2.traversePreorder();
+		System.out.println();
+		System.out.println( bst2.findKBalanced(3) );
+		*/
+		
+		BinarySearchTree<Integer> bst3 = new BinarySearchTree<Integer>();
+		bst3.testFindNodeFirstInorder();
+		bst3.traversePreorder();
+		
+		List<String> list;
+		list.set
 		
 		
 //		System.out.println();

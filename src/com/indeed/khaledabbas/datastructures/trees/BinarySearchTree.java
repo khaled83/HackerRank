@@ -4,6 +4,8 @@ import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Stack;
 
 public class BinarySearchTree<E extends Comparable<E>> {
 	
@@ -25,6 +27,14 @@ public class BinarySearchTree<E extends Comparable<E>> {
 			this(e);
 			this.leftChild = leftChild;
 			this.rightChild = rightChild;
+		}
+		
+		@Override
+		public String toString() {
+			return element.toString() + " <" 
+					+ ( leftChild != null ? leftChild.element : "" )
+					+ "," + ( rightChild != null ? rightChild.element : "" )
+							+ ">";
 		}
 	}
 	
@@ -100,7 +110,138 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		return node;
 	}
 	
+	private Node<E> findNodeFirstInorder3(E key) {
+
+		Node<E> cur = root;
+		Node<E> found = null;
+
+		while (cur != null) {
+			if (cur.element.equals(key)) {
+				found = cur;
+				cur = cur.leftChild;
+			} else if (key.compareTo(cur.element) < 0)
+				cur = cur.leftChild;
+			else
+				cur = cur.rightChild;
+		}
+
+		return found;
+	}
 	
+	private Node<E> findNodeFirstInorder2(E key) {
+
+		Stack<Node<E>> stack = new Stack<Node<E>>();
+		stack.push(root);
+
+		HashSet<Node<E>> visited = new HashSet<Node<E>>();
+
+		// 60 60 10
+		while (!stack.empty()) {
+			Node<E> node = stack.peek();
+
+			if (node == null) { // 1
+				stack.pop();
+			} else if (key.equals(node.element) && visited.contains(node)) { // 2
+				return node;
+			}
+			else if (visited.contains(node)) // 3
+				stack.pop();
+			else if (key.compareTo(node.element) <= 0) { // 4
+				stack.push(node.leftChild);
+				visited.add(node);
+			} else if (key.compareTo(node.element) > 0) { // 5
+				stack.push(node.rightChild);
+				visited.add(node);
+			}
+		}
+		
+		return null;
+	}
+	
+	public void testFindNodeFirstInorder() {
+		root = new Node(108);
+		root.leftChild = new Node(108);
+		root.rightChild = new Node(285);
+		Node<E> node = root.leftChild;
+		node.leftChild = new Node(-10);
+		node.rightChild = new Node(108);
+		node = node.leftChild;
+		node.leftChild = new Node(-14);
+		node.rightChild = new Node(2);
+		node = root.rightChild;
+		node.leftChild = new Node(243);
+		node.rightChild = new Node(285);
+		node = node.rightChild;
+		node.rightChild = new Node(401);
+		
+		System.out.println( findNodeFirstInorder3( (E) new Integer( 285 ) ) );
+	}
+	
+	private Node<E> findNodeFirstInorder(E key) {
+		return findNodeFirstInorder(root, key);
+	}
+
+	private Node<E> findNodeFirstInorder(Node<E> node, E key) {
+
+		if (node == null)
+			return null;
+
+		if ( key.equals(node.element) ) {
+			Node<E> result = findNodeFirstInorder(node.leftChild, key);
+			return result != null ? result : node;
+		}
+
+		if ( key.compareTo(node.element) < 0)
+			return findNodeFirstInorder(node.leftChild, key);
+		else
+			return findNodeFirstInorder(node.rightChild, key);
+	}
+	
+	private static class Tuple<E> {
+		private boolean isKBalanced;
+		private int count;
+		private Node<E> node;
+
+		Tuple(Node<E> node, int count, boolean isKBalanced) {
+			this.node = node;
+			this.count = count;
+			this.isKBalanced = isKBalanced;
+		}
+	}
+
+	public Node<E> findKBalanced(int k) {
+		return findKBalanced(root, k).node;
+	}
+
+	private Tuple<E> findKBalanced(Node<E> cur, int k) {
+
+		if (cur == null) {
+			return new Tuple<E>(null, 0, true);
+		} else {
+			Tuple<E> left = findKBalanced(cur.leftChild, k);
+			Tuple<E> right = findKBalanced(cur.rightChild, k);
+
+			// solution found in leftChild
+			if (left.node != null)
+				return left;
+			// solution found in rightChild
+			else if (right.node != null)
+				return right;
+
+			// check current node for solution
+			boolean isKBalanced = Math.abs( left.count - right.count ) <= k
+					&& left.isKBalanced && right.isKBalanced;
+			int count = 1 + left.count + right.count;
+
+			// solution found in current node
+			if (!isKBalanced && left.isKBalanced && right.isKBalanced) {
+				return new Tuple<E>(cur, count, isKBalanced);
+			} else {
+				return new Tuple<E>(null, count, isKBalanced);
+			}
+		}
+
+	}
 	
 	private E getLeftMostElement(Node<E> node)
 	{
@@ -533,6 +674,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
 			traversePreorder(node.leftChild);
 			traversePreorder(node.rightChild);
 		}
+		
 	}
 	
 	public void traversePostorder()
@@ -556,35 +698,3 @@ public class BinarySearchTree<E extends Comparable<E>> {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

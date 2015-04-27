@@ -3,8 +3,8 @@ package com.indeed.khaledabbas.datastructures.linkedlist;
 import java.util.Hashtable;
 
 public class LinkedListSingly<E extends Comparable<E>> {
-
-	protected class Node<E> {
+	
+	protected static class Node<E> {
 		protected E element;
 		protected Node<E> next = null;
 		

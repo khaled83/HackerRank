@@ -19,93 +19,94 @@ public class GoogleGraphQuestion {
 	 * The answer would be the list containing the coordinates of all circled
 	 * cells: [(4,0), (3,1), (4,1), (2,2), (0,3), (1,3), (0,4)]
 	 * 
-	 * 
+	 * 1
 	 * /** 1: p 01 10
 	 */
 
-	HashMap<String, Vertex> vertices;
-	// ArrayList would do as well
-	HashMap<Vertex, TreeMap<Vertex>> adjList;
-
-	Vertex[][] matrix;
-	int rows;
-	int cols;
-
-	private static class Vertex {
-		String name;
-		int height;
-		boolean adjacentToOcean;
-
-		public Vertex(String name, int height) {
-			this.name = name;
-			this.height = height;
-		}
-	}
-
-	public Graph(Vertex[][] m, int rows, int cols) {
-		vertices = new HashMap<String, Vertex>();
-		adjList = new HashMap<Vertex, TreeMap<Vertex>>();
-		matrix = m;
-		this.rows = rows;
-		this.cols = cols;
-
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				// add vertex
-				// add links
-				addEdge(row, col, row - 1, col);
-				addEdge(row, col, row, col - 1);
-				addEdge(row, col, row + 1, col);
-				addEdge(row, col, row, col + 1);
-			}
-		}
-
-	}
-
-	private void addEdge(int vRow, int vCol, int wRow, int wCol) {
-		if (rangeCheck(row, col)) {
-			Vertex v = vertices.get(matrix[vRow][vCol].name);
-			if (v == null) {
-				v = new Vertex(matrix[row][col].name, matrix[row][col].height);
-				vertices.add(v.name, v);
-			}
-
-			Vertex w = vetices.get(matrix[wRow][wCol].name);
-			if (w == null) {
-				w = new Vertex(matrix[wRow][wCol].name,
-						matrix[wRow][wCol].height);
-				//
-			}
-		}
-	}
-
-	public List<Vertex> flowingPoints() {
-		List<Vertex> result = new ArrayList<Vertex>();
-		for (Vertex v : vertices) {
-			if (v.adjacentToOcean)
-				result.add(v);
-			Queue<Vertex> queue = new Queue<Vertex>();
-			queue.add(v);
-			while (!queue.isEmpty()) {
-				Vertex next = queue.dequeue();
-				for (Vertex w : adjList.get(next)) {
-					// add all verices since source
-					if (w.adjacentToOcean) {
-						result.add(w);
-					} else if (w.height <= v.height)
-						queue.add(w);
-				}
-			}
-
-		}
-	}
-
-	private boolean rangeCheck(int row, int col) {
-		if (row < 0 || row > (rows - 1))
-			return false;
-		if (col < 0 || col > (cols - 1))
-			return false;
-		return true;
-	}
+//	
+//	HashMap<String, Vertex> vertices;
+//	// ArrayList would do as well
+//	HashMap<Vertex, TreeMap<Vertex>> adjList;
+//
+//	Vertex[][] matrix;
+//	int rows;
+//	int cols;
+//
+//	private static class Vertex {
+//		String name;
+//		int height;
+//		boolean adjacentToOcean;
+//
+//		public Vertex(String name, int height) {
+//			this.name = name;
+//			this.height = height;
+//		}
+//	}
+//
+//	public Graph(Vertex[][] m, int rows, int cols) {
+//		vertices = new HashMap<String, Vertex>();
+//		adjList = new HashMap<Vertex, TreeMap<Vertex>>();
+//		matrix = m;
+//		this.rows = rows;
+//		this.cols = cols;
+//
+//		for (int row = 0; row < rows; row++) {
+//			for (int col = 0; col < cols; col++) {
+//				// add vertex
+//				// add links
+//				addEdge(row, col, row - 1, col);
+//				addEdge(row, col, row, col - 1);
+//				addEdge(row, col, row + 1, col);
+//				addEdge(row, col, row, col + 1);
+//			}
+//		}
+//
+//	}
+//
+//	private void addEdge(int vRow, int vCol, int wRow, int wCol) {
+//		if (rangeCheck(row, col)) {
+//			Vertex v = vertices.get(matrix[vRow][vCol].name);
+//			if (v == null) {
+//				v = new Vertex(matrix[row][col].name, matrix[row][col].height);
+//				vertices.add(v.name, v);
+//			}
+//
+//			Vertex w = vetices.get(matrix[wRow][wCol].name);
+//			if (w == null) {
+//				w = new Vertex(matrix[wRow][wCol].name,
+//						matrix[wRow][wCol].height);
+//				//
+//			}
+//		}
+//	}
+//
+//	public List<Vertex> flowingPoints() {
+//		List<Vertex> result = new ArrayList<Vertex>();
+//		for (Vertex v : vertices) {
+//			if (v.adjacentToOcean)
+//				result.add(v);
+//			Queue<Vertex> queue = new Queue<Vertex>();
+//			queue.add(v);
+//			while (!queue.isEmpty()) {
+//				Vertex next = queue.dequeue();
+//				for (Vertex w : adjList.get(next)) {
+//					// add all verices since source
+//					if (w.adjacentToOcean) {
+//						result.add(w);
+//					} else if (w.height <= v.height)
+//						queue.add(w);
+//				}
+//			}
+//
+//		}
+//	}
+//
+//	private boolean rangeCheck(int row, int col) {
+//		if (row < 0 || row > (rows - 1))
+//			return false;
+//		if (col < 0 || col > (cols - 1))
+//			return false;
+//		return true;
+//	}
 
 }

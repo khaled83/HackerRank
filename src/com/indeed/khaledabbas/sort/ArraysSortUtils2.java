@@ -20,12 +20,126 @@ public class ArraysSortUtils2 {
 		String[] arr4 = { "abc", "def", "efd", "cba", "wwf", "cab", "dfe" };
 		sortAnagrams( arr4 );
 		System.out.println( print( arr4 ) );
-		**/
-		
+
 		int[] arr5 = { 60, 70, 10, 20, 30, 40, 50 };
 		System.out.println("  0  1  2  3  4  5  6");
 		System.out.println( print(arr5));
 		System.out.println( binarySearchAfterRotation(arr5, 65) );
+		
+		int[] arr6 = { 37, 131, 493, 294, 280, 221, 339, 418, 452, 442, 190 };
+		System.out.println( print(arr6) );
+		sortIncreasingDecreasingArray(arr6);
+		System.out.println( print(arr6) );
+		**/
+		//              0    1  2    3    4    5    6    7    8    9
+		int[] arr = { -14, -10, 2, 108, 108, 243, 285, 285, 285, 401 };
+		System.out.println(binarySearchForLarger(arr, 401));
+	}
+
+	public static int binarySearchForLarger(int[] arr, int key) {
+
+		return binarySearchForLarger(arr, key, 0, arr.length - 1);
+
+	}
+
+	private static int binarySearchForLarger(int[] arr, int key, int start, int end) {
+
+		// no result found
+		if (start > end) {
+			int indx = firstLargerAfter(arr, key, end, arr.length - 1);
+			if (indx == -1)
+				indx = firstLargerBefore(arr, key, end, 0);
+			return indx;
+		}
+
+		int mid = (start+end) / 2;
+
+		// key found
+		if (arr[mid] == key) {
+			// for loop needed for array with duplicates
+			return firstLargerAfter(arr, key, mid, arr.length - 1);
+		} else if (key < arr[mid]) { // search 1st half
+			return binarySearchForLarger(arr, key, start, mid - 1);
+		} else if (key > arr[mid]) { // serch 2nd half
+			return binarySearchForLarger(arr, key, mid + 1, end);
+		}
+
+		return -1;
+	}
+
+	private static int firstLargerAfter(int[] arr, int key, int start, int end) {
+		start = Math.max(start, 0);
+		for (int i = start; i <= end; i++)
+			if (arr[i] > key)
+				return i;
+		return end + 1;
+	}
+
+	private static int firstLargerBefore(int[] arr, int key, int start, int end) {
+		for (int i = end; i >= start; i--)
+			if (arr[i] < key)
+				return i + 1;
+		return 0;
+	}
+	
+	public static void sortIncreasingDecreasingArray(int[] arr) {
+
+		int p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+		int n = arr.length;
+
+		int i = 0;
+		while (arr[i] < arr[i + 1]) {
+			i++;
+		}
+		while (arr[i] > arr[i + 1]) {
+			i++;
+		}
+		p2 = i;
+		p3 = p2 + 1;
+		p4 = n - 1;
+
+		int sortedSoFar = 0;
+		int[] sorted = new int[n];
+		int indx = 0;
+
+		while (sortedSoFar < n) {
+			int minIndx = minIndx(arr, p1, p2, p3, p4);
+			if (minIndx == p1)
+				p1++;
+			if (minIndx == p2)
+				p2--;
+			if (minIndx == p3)
+				p3++;
+			if (minIndx == p4)
+				p4--;
+			sorted[indx++] = arr[minIndx];
+			sortedSoFar++;
+		}
+		
+		System.arraycopy( sorted, 0, arr, 0, n );
+
+	}
+
+	private static int minIndx(int[] arr, int w, int x, int y, int z) {
+		int min = Integer.MAX_VALUE;
+		int indx = 0;
+		if (w >= 0 && w <= x) {
+			min = arr[w];
+			indx = w;
+		}
+		if (x >= 0 && x >= w && arr[x] < min) {
+			min = arr[x];
+			indx = x;
+		}
+		if (y >= 0 && y <= z && arr[y] < min) {
+			min = arr[y];
+			indx = y;
+		}
+		if (z >= 0 && z >= y && arr[z] < min) {
+			min = arr[z];
+			indx = z;
+		}
+		return indx;
 	}
 	
 	public static int binarySearchAfterRotation(int[] arr, int key) {

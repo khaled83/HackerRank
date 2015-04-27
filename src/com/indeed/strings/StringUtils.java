@@ -42,9 +42,187 @@ public class StringUtils {
 		System.out.println( levenshteinDistance("sitting", "kitten") );
 		
 		perm("abc");
-		*/
+		
 		
 		System.out.println(encrypt("abcaad  "));
+		
+		System.out.println( multiply( "999", "99" ) );
+		
+		System.out.println(reverseWords("Bob likes Alice"));
+		
+		System.out.println( RPN("34+21x+") );
+		System.out.println( RPN("11+2x") );
+		System.out.println( RPN("63/2/") );
+		
+		System.out.println( canPalyndrome("edified") );
+		*/
+		countChars("bcdacebe");
+		
+	}
+	
+	public static void countChars(String s) {
+
+		int[] count = new int[58];
+
+		for (char c : s.toCharArray()) {
+			count[c - 'A']++;
+		}
+
+		for (int indx = 0; indx < 58 ; indx++) {
+			if( count[indx] > 0 ) {
+				char c = (char) (indx + 'A');
+				System.out.print("(" + c + "," + count[indx] + ") ");
+			}
+		}
+
+	}
+	
+	public static boolean canPalyndrome(String s) {
+
+		// assume we only have alphabets
+		int[] count = new int[58];
+
+		for (char c : s.toCharArray()) {
+			count[c - 'A']++;
+		}
+
+		int oddCount = 0;
+
+		for (int x : count) {
+			if ( x % 2 != 0 && ++oddCount > 1 )
+				return false;
+		}
+
+		return true;
+	}
+	
+	public static int RPN(String exp) {
+
+		Stack<Integer> operands = new Stack<Integer>();
+
+		for (char c : exp.toCharArray()) {
+			if (isOperator(c)) {
+				int y = operands.pop();
+				int x = operands.pop();
+				int result = evaluate(x, y, c);
+				operands.push(result);
+			} else {
+				operands.push(c - '0');
+			}
+		}
+		
+		return operands.pop();
+	}
+
+	private static boolean isOperator(Character c) {
+		return c == 'x' || c == '/' || c == '+' || c == '-';
+	}
+
+	private static int evaluate(int x, int y, char operator) {
+
+		if (operator == 'x')
+			return x * y;
+		if (operator == '/')
+			return x / y;
+		if (operator == '+')
+			return x + y;
+		if (operator == '-')
+			return x - y;
+		else
+			return 0;
+	}
+	
+	public static String reverseWords(String s) {
+		char[] chars = s.toCharArray();
+		reverseWords(chars);
+		return new String(chars);
+	}
+
+	public static void reverseWords(char[] chars) {
+
+		// reverse all characters regardless of word tokens
+		int n = chars.length;
+		int src = 0;
+		int dst = n - 1;
+
+		while (src < dst) {
+			char tmp = chars[dst];
+			chars[dst--] = chars[src];
+			chars[src++] = tmp;
+		}
+
+		// reverse each word
+		src = 0;
+		dst = 0;
+		int wordEnd = 0;
+		while (dst < n) {
+			while (wordEnd < (n - 1) && chars[wordEnd + 1] != ' ') {
+				wordEnd++;
+			}
+
+			dst = wordEnd;
+			// now dst points to end of word
+			while (src < dst) {
+				char tmp = chars[dst];
+				chars[dst--] = chars[src];
+				chars[src++] = tmp;
+			}
+
+			wordEnd += 2;
+			src = wordEnd;
+			dst = wordEnd;
+		}
+	}
+	
+	/**
+	 * @deprecated	doesn't return correct result, but basic implementation is almost correct.
+	 */
+	public static String multiply(String s1, String s2) {
+
+		char[] arr1 = s1.toCharArray();
+		char[] arr2 = s2.toCharArray();
+		int n = arr1.length;
+		int m = arr2.length;
+
+		boolean is1Neg = arr1[0] == '-';
+		boolean is2Neg = arr2[0] == '-';
+		boolean isResultNeg = ((is1Neg ? 1 : 0) ^ (is2Neg ? 1 : 0)) != 0;
+
+		int resLength = m + n + 1 + (isResultNeg ? 1 : 0);
+		char[] result = new char[resLength];
+
+		int indx = resLength - 1;
+		int order = 0;
+
+		for (int i = n - 1; i >= (is1Neg ? 1 : 0); i--, order++) {
+			indx = resLength - 1 - order;
+			for (int j = m - 1; j >= (is2Neg ? 1 : 0); j--) {
+				int num1 = arr1[i] - '0';
+				int num2 = arr2[j] - '0';
+				int mul = (num1 * num2);
+				
+				// process current index
+				int cur = 0;
+				if( result[indx] != '\u0000')
+					cur = result[indx] - '0';
+				int sum = cur + mul;
+				
+				// process previous index
+				int prev = 0;
+				if( result[indx-1] != '\u0000' )
+					prev = result[indx-1] - '0';
+				result[indx-1] = (char) ( (prev + ( mul / 10 ) ) + '0' );
+				
+				result[indx] = (char) ( ( sum % 10 )  + '0' );
+				indx--;
+			}
+		}
+
+		if (isResultNeg)
+			result[indx] = '-';
+		
+		return new String(result, indx, resLength-indx);
+
 	}
 	
 	public static String encrypt(String s) {

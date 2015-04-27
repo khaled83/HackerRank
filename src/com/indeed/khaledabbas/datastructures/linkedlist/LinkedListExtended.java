@@ -2,6 +2,7 @@ package com.indeed.khaledabbas.datastructures.linkedlist;
 
 import java.util.Hashtable;
 
+import com.indeed.khaledabbas.datastructures.linkedlist.LinkedListSingly.Node;
 import com.indeed.khaledabbas.datastructures.stack.adt.Stack;
 
 public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingly<E> {
@@ -15,6 +16,79 @@ public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingl
 		list.add(5);
 		System.out.println( list.toString() );
 		System.out.println( "result=" + list.kthToLast(5) );
+		System.out.println(list.toString());
+		list.reverseRecursive();
+		System.out.println(list.toString());
+	}
+	
+	public void reverseRecursive() {
+		head = reverse2(null, head);
+	}
+
+	public Node<E> reverse2(Node<E> prev, Node<E> cur) {
+		if (cur == null)
+			return prev;
+		else {
+			Node<E> next = cur.next;
+			cur.next = prev;
+			return reverse2(cur, next);
+		}
+	}
+	
+	public void reverse() {
+
+		Node<E> last = null;
+		Node<E> cur = head;
+
+		while (cur != null) {
+			Node<E> tmp = cur.next;
+			cur.next = last;
+			last = cur;
+			cur = tmp;
+		}
+		
+		head = last;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static LinkedListSingly merge(LinkedListSingly list1, LinkedListSingly list2) 
+	{
+		LinkedListSingly mergeList = new LinkedListSingly();
+		Node p1 = list1.head;
+		Node p2 = list2.head;
+		
+		// initialization with a dummy head
+		mergeList.head = new Node(null);
+		Node tail = mergeList.head;
+
+		// 29 10 14
+		// 13 37
+
+		while (p1 != null && p2 != null) {
+			if ( ( (Comparable) p1.element).compareTo(p2.element) < 0) {
+				Node newNode = new Node( p1.element);
+				tail.next = newNode;
+				tail = tail.next;
+				p1 = p1.next;
+			} else {
+				Node newNode = new Node( p2.element);
+				tail.next = newNode;
+				tail = tail.next;
+				p2 = p2.next;
+			}
+		}
+
+		// finish off list1
+		if(p1 != null)
+			tail.next = p1;
+		if(p2 != null)
+			tail.next = p2;
+		
+		// remove dummy head
+		mergeList.head = mergeList.head.next;
+
+		return mergeList;
+
 	}
 	
 	public void writeString()

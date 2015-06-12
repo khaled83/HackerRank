@@ -2,6 +2,7 @@ package com.indeed.strings;
 
 import java.util.*;
 
+import com.indeed.khaledabbas.datastructures.arrays.ArrayUtils;
 import com.indeed.khaledabbas.sort.ArraysSortUtils2;
 
 public class StringUtils {
@@ -30,7 +31,7 @@ public class StringUtils {
 		
 		assert( isPanagram("accecca") );
 		
-		perm("abc");
+		
 		
 		List<String> combi = combi("abc");
 		Collections.sort( combi );
@@ -40,9 +41,6 @@ public class StringUtils {
 		System.out.println( integerToString(Integer.MIN_VALUE + 1) );
 		
 		System.out.println( levenshteinDistance("sitting", "kitten") );
-		
-		perm("abc");
-		
 		
 		System.out.println(encrypt("abcaad  "));
 		
@@ -55,9 +53,136 @@ public class StringUtils {
 		System.out.println( RPN("63/2/") );
 		
 		System.out.println( canPalyndrome("edified") );
-		*/
+		
 		countChars("bcdacebe");
 		
+		
+		System.out.print("{");
+		for( int i = 1; i <= 8; i ++ )
+			System.out.print( lookAndSay(i) + "," );
+		System.out.print("}");
+		*/
+		
+		System.out.println( constructible2("JohnlovesKaren", "JohndoesntlikeorloveKathy") );
+	}
+	
+	// caches substrings of 3 characters
+	HashMap<String, String> cach = new HashMap<String, String>();
+
+	/***
+	 * 13.3 Elements of programming interviews 
+	 */
+	public static boolean constructible2(String letter, String magazine) {
+
+		HashMap<Character, Integer> letterMap = new HashMap<Character, Integer>();
+//		HashMap<Character, Integer> magazineMap = new HashMap<Character, Integer>();
+
+		for (char c : letter.toCharArray() ) {
+			Integer count = letterMap.get(c);
+			if (count == null)
+				count = 0;
+			letterMap.put(c, ++count);
+		}
+		
+		for( char c : magazine.toCharArray() ) {
+			Integer count = letterMap.get(c);
+			if( count != null ) {
+				if( --count == 0 ) {
+					letterMap.remove(c);
+					if( letterMap.isEmpty() )
+						return true;
+				}
+				else
+					letterMap.put(c, count);
+			}
+		}
+		
+		return letterMap.isEmpty();
+
+		/**
+		for (char c : magazine.toCharArray() ) {
+			Integer count = magazineMap.get(c);
+			if (count == null)
+				count = 0;
+			magazineMap.put(c, count++);
+		}
+
+		for (char c : letterMap.keySet()) {
+			if (magazineMap.get(c) == null || magazineMap.get(c) < letterMap.get(c))
+				return false;
+		}
+
+		return true;
+		*/
+	}
+	
+	// Time: 00:17:00 (both approaches)
+	// only alphabetic characters
+	public static boolean constructible(String letter, String magazine) {
+
+		int[] letterCount = new int[58];
+		int[] magazineCount = new int[58];
+
+		for (char c : letter.toCharArray())
+			letterCount[c - 'A']++;
+
+		for (char c : magazine.toCharArray())
+			magazineCount[c - 'A']++;
+
+		for (int i = 0; i < 58; i++)
+			if (magazineCount[i] < letterCount[i]) 
+				return false;
+
+		return true;
+	}
+
+	public static String lookAndSay(int n) {
+
+		String s = "1";
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 1; i <= n; i++) {
+			char last = s.charAt(0);
+			int count = 1;
+			sb = new StringBuilder();
+
+			for (int j = 1; j < s.length(); j++) {
+				char cur = s.charAt(j);
+				if (cur == last)
+					count++;
+				else {
+					sb.append(count).append(last);
+					
+					// fill cach: 3 similar chars
+//					if (count == 3) {
+//						cach.put(s.substring(j - 2, j), count + last);
+//					}
+//					// fill cach: any set of chars
+//					else if (s.lenght < 4) {
+//						cach.put(s, new String(sb));
+//					}
+
+					last = cur;
+					count = 1;
+
+//					String cachStr = cach.get(s.substring(i, i + 2));
+//					if (cachStr != null) {
+//						sb.append(cachStr);
+//						j += 3;
+//						last = s.charAt(j + 3);
+//						count = 1;
+//						j++;
+//					}
+
+				}
+			}
+
+			sb.append(count).append(last);
+			s = new String( sb );
+		}
+		
+		return new String(sb);
+
 	}
 	
 	public static void countChars(String s) {
@@ -346,44 +471,6 @@ public class StringUtils {
 		return ( neg * value );
 	}
 
-	
-	
-	/**
-	 * {@link http://www.growingwiththeweb.com/2013/06/algorithm-all-combinations-of-set.html}
-	 * alt: {@link http://javahungry.blogspot.com/2014/03/algorithm-to-find-permutations-of-string-using-recursion-in-java.html}
-	 */
-    private static List<String> combi(String s)
-    {
-    	ArrayList<String> combi = new ArrayList<String>();
-        for(int i=0; i<s.length();i++)
-        {
-        	int length = combi.size();
-            for(int j=0; j<length; j++)
-            {
-                combi.add( combi.get(j) + s.charAt(i) );
-            }
-            combi.add(Character.toString( s.charAt(i)) );
-        }
-        return combi;
-    }
-	
-	public static void perm(String s)
-	{
-	    perm(s.toCharArray(), 0, s.length() -1);
-	}
-
-	private static void perm(char[] chars, int start, int end)
-	{
-	    if(start == end)
-	        System.out.println(new String(chars) );
-	    for(int i=start; i<=end; i++)
-	    {
-	        swap(chars, i, start);
-	        perm(chars, start+1, end);
-	        swap(chars, i, start); // backtrack
-	    }
-	}
-	
 	private static void swap(char[] arr, int indx1, int indx2)
 	{
 		char tmp = arr[indx1];

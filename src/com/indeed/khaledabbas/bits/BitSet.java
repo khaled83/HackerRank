@@ -6,7 +6,7 @@ public class BitSet {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		System.out.println( printBinary( 0.75 ) );
 	}
 
 	/**
@@ -21,6 +21,32 @@ public class BitSet {
 	private static final int BITS_PER_WORD = 1 << ADDRESS_BITS_PER_WORD;
 	private static final long MASK_ONES = (1 << BITS_PER_WORD) - 1;
 
+	/** Cracking the coding interview: 5.2; copied */
+	public static String printBinary( double num ) {
+		if( num >= 1 || num <= 0 ) {
+			return "Error";
+		}
+		
+		StringBuilder binary = new StringBuilder();
+		binary.append(".");
+		
+		while( num > 0 ) {
+			if( binary.length() >= 32 )
+				return "Error";
+			
+			double r = num * 2;
+			if( r >= 1 ) {
+				binary.append(1);
+				num = r - 1;
+			} else {
+				binary.append(0);
+				num = r;
+			}
+		}
+		
+		return binary.toString();
+	}
+	
 	private void set(int bitIndx) {
 		rangeCheck(bitIndx);
 		int wordIndx = wordIndx(bitIndx);

@@ -3,11 +3,120 @@ package com.indeed.khaledabbas.datastructures.trees;
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class BinarySearchTree<E extends Comparable<E>> {
+	
+	public static void main( String[] args ) {
+		///** Trees
+		
+				// 60 20 10 40 30 50 70
+				BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
+				bst.insert(60);
+				bst.insert(20);
+				bst.insert(70);
+				bst.insert(40);
+				bst.insert(10);
+				bst.insert(30);
+				bst.insert(50);
+				
+				/**
+				// balanced insert
+				bst.insert(40);
+				bst.insert(20);
+				bst.insert(60);
+				bst.insert(10);
+				bst.insert(30);
+				bst.insert(50);
+				bst.insert(70);
+				
+				
+//				bst.delete(20);
+				// 90, 150, 170, 130
+				
+				System.out.println(" size = " + bst.size() 
+									+ "\n maxDepth = "+bst.maxDepth()
+									+ "\n minValue = "+bst.minValue()
+									+ "\n hasSum = "+bst.hasPathSum(130)
+								  );
+				bst.traversePreorder();
+//				bst.storeTreeExactShape();
+				
+				System.out.println();
+				
+//				int[] arr = {10, 14, 29, 13, 37};
+//				printArray(arr);
+//				BinarySearchTree.treeSort(arr);
+//				printArray(arr);
+				
+//				BinarySearchTree bst2 = BinarySearchTree.restoreTreeExactShape();
+				bst.traverseInorder();
+				System.out.println();
+				System.out.println("isBalanced=" + bst.isBlanced());
+				System.out.println("isBST="+bst.isBST());
+				**/
+				
+				/**
+				 // 10 20 30 40 50 60 70
+				 
+				 40
+		      20     60
+			10  30  50  70	 
+				 
+				System.out.println();
+				System.out.println("Balanced tree:");
+				BinarySearchTree balanced = bst.buildTreeBalanced();
+				balanced.traversePreorder();
+				
+				int[] arr = { 10, 20, 30, 40, 50, 60, 70 };
+				BinarySearchTree bst = BinarySearchTree.getBalancedTree(arr);
+				bst.traversePreorder();
+				System.out.println(bst.isBlanced());
+				System.out.println( bst.findInorderSuccessor(30) );
+				
+				BinarySearchTree<Character> bst2 = new BinarySearchTree<Character>();
+				bst2.insert('H');
+				bst2.insert('D');
+				bst2.insert('B');
+				bst2.insert('A');
+				bst2.insert('C');
+				bst2.insert('E');
+				bst2.insert('F');
+				bst2.insert('G');
+				bst2.insert('N');
+				bst2.insert('I');
+				bst2.insert('L');
+				bst2.insert('J');
+				bst2.insert('K');
+				bst2.insert('M');
+				bst2.insert('O');
+				bst2.insert('P');
+				bst2.traversePreorder();
+				System.out.println();
+				System.out.println( bst2.findKBalanced(3) );
+				
+				
+				BinarySearchTree<Integer> bst3 = new BinarySearchTree<Integer>();
+				bst3.testFindNodeFirstInorder();
+				bst3.traversePreorder();
+				*/
+		
+				System.out.println( bst.inorderSuccessor( 50 ) );
+				System.out.println( bst.inorderSuccessor2( 50 ) );
+				
+//				System.out.println();
+//				bst.printPaths();
+//				System.out.println();
+//				System.out.println("Inorder");
+//				bst.traverseInorder();
+//				System.out.println();
+//				System.out.println("Postorder");
+//				bst.traversePostorder();
+				
+//				*/
+				
+				
+	}
 	
 	private static class Node<E>
 	{
@@ -108,6 +217,95 @@ public class BinarySearchTree<E extends Comparable<E>> {
 		}
 		
 		return node;
+	}
+	
+	public E inorderSuccessor2(E key) {
+
+		Node<E> cur = root;
+		E last = null;
+		boolean found = false;
+
+		while (cur != null) {
+			if (cur.element.compareTo(key) > 0) {
+				last = cur.element;
+				cur = cur.leftChild;
+			} 
+			else if (cur.element.compareTo(key) < 0)
+				cur = cur.rightChild;
+			else if( cur.element.equals(key) ) {
+				found = true;
+				cur = cur.rightChild;
+			}
+
+		}
+
+		return found ? last : null;
+
+	}
+	
+	/**
+	 * Elements of programming interviews
+	 * returns inorder successor value in bst
+	 */
+	public E inorderSuccessor(E key) {
+		Node<E> node = inorderSuccessor(null, root, key); 
+		return node != null ? node.element : null;
+	}
+	
+	private Node<E> inorderSuccessor(Node<E> rightParent, Node<E> cur, E key) {
+		if (cur.element.equals(key)) {
+			Node<E> leftMost = cur.rightChild;
+			if (leftMost == null)
+				return rightParent;
+			while (leftMost.leftChild != null)
+				leftMost = leftMost.leftChild;
+			return leftMost;
+		} else if (key.compareTo(cur.element) < 0)
+			return inorderSuccessor(cur, cur.leftChild, key);
+		else
+			return inorderSuccessor(rightParent, cur.rightChild, key);
+
+	}
+
+	
+	/**
+	 * @see	alternative soltuion at Elements of Programming Interviews pg. 266
+	 * @deprecated	not tested
+	 */
+	public boolean isSymmetrical() {
+
+		Node<E> left = root.leftChild;
+		Node<E> right = root.rightChild;
+		// O( N )
+		List<E> leftList = new ArrayList<E>();
+		inorderList( left, leftList );
+		// O( N )
+		List<E> rightList = new ArrayList<E>();
+		inorderList( right, rightList );
+
+		int n = leftList.size();
+		if (rightList.size() != n)
+			return false;
+
+		// alt: reverse sort rightList, and return l1.equals(l2): cost= O( n
+		// log(n) )
+
+		// O( N )
+		for (int i = 0; i < n; i++) {
+			if (!leftList.get(i).equals(rightList.get(n - 1 - i)))
+				return false;
+		}
+
+		return true;
+
+	}
+
+	private void inorderList( Node<E> cur, List<E> list ) {
+		if( cur == null)
+			return;
+		inorderList( cur.leftChild, list);
+		list.add(cur.element);
+		inorderList( cur.rightChild, list);
 	}
 	
 	private Node<E> findNodeFirstInorder3(E key) {
@@ -439,8 +637,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
 				&& isBST( node.leftChild, new Range( range.min, node.element ) ) 
 				&& isBST( node.rightChild, new Range( node.element, range.max ) );
 	}
-
-
 	
 	// 
 	public void printPaths()

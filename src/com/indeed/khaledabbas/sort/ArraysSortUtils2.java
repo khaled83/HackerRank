@@ -3,6 +3,10 @@ package com.indeed.khaledabbas.sort;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+
+import com.indeed.khaledabbas.datastructures.arrays.ArrayUtils;
 
 public class ArraysSortUtils2 {
 
@@ -30,12 +34,246 @@ public class ArraysSortUtils2 {
 		System.out.println( print(arr6) );
 		sortIncreasingDecreasingArray(arr6);
 		System.out.println( print(arr6) );
-		**/
+		
 		//              0    1  2    3    4    5    6    7    8    9
 		int[] arr = { -14, -10, 2, 108, 108, 243, 285, 285, 285, 401 };
 		System.out.println(binarySearchForLarger(arr, 401));
+		
+		System.out.println( bsIndx( new int[] { -2, 0, 2, 3, 6, 7, 9 } ) ); // { -2, -1, 0, 0, 2, 2, 3 }
+		System.out.println( bsIndx2( new int[] { -2, 0, 2, 3, 6, 7, 9 } ) ); 
+		
+		
+		int[] arr = { 3, -1, 2, 6, 4, 5, 8 };
+		ArrayUtils.printArray( arr );
+		sort2( arr , 2 );
+		ArrayUtils.printArray( arr );
+		
+		// b a c b d a b d
+		Item[] arr = new Item[] { new Item<String>("b"), new Item<String>("a"), new Item<String>("c"), new Item<String>("b"),
+									new Item<String>("d"), new Item<String>("a"), new Item<String>("b"), new Item<String>("d") };
+		System.out.println( print(arr) );
+		new Item<String>().countSort(arr);
+		System.out.println( print(arr) );
+		**/
+		
+		
+		Item[] arr = new Item[] { new Item<String>("g4"), new Item<String>("g2"),
+				new Item<String>("t1"), new Item<String>("c3"),
+				new Item<String>("a2"), new Item<String>("g5"),
+				new Item<String>("a3"), new Item<String>("t4") };
+		System.out.println( print(arr) );
+		/**
+		 {t1=1, t4=1, g2=1, a2=1, a3=1, c3=1, g5=1, g4=1}
+		 {t1=0, g2=2, t4=1, a2=3, a3=4, c3=5, g5=6, g4=7}
+		 */
+		new Item<String>().countSort2(arr);
+		System.out.println( print(arr) );
 	}
 
+	public static class Item<E> {
+
+		E key;
+		
+		Item() {}
+		
+		Item( E key ) { this.key = key; }
+
+		@Override
+		public boolean equals(Object o) {
+			if (!(o instanceof Item))
+				return false;
+			Item item = (Item) o;
+			
+			if( key instanceof String)
+				return ((String) key).charAt(0) == ((String)item.key).charAt(0);
+			
+			return this.key.equals(item.key);
+		}
+
+		@Override
+		public int hashCode() {
+			if( key instanceof String ) {
+				Character firstChar = ((String)key).charAt(0);
+				return firstChar.hashCode();
+			}
+				
+			return key.hashCode();
+		}
+		
+		@Override
+		public String toString() {
+			return key.toString();
+		}
+
+		public void countSort2(Item<E>[] arr) {
+			
+			HashMap<Item<E>, Integer> countMap = new HashMap<Item<E>, Integer>();
+			HashMap<Item<E>, Integer> offsetMap = new HashMap<Item<E>, Integer>();
+			
+			for (Item<E> e : arr) {
+				Integer count = countMap.get(e);
+				if (count == null)
+					count = 0;
+				countMap.put(e, ++count);
+			}
+
+			int offset = 0;
+			for (Item<E> e : countMap.keySet()) {
+				offsetMap.put(e, offset);
+				offset += countMap.get(e);
+			}
+
+			for (int src = 0; src < arr.length && !countMap.isEmpty(); src++) {
+				Item<E> e = arr[src];
+				int dst = offsetMap.get(e);
+				if (dst != src) {
+					swap(arr, src, dst);
+					src--; // handle swapped element
+				} // dst != src
+
+				int count = countMap.get(e);
+				if ( ( count-1 ) == 0) {
+					countMap.remove(e);
+					offsetMap.remove(e);
+				} else {
+					countMap.put(e, --count);
+					offsetMap.put(e, ++dst);
+				}
+
+			}
+
+		} // end of method
+		
+		public void countSort(Item[] arr) {
+
+			HashMap<E, Integer> countMap = new HashMap<E, Integer>();
+			for (Item item : arr) {
+				Integer count = countMap.get(item.key);
+				if (count == null)
+					count = 0;
+				countMap.put( (E) item.key, ++count);
+			}
+
+			HashMap<E, Integer> dstMap = new HashMap<E, Integer>();
+			int dst = 0;
+			for (E key : countMap.keySet()) {
+				dstMap.put(key, dst);
+				dst += countMap.get(key);
+			}
+			/**
+			 * 0 1 2 3 4 5 6 7 b1 c1 a1 c1 b2 d1 a2 b3 d2 src
+			 */
+			int sorted = 0;
+			for (int src = 0; src < arr.length && sorted < arr.length; src++, sorted++) {
+				dst = dstMap.get(arr[src].key);
+				if ( ! arr[src].key.equals(arr[dst].key) ) {
+					swap(arr, src, dst);
+					src--;
+				}
+				dstMap.put( (E) arr[dst].key, ++dst);
+			}
+
+		}
+	}
+	
+	public static void swap( Object[] arr, int x, int y ) {
+		Object tmp = arr[x];
+		arr[x] = arr[y];
+		arr[y] = tmp;
+	}
+	
+	/**
+	 * Elements of programming interviews
+	 */
+	public static void sort2(int[] arr, int k) {
+
+		PriorityQueue<Integer> heap = new PriorityQueue<Integer>();
+		int n = arr.length;
+
+		// initialize with the first k elements
+		int src = 0;
+		for ( src = 0; src < k && src < n; src++)
+			heap.add(arr[src]);
+
+		int dst = 0;
+		for (src = k; src < n; src++, dst++) {
+			arr[dst] = heap.remove();
+			heap.add(arr[src]);
+		}
+
+		while (!heap.isEmpty())
+			arr[dst++] = heap.remove();
+
+	}
+
+	/** 
+	 * @deprecated	doesn't work correctly 
+	 * time: 00:25:00
+	 */
+	public static void sort(int[] arr, int k) {
+		int n = arr.length;
+		for (int i = 1; i < n; i++) {
+			if (arr[i] < arr[i - 1])
+				sort(arr, i - k, i);
+		}
+	}
+
+	/** 
+	 * @deprecated	doesn't work correctly 
+	 * time: 00:25:00
+	 */
+	private static void sort(int[] arr, int start, int unsortedIndx) {
+		if (start < 0)
+			start = 0;
+		int unsorted = arr[unsortedIndx];
+		int insertionIndx = unsortedIndx - 1;
+
+		while (insertionIndx > start && arr[insertionIndx] > unsorted ) {
+			arr[insertionIndx + 1] = arr[insertionIndx];
+			insertionIndx--;
+		}
+
+		arr[insertionIndx] = unsorted;
+	}
+	
+	// time: 00:16:00 (rec+iter)
+	public static int bsIndx2(int[] arr) {
+		int start = 0;
+		int end = arr.length - 1;
+		int mid = start;
+		while (start <= end) {
+			mid = (start + end) / 2;
+			if (arr[mid] == mid)
+				return mid;
+			else if (arr[mid] > mid)
+				end = mid - 1;
+			else
+				start = mid + 1;
+		}
+
+		return Integer.MIN_VALUE;
+	}
+
+	// recursive; time: O( log( n ) ), space: O( log ( n ) ) call stack
+	public static int bsIndx(int[] arr) {
+
+		return bsIndx(arr, 0, arr.length - 1);
+	}
+
+	public static int bsIndx(int[] arr, int start, int end) {
+
+		if (start > end)
+			return Integer.MIN_VALUE;
+
+		int mid = (start + end) / 2;
+		if (arr[mid] == mid)
+			return mid;
+		else if (arr[mid] > mid)
+			return bsIndx(arr, start, mid - 1);
+		else
+			return bsIndx(arr, mid + 1, end);
+	}
+	
 	public static int binarySearchForLarger(int[] arr, int key) {
 
 		return binarySearchForLarger(arr, key, 0, arr.length - 1);

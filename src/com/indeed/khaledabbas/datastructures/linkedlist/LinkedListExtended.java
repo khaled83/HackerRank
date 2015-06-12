@@ -17,8 +17,44 @@ public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingl
 		System.out.println( list.toString() );
 		System.out.println( "result=" + list.kthToLast(5) );
 		System.out.println(list.toString());
-		list.reverseRecursive();
+//		list.reverseRecursive();
+		list.reverse(2, 5);
 		System.out.println(list.toString());
+	}
+	
+	private static class Pair<E> {
+		private Node<E> first;
+		private Node<E> second;
+
+		Pair(Node<E> f, Node<E> s) {
+			this.first = f;
+			this.second = s;
+		}
+	}
+	
+	// O( n )
+	// Time: 00:31:44
+	public void reverse(int start, int end) {
+		Node<E> prev = head;
+		for (int indx = 2; indx <= start - 1; indx++)
+			prev = prev.next;
+
+		Node<E> first = prev.next;
+		Pair<E> result = reverse(first, first.next, start, end);
+		prev.next = result.first;
+		first.next = result.second;
+	}
+
+	private Pair<E> reverse(Node<E> prev, Node<E> cur, int start, int end) {
+
+		if (start < end) {
+			Pair<E> p = reverse( cur, cur.next, ++start, end );
+			cur.next = prev;
+			return p;
+		} else {
+			return new Pair<E>(prev, cur);
+		}
+
 	}
 	
 	public void reverseRecursive() {
@@ -209,10 +245,8 @@ public class LinkedListExtended<E extends Comparable<E>> extends LinkedListSingl
 		else {
 			node = kthToLast(head.next, k, kSoFar);
 			kSoFar[0]++;
-			System.out.println( kSoFar[0] + " <> " + k );
 			if ( kSoFar[0] == k)
 				return head;
-			System.out.println("Didn't return...");
 		}
 
 		return node;

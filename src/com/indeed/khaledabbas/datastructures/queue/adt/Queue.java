@@ -13,7 +13,7 @@ public class Queue<E> {
 	
 	public E dequeue()
 	{
-		return list.getFirst();
+		return list.removeFirst();
 	}
 	
 	public boolean empty()

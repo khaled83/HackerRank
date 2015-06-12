@@ -3,6 +3,7 @@ package com.indeed.khaledabbas;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.TreeSet;
 
 import com.indeed.khaledabbas.concurrency.Concurrency;
 import com.indeed.khaledabbas.datastructures.ArrayList;
@@ -27,6 +28,8 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 public class Experiment {
 	
 	public static void main(String[] args) throws Exception {
+		
+		System.out.println(Math.pow(10, 10) > Long.MAX_VALUE);
 		
 //		Concurrency.main();
 		
@@ -128,106 +131,6 @@ public class Experiment {
 		Integer x = 0, y = 0;
 		System.out.println(x - y);
 		**/
-		
-		///** Trees
-		
-		// 60 20 10 40 30 50 70
-		/**
-		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
-		bst.insert(40);
-		
-		bst.insert(20);
-		bst.insert(60);
-		
-		
-		bst.insert(10);
-		
-		bst.insert(30);
-		bst.insert(50);
-		bst.insert(70);
-//		bst.delete(20);
-		// 90, 150, 170, 130
-		
-		System.out.println(" size = " + bst.size() 
-							+ "\n maxDepth = "+bst.maxDepth()
-							+ "\n minValue = "+bst.minValue()
-							+ "\n hasSum = "+bst.hasPathSum(130)
-						  );
-		bst.traversePreorder();
-//		bst.storeTreeExactShape();
-		
-		System.out.println();
-		
-//		int[] arr = {10, 14, 29, 13, 37};
-//		printArray(arr);
-//		BinarySearchTree.treeSort(arr);
-//		printArray(arr);
-		
-//		BinarySearchTree bst2 = BinarySearchTree.restoreTreeExactShape();
-		bst.traverseInorder();
-		System.out.println();
-		System.out.println("isBalanced=" + bst.isBlanced());
-		System.out.println("isBST="+bst.isBST());
-		**/
-		
-		/**
-		 // 10 20 30 40 50 60 70
-		 
-		 40
-      20     60
-	10  30  50  70	 
-		 
-		System.out.println();
-		System.out.println("Balanced tree:");
-		BinarySearchTree balanced = bst.buildTreeBalanced();
-		balanced.traversePreorder();
-		
-		int[] arr = { 10, 20, 30, 40, 50, 60, 70 };
-		BinarySearchTree bst = BinarySearchTree.getBalancedTree(arr);
-		bst.traversePreorder();
-		System.out.println(bst.isBlanced());
-		System.out.println( bst.findInorderSuccessor(30) );
-		
-		BinarySearchTree<Character> bst2 = new BinarySearchTree<Character>();
-		bst2.insert('H');
-		bst2.insert('D');
-		bst2.insert('B');
-		bst2.insert('A');
-		bst2.insert('C');
-		bst2.insert('E');
-		bst2.insert('F');
-		bst2.insert('G');
-		bst2.insert('N');
-		bst2.insert('I');
-		bst2.insert('L');
-		bst2.insert('J');
-		bst2.insert('K');
-		bst2.insert('M');
-		bst2.insert('O');
-		bst2.insert('P');
-		bst2.traversePreorder();
-		System.out.println();
-		System.out.println( bst2.findKBalanced(3) );
-		*/
-		
-		BinarySearchTree<Integer> bst3 = new BinarySearchTree<Integer>();
-		bst3.testFindNodeFirstInorder();
-		bst3.traversePreorder();
-		
-		List<String> list;
-		list.set
-		
-		
-//		System.out.println();
-//		bst.printPaths();
-//		System.out.println();
-//		System.out.println("Inorder");
-//		bst.traverseInorder();
-//		System.out.println();
-//		System.out.println("Postorder");
-//		bst.traversePostorder();
-		
-//		*/
 		
 		/**
 		Queue<Integer> queue = new Queue<Integer>();

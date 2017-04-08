@@ -24,7 +24,7 @@ public class KnapsackProblem {
 		HashMap<String, Integer> solution = new HashMap<String, Integer>();
 		ArrayList<HashMap<String, Integer>> solutions = new ArrayList<HashMap<String, Integer>>(); 
 		
-		solve(weightCapacity, valueSoFar, weightSoFar, solutions);
+//		solve(weightCapacity, valueSoFar, weightSoFar, solutions);
 		
 		while( ( weightSoFar + minWeight ) < weightCapacity  ) 
 		{

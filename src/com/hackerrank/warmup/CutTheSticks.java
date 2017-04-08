@@ -63,14 +63,16 @@ public class CutTheSticks {
             return head.element;
         }
         
-        void decrement(E e)
+        @SuppressWarnings("unchecked")
+		void decrement(E e)
         {
             Integer value = (Integer)e;
             Node<E> cur = head;
             Node<E> prev = null;
             
             Node<E> lastRemove = null;
-            Node<E> lastPrev = null;
+            @SuppressWarnings("unused")
+			Node<E> lastPrev = null;
             
             while(cur != null)
             {
@@ -94,7 +96,8 @@ public class CutTheSticks {
             // nullify deleted nodes
             while(cur != head)
             {
-                Node<E> del = cur;
+                @SuppressWarnings("unused")
+				Node<E> del = cur;
                 cur = cur.next;
                 del = null;
                 size--;

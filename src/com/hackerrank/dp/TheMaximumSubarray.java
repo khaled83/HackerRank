@@ -87,7 +87,8 @@ public static void main(String[] args) {
 	    }
 	}
     
-    private static int max2(int[] arr, int[] cache, int startIndx, int endIndx) 
+    @SuppressWarnings("unused")
+	private static int max2(int[] arr, int[] cache, int startIndx, int endIndx) 
     {
         int arrLength = endIndx - startIndx + 1;
         if(arrLength == 1)

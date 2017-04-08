@@ -44,6 +44,7 @@ public class FriendRecommendations {
 
 		}
 		
+		@SuppressWarnings("unused")
 		private static final TreeMap<Vertex, Integer> EMPTY_MaP = new TreeMap<Vertex, Integer>();
 		private static final TreeSet<Vertex> EMPTY_SET = new TreeSet<Vertex>();
 		
@@ -185,6 +186,7 @@ public class FriendRecommendations {
 		for( int t = 0; t < count ; t++ ) 
 		{
 			String from = t + "";
+			@SuppressWarnings("unused")
 			Graph.Vertex v = g.addVertex( from );
 			for( int toIndx = 0; toIndx < count; toIndx++ ) {
 				int isLinked = sc.nextInt();

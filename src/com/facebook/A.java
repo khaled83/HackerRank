@@ -1,16 +1,13 @@
 package com.facebook;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.math.*;
-import java.text.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.TreeSet;
 
 public class A {
-	private static BufferedReader br;
-	private static StringTokenizer st;
-	private static PrintWriter pw;
+//	private static BufferedReader br;
+//	private static StringTokenizer st;
+//	private static PrintWriter pw;
 	private static Scanner sc;
 
 	public static void main(String[] args) throws IOException	{

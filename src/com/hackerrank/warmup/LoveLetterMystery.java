@@ -16,6 +16,8 @@ public class LoveLetterMystery
         
         for( int i=0; i< inputs.length; i++)
             System.out.println( solveWithAscii( inputs[i] ) );    
+        
+        sc.close();
     }
     
     private static int solveWithAscii(String s)

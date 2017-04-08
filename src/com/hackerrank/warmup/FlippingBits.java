@@ -23,6 +23,7 @@ public class FlippingBits {
         sc.close();
 	}
 	
+	@SuppressWarnings("unused")
 	private static void print32Digits()
 	{
 		System.out.println("---");

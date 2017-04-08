@@ -21,6 +21,7 @@ public class SherlockAndGCD {
             String output = result <= 1 ? "YES" : "NO";
             System.out.println(output);
         }
+        sc.close();
     }
     
     // greatest common divider using Eclidean algorithm

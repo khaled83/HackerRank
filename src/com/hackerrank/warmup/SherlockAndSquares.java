@@ -61,7 +61,8 @@ public class SherlockAndSquares
         sc.close();
     }
     
-    private static boolean isPerfectSquareRoot(int number)
+    @SuppressWarnings("unused")
+	private static boolean isPerfectSquareRoot(int number)
     {
         // 0 1 4 9
         // 0000 0001 0100 1001

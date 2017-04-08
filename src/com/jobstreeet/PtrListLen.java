@@ -8,16 +8,16 @@ public class PtrListLen {
 	}
 	
 	// 1 minute
-	int solution(struct IntList * L) {
-	    // write your code in C90
-		int length = 0;
-		while( L != null ) {
-			L = L->next;
-			length++;
-		}
-		
-		return length;
-			
-	}
+//	int solution(struct IntList * L) {
+//	    // write your code in C90
+//		int length = 0;
+//		while( L != null ) {
+//			L = L->next;
+//			length++;
+//		}
+//		
+//		return length;
+//			
+//	}
 
 }

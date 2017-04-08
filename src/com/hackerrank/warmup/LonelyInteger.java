@@ -12,6 +12,7 @@ public class LonelyInteger {
         for(int i=0; i<n; i++) {
             bset.flip( sc.nextInt() );
         }
+        sc.close();
         
         for(int i=0; i<101; i++) {
             if(bset.get(i)) {

@@ -10,6 +10,7 @@ public class Main {
 		
 		Scanner sc = new Scanner(System.in);
 		
+		@SuppressWarnings("unused")
 		int numNodes = sc.nextInt();
 		int numInstrcutions = sc.nextInt();
 		
@@ -53,8 +54,9 @@ public class Main {
 		int n1;
 		int n2;
 		
+		@SuppressWarnings("unused")
 		int time;
-		
+		@SuppressWarnings("unused")
 		int order;
 		
 		Pair(int n1, int n2, int time, int order)

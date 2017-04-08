@@ -7,6 +7,7 @@ public class Experiments {
 
 	public static void main(String[] args) {
 		
+		@SuppressWarnings("unused")
 		double[] arr = new double[100000];
 		DecimalFormat format = new DecimalFormat("#");
         format.setMaximumFractionDigits(0);
@@ -54,6 +55,7 @@ public class Experiments {
 
 	}
 	
+	@SuppressWarnings("unused")
 	private static BigDecimal fact(double n) {
 		BigDecimal fact = new BigDecimal(1);
 		for(double i=n; i>=1; i--) {

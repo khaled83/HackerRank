@@ -12,6 +12,7 @@ public class SherlockAndTheBeast {
 			x+= (x*10)+5;
 		}
 		
+		@SuppressWarnings("unused")
 		String num5s;
 		
 		DecimalFormat format = new DecimalFormat("#");

@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Main {
 	
+	@SuppressWarnings("unused")
 	private static final Main instance = new Main();
 
 	public static void main(String[] args) {

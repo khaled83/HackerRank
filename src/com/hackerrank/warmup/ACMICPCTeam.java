@@ -9,6 +9,7 @@ public class ACMICPCTeam {
 
 	public static void main(String[] args) {
 		
+		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
 		int numPersons = sc.nextInt();
 		int numTopics = sc.nextInt();
@@ -53,6 +54,7 @@ public class ACMICPCTeam {
 
 	}
 	
+	@SuppressWarnings("unused")
 	private static void printBitSet(BitSet bset, int size) {
 		for(int i=0; i<size;i++)
 			System.out.print(bset.get(i) ? "1" : "0");

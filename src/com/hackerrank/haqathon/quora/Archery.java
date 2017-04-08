@@ -34,6 +34,7 @@ public class Archery {
             numQs+= binarySearchCeil( radius, (int) Math.floor( r2 ) ) - binarySearchCeil( radius, (int) Math.floor( r1 ) );
         }
         
+        sc.close();
         System.out.println(numQs);
         
     }

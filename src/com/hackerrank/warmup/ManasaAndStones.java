@@ -50,6 +50,7 @@ public class ManasaAndStones {
 	 * Exception in thread "main" java.lang.OutOfMemoryError: Requested array size exceeds VM limit
 	 * @deprecated
 	 */
+	@SuppressWarnings("unused")
 	private static void solutionWithArray() {
 		Scanner sc = new Scanner(System.in);
         int numCases = sc.nextInt();
@@ -84,6 +85,7 @@ public class ManasaAndStones {
                 System.out.print(value + " ");
             }
             
+            sc.close();
             System.out.println();            
             
             

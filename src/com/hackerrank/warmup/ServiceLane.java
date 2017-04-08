@@ -31,7 +31,8 @@ public class ServiceLane
 		Pair[] cases = new Pair[numCases];
         ServiceLane sl = new ServiceLane();
         int n_minus_1 = n-1;
-        int n_minus_2 = n-2;
+        @SuppressWarnings("unused")
+		int n_minus_2 = n-2;
         
         for(int i=0; i<numCases; i++)
         {

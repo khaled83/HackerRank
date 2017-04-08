@@ -19,7 +19,7 @@ public class AlternatingCharacters {
                     results[caseNum]++;
             }
         }
-
+        sc.close();
 	}
 
 }

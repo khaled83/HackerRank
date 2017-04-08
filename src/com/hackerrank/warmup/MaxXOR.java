@@ -13,7 +13,8 @@ public class MaxXOR {
         // problem size: number of possible integers
         ArrayList<Integer> ones = new ArrayList<Integer>();
         ArrayList<Integer> zeros = new ArrayList<Integer>();
-        int[] xor;
+        @SuppressWarnings("unused")
+		int[] xor;
         
         // initialize both with all numbers
         for(int num=l; num<=r; num++) {

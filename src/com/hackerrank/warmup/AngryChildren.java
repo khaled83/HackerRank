@@ -27,6 +27,7 @@ public class AngryChildren {
 				min = curMin;
 		}
 
+		sc.close();
 		System.out.println(min);
 	}
 

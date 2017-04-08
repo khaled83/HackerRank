@@ -17,6 +17,8 @@ public class Solution {
 		
 		for(int i=0; i<inputs.length;i++)
 			System.out.println(solve(inputs[i]));
+		
+		sc.close();
     }
 	
 	public static int solve(int n)

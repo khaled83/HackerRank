@@ -1,8 +1,6 @@
 package com.hackerrank.algorithms.string;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -93,13 +91,13 @@ public class BiggerIsGreater {
 /**
 http://www.geeksforgeeks.org/lexicographic-permutations-of-string/
 Steps to generate the next higher permutation:
-1. Take the previously printed permutation and find the rightmost character in it, which is smaller than its next character. Let us call this character as ‘first character’.
+1. Take the previously printed permutation and find the rightmost character in it, which is smaller than its next character. Let us call this character as ï¿½first characterï¿½.
 
-2. Now find the ceiling of the ‘first character’. Ceiling is the smallest character on right of ‘first character’, which is greater than ‘first character’. Let us call the ceil character as ‘second character’.
+2. Now find the ceiling of the ï¿½first characterï¿½. Ceiling is the smallest character on right of ï¿½first characterï¿½, which is greater than ï¿½first characterï¿½. Let us call the ceil character as ï¿½second characterï¿½.
 
 3. Swap the two characters found in above 2 steps.
 
-4. Sort the substring (in non-decreasing order) after the original index of ‘first character’.
+4. Sort the substring (in non-decreasing order) after the original index of ï¿½first characterï¿½.
 
-Let us consider the string “ABCDEF”. Let previously printed permutation be “DCFEBA”. The next permutation in sorted order should be “DEABCF”. Let us understand above steps to find next permutation. The ‘first character’ will be ‘C’. The ‘second character’ will be ‘E’. After swapping these two, we get “DEFCBA”. The final step is to sort the substring after the character original index of ‘first character’. Finally, we get “DEABCF”.
+Let us consider the string ï¿½ABCDEFï¿½. Let previously printed permutation be ï¿½DCFEBAï¿½. The next permutation in sorted order should be ï¿½DEABCFï¿½. Let us understand above steps to find next permutation. The ï¿½first characterï¿½ will be ï¿½Cï¿½. The ï¿½second characterï¿½ will be ï¿½Eï¿½. After swapping these two, we get ï¿½DEFCBAï¿½. The final step is to sort the substring after the character original index of ï¿½first characterï¿½. Finally, we get ï¿½DEABCFï¿½.
  * */

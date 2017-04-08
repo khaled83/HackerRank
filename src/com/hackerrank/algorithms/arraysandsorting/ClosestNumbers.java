@@ -41,6 +41,7 @@ public class ClosestNumbers {
             System.out.print( value + " " );
         }
         System.out.println();
+        sc.close();
 
 	}
 

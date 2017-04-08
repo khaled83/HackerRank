@@ -17,11 +17,11 @@ public class PlayingWithNumbers {
         int minPos = Integer.MAX_VALUE;
         int numPos = 0, numNeg = 0;
         
-        int sum = 0;
+//        int sum = 0;
         
         for(int i=0; i<arrSize; i++) {
         	arr[i] = sc.nextInt();
-        	sum += Math.abs( arr[i] );
+//        	sum += Math.abs( arr[i] );
         	if(arr[i] >= 0) {
         		pos += arr[i];
         		if(arr[i] < minPos) {

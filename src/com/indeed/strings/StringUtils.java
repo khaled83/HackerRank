@@ -2,9 +2,6 @@ package com.indeed.strings;
 
 import java.util.*;
 
-import com.indeed.khaledabbas.datastructures.arrays.ArrayUtils;
-import com.indeed.khaledabbas.sort.ArraysSortUtils2;
-
 public class StringUtils {
 
 	public static void main(String[] args) throws Exception {
@@ -676,9 +673,11 @@ public class StringUtils {
         return new String(strArr, 0, dst);
     }
     
-    private static class NoAnswerException extends Exception
+    @SuppressWarnings("serial")
+	private static class NoAnswerException extends Exception
     {
-    	public NoAnswerException() {}
+    	@SuppressWarnings("unused")
+		public NoAnswerException() {}
     	
     	public NoAnswerException(String msg) {
     		super(msg);

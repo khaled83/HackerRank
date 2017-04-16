@@ -25,6 +25,7 @@ import com.amazon.datastructures.Queue.EmptyQueueException;
 import com.amazon.datastructures.trees.BST;
 import com.amazon.datastructures.trees.BSTArrayBased;
 import com.amazon.datastructures.trees.Tree;
+import com.amazon.dp.MixStrategies;
 import com.amazon.dp.Recursion;
 import com.khaledabbas.datastructures.trees.BinarySearchTree;
 import com.amazon.datastructures.QueueArrayBased;
@@ -593,6 +594,19 @@ public class ApplicationTest {
 		// combi
 		assert(Recursion.combiDP(5, 4) == 5);
 		assert(Recursion.combiRecursion(5, 4) == 5);
+		
+		// shortest path
+		int[][] cost = {{1, 3, 5, 8},{4, 2, 1, 7},{4, 3, 2, 3}};
+		assert(MixStrategies.shortestPath1(cost, 3, 2) == 12);
+		assert(MixStrategies.shortestPath2(cost, 3, 2) == 12);
+		assert(MixStrategies.shortestPath3(cost, 3, 2) == 12);
+		assert(MixStrategies.shortestPath4(cost, 3, 2) == 12);
+		assert(MixStrategies.shortestPath5(cost, 3, 2) == 7);
+		
+		// empty pot combi
+		assert(MixStrategies.combiEmptyPlot(1) == 1);
+		assert(MixStrategies.combiEmptyPlot(2) == 4);
+		assert(MixStrategies.combiEmptyPlot(3) == 28);
 		
 		System.out.println("Success! Recursion breaks nicely ; )");
 	}

@@ -1,4 +1,4 @@
-package com.google.codejam2017.a;
+package com.google.codejam2017.a.copy;
 
 import java.util.HashMap;
 import java.util.HashSet;

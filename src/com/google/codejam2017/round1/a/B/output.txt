@@ -1,0 +1,11 @@
+Hd Ad Hk Ak B  D
+2  1  5  1  1  1
+buff
+cach  => 2 2 5 1
+knight
+cure
+cach  => 2 2 5 1
+knight
+cach  => 1 2 5 1
+knight
+Case #1: IMPOSSIBLE

@@ -1,18 +1,12 @@
 package com.amazon;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.naming.LimitExceededException;
 import javax.naming.SizeLimitExceededException;
@@ -22,12 +16,6 @@ import com.amazon.datastructures.ArrayList;
 import com.amazon.datastructures.LinkedList;
 import com.amazon.datastructures.Queue;
 import com.amazon.datastructures.Queue.EmptyQueueException;
-import com.amazon.datastructures.trees.BST;
-import com.amazon.datastructures.trees.BSTArrayBased;
-import com.amazon.datastructures.trees.Tree;
-import com.amazon.dp.MixStrategies;
-import com.amazon.dp.Recursion;
-import com.khaledabbas.datastructures.trees.BinarySearchTree;
 import com.amazon.datastructures.QueueArrayBased;
 import com.amazon.datastructures.QueueLinkedList;
 import com.amazon.datastructures.QueuePointerBased;
@@ -35,6 +23,12 @@ import com.amazon.datastructures.Stack;
 import com.amazon.datastructures.StackArray;
 import com.amazon.datastructures.StackLinkedList;
 import com.amazon.datastructures.Strings;
+import com.amazon.datastructures.graphs.Graph;
+import com.amazon.datastructures.trees.BST;
+import com.amazon.datastructures.trees.BSTArrayBased;
+import com.amazon.datastructures.trees.Tree;
+import com.amazon.dp.MixStrategies;
+import com.amazon.dp.Recursion;
 
 public class ApplicationTest {
 
@@ -50,6 +44,7 @@ public class ApplicationTest {
 		runTrees();
 		
 		runDynamicProgramming();
+		runGraphs();
 	}
 	
 	private static void runArrayList() {
@@ -609,6 +604,29 @@ public class ApplicationTest {
 		assert(MixStrategies.combiEmptyPlot(3) == 28);
 		
 		System.out.println("Success! Recursion breaks nicely ; )");
+	}
+
+	private static void runGraphs() {
+	    Graph g = new Graph(9);
+	    // 0,1,2,3,4,5,6,7,8
+	    // a b c d e f g h i
+	    g.addEdge(0,1);
+	    g.addEdge(0,5);
+	    g.addEdge(0,8);
+	    g.addEdge(1,2);
+	    g.addEdge(1,4);
+	    g.addEdge(4,6);
+	    g.addEdge(5,6);
+	    g.addEdge(2,3);
+	    g.addEdge(2,4);
+	    g.addEdge(3,6);
+	    g.addEdge(3,7);
+	    
+	    System.out.println(g);
+	    System.out.println("recursive dfs");
+	    g.dfs();
+	    System.out.println("iterative dfs");
+	    g.dfs2();
 	}
 	
 	@SuppressWarnings("unused")

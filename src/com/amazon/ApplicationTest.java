@@ -24,6 +24,7 @@ import com.amazon.datastructures.StackArray;
 import com.amazon.datastructures.StackLinkedList;
 import com.amazon.datastructures.Strings;
 import com.amazon.datastructures.graphs.Graph;
+import com.amazon.datastructures.graphs.GraphDirected;
 import com.amazon.datastructures.trees.BST;
 import com.amazon.datastructures.trees.BSTArrayBased;
 import com.amazon.datastructures.trees.Tree;
@@ -622,11 +623,39 @@ public class ApplicationTest {
 	    g.addEdge(3,6);
 	    g.addEdge(3,7);
 	    
-	    System.out.println(g);
-	    System.out.println("recursive dfs");
+//	    System.out.println(g);
+	    // dfs
 	    g.dfs();
-	    System.out.println("iterative dfs");
+	    System.out.println(g.dfs);
+	    assert(g.dfs.toString().equals("a b c d g e f h i "));
 	    g.dfs2();
+	    assert(g.dfs.toString().equals("a b c d g h e f i "));
+	    System.out.println(g.dfs);
+	    g.dfs3();
+	    assert(g.dfs.toString().equals("a b c d g e f h i "));
+	    System.out.println(g.dfs);
+	    
+	    // bfs
+	    g.bfs2();
+	    System.out.println(g.bfs);
+	    g.bfs();
+	    System.out.println(g.bfs);
+	    
+	    // directed graph
+	    
+	    // topological order
+	    GraphDirected g2 = new GraphDirected(7);
+	    g2.addEdge(0, 1);
+	    g2.addEdge(0, 3);
+	    g2.addEdge(6, 3);
+	    g2.addEdge(1, 2);
+	    g2.addEdge(1, 4);
+	    g2.addEdge(3, 4);
+	    g2.addEdge(4, 2);
+	    g2.addEdge(4, 5);
+	    g2.topologicalOrder();
+	    System.out.println("Topological order");
+	    System.out.println(g2.to);
 	}
 	
 	@SuppressWarnings("unused")

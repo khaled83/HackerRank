@@ -7,24 +7,33 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.EmptyStackException;
+import java.util.HashMap;
 
 import javax.naming.LimitExceededException;
 import javax.naming.SizeLimitExceededException;
 
+import com.amazon.algorithms.BitManipulation;
 import com.amazon.algorithms.Sorting;
 import com.amazon.datastructures.ArrayList;
 import com.amazon.datastructures.LinkedList;
-import com.amazon.datastructures.Queue;
-import com.amazon.datastructures.Queue.EmptyQueueException;
-import com.amazon.datastructures.QueueArrayBased;
-import com.amazon.datastructures.QueueLinkedList;
-import com.amazon.datastructures.QueuePointerBased;
-import com.amazon.datastructures.Stack;
 import com.amazon.datastructures.StackArray;
 import com.amazon.datastructures.StackLinkedList;
 import com.amazon.datastructures.Strings;
+import com.amazon.datastructures.graphs.GraphUndirected;
 import com.amazon.datastructures.graphs.Graph;
 import com.amazon.datastructures.graphs.GraphDirected;
+import com.amazon.datastructures.graphs.GraphWeighted;
+import com.amazon.datastructures.queues.Queue;
+import com.amazon.datastructures.queues.QueueArrayBased;
+import com.amazon.datastructures.queues.QueueLinkedList;
+import com.amazon.datastructures.queues.QueuePointerBased;
+import com.amazon.datastructures.queues.QueueWithStacks;
+import com.amazon.datastructures.queues.Queue.EmptyQueueException;
+import com.amazon.datastructures.graphs.GraphDirectedWeighted;
+import com.amazon.datastructures.graphs.GraphDirectedExt;
+import com.amazon.datastructures.stacks.Stack;
+import com.amazon.datastructures.stacks.StackWithArrays;
+import com.amazon.datastructures.stacks.StackWithMin;
 import com.amazon.datastructures.trees.BST;
 import com.amazon.datastructures.trees.BSTArrayBased;
 import com.amazon.datastructures.trees.Tree;
@@ -46,6 +55,8 @@ public class ApplicationTest {
 		
 		runDynamicProgramming();
 		runGraphs();
+		
+		runBits();
 	}
 	
 	private static void runArrayList() {
@@ -86,6 +97,29 @@ public class ApplicationTest {
 		assert (list.get(1) == 3);
 		assert (list.get(2) == 18);
 		assert (list.get(3) == 25);
+		
+		// remove duplicates 1
+		list.add(3, 3);
+		list.addLast(18);
+		list.removeDuplicates1();
+		assert (list.size() == 4);
+		assert (list.get(0) == 12);
+		assert (list.get(1) == 3);
+		assert (list.get(2) == 18);
+		assert (list.get(3) == 25);
+		// remove duplicates 2
+		list.add(4, 3);
+		list.addLast(18);
+		list.removeDuplicates2();
+		assert (list.size() == 4);
+		assert (list.get(0) == 12);
+		assert (list.get(1) == 3);
+		assert (list.get(2) == 18);
+		assert (list.get(3) == 25);
+		
+		assert(list.KthToLast(1) == 25);
+		assert(list.KthToLast(2) == 18);
+		assert(list.KthToLast(3) == 3);
 		
 		assert (list.traverseRecursive().trim().equals("12 3 18 25"));
 		assert (list.traverseBackwardRecursive().trim().equals("25 18 3 12"));
@@ -151,7 +185,30 @@ public class ApplicationTest {
 		assert(Strings.isPalyndrome("abc%cba"));
 		assert(!Strings.isPalyndrome("abbc%bcba"));
 		
-		System.out.println("Success! Strings is working fine :P");
+		// sort anagrams
+		String[] arr = new String[]{"abcd", "cinema", "cdab", "abc", "iceman"};
+		Strings.sortAnagrams(arr);
+		assert(Arrays.equals(arr, new String[]{"abc", "abcd", "cdab", "cinema", "iceman"}));
+		
+		// is permutation of palyndrome
+		assert(Strings.isPermOfPalyndrome1("ABCCBA") == true);
+		assert(Strings.isPermOfPalyndrome1("ABCxCBA") == true);
+		assert(Strings.isPermOfPalyndrome1("ABCxyCBA") == false);
+		assert(Strings.isPermOfPalyndrome2("ABCCBA") == true);
+		assert(Strings.isPermOfPalyndrome2("ABCxCBA") == true);
+		assert(Strings.isPermOfPalyndrome2("ABCxyCBA") == false);
+		boolean thrown = false;
+		try {
+			Strings.isPermOfPalyndrome3("ABCCBA");
+		} catch (IllegalArgumentException e) {
+			thrown = true;
+		}
+		assert(thrown);
+		assert(Strings.isPermOfPalyndrome3("abccba") == true);
+		assert(Strings.isPermOfPalyndrome3("abcxcba") == true);
+		assert(Strings.isPermOfPalyndrome3("abcxycba") == false);
+		
+		System.out.println("Success! Strings are working fine :P");
 	}
 	
 	private static void runStacks() {
@@ -160,6 +217,11 @@ public class ApplicationTest {
 		runStacks(stack);
 		stack = new StackLinkedList();
 		runStacks(stack);
+		stack = new StackWithMin();
+		runStacks(stack);
+		runStackWithMin();
+		runStacksWithArrays();
+		System.out.println("Success! Stacks are LIFO : )");
 	}
 	
 	private static void runStacks(Stack stack) {
@@ -228,8 +290,78 @@ public class ApplicationTest {
 			assert(postfix.equals("abcd*+e/-"));
 		} catch (Exception e) { thrown = true; e.printStackTrace(); }
 		assert(!thrown);
+	}
+	
+	private static void runStacksWithArrays() {
+		StackWithArrays s = new StackWithArrays();
+		boolean thrown = false;
+		try {
+			s.push(1, 11);
+			s.push(1, 12);
+			s.push(1, 13);
+			assert(s.size(1) == 3);
+			assert(s.peek(1) == 13);
+			
+			s.push(2, 21);
+			s.push(2, 22);
+			assert(s.size(2) == 2);
+			assert(s.peek(2) == 22);
+			
+			s.push(3, 31);
+			s.push(3, 32);
+			assert(s.size(3) == 2);
+			assert(s.peek(3) == 32);
+
+			assert(s.pop(1) == 13);
+			
+			// empty 2
+			assert(s.pop(2) == 22);
+			assert(s.pop(2) == 21);
+			assert(s.isEmpty(2));
+			
+			// fill 1
+			s.push(1, 13);
+			assert(s.peek(1) == 13);
+			s.push(1, 14);
+			assert(s.peek(1) == 14);
+			s.push(1, 15);
+			assert(s.peek(1) == 15);
+			
+			// fill 2
+			s.push(2,21);
+			assert(!s.isEmpty(2));
+			s.push(2,22);
+			s.push(2,23);
+			assert(s.size(2) == 3);
+			
+			assert(s.pop(1) == 15);
+			s.push(2, 24);
+			assert(s.size(2) == 4);
+		} catch (Exception e) {
+			e.printStackTrace();
+			thrown = true;
+		}
+		assert(thrown == false);
 		
-		System.out.println("Success! Stacks are LIFO : )");
+//		System.out.println(s.peek(1));
+//		assert(s.peek(1) == 13);
+//		assert(s.pop(1) == 13);
+	}
+	
+	private static void runStackWithMin() {
+		StackWithMin s = new StackWithMin();
+		s.push(60);
+		s.push(50);
+		s.push(30);
+		assert(s.min() == 30);
+		s.push(40);
+		assert(s.min() == 30);
+		s.pop();
+		assert(s.min() == 30);
+		s.pop();
+		assert(s.min() == 50);
+		s.pop();
+		assert(s.min() == 60);
 	}
 	
 	private static void runQueues() {
@@ -238,6 +370,8 @@ public class ApplicationTest {
 		queue = new QueueArrayBased(3);
 		runQueues(queue);
 		queue = new QueueLinkedList();
+		runQueues(queue);
+		queue = new QueueWithStacks();
 		runQueues(queue);
 	}
 	
@@ -330,11 +464,20 @@ public class ApplicationTest {
 		// merge B into A
 		int[] A = new int[]{1, 3, 4, 0, 0, 0};
 		int[] B = new int[]{2, 5, 6};
-		Sorting.merge(A, B);
+		Sorting.merge1(A, B);
 		assert(Arrays.equals(A, new int[]{1, 2, 3, 4, 5, 6}));
 		A = new int[]{1, 5, 6, 0, 0, 0};
 		B = new int[]{2, 2, 4};
-		Sorting.merge(A, B);
+		Sorting.merge1(A, B);
+		assert(Arrays.equals(A, new int[]{1, 2, 2, 4, 5, 6}));
+		
+		A = new int[]{1, 3, 4, 0, 0, 0};
+		B = new int[]{2, 5, 6};
+		Sorting.merge2(A, B);
+		assert(Arrays.equals(A, new int[]{1, 2, 3, 4, 5, 6}));
+		A = new int[]{1, 5, 6, 0, 0, 0};
+		B = new int[]{2, 2, 4};
+		Sorting.merge2(A, B);
 		assert(Arrays.equals(A, new int[]{1, 2, 2, 4, 5, 6}));
 		
 		A = new int[]{1, 3, 4, 0, 0, 0};
@@ -354,6 +497,8 @@ public class ApplicationTest {
 		arr = new String[]{"ABC", "XYZ", "YZX", "CBA", "ADD"};
 		Sorting.sortAnagrams2(arr);
 		assert(Arrays.equals(arr, new String[]{"ABC", "CBA", "ADD", "XYZ", "YZX"}));
+		
+		System.out.println("Success! Sort problems are sorted out ;)");
 	}
 
 	private static void runTrees() {
@@ -407,6 +552,10 @@ public class ApplicationTest {
 		bst.storeTreeInorder(path);
 		BST<Integer> bst3 = BST.restoreBalanced3(path, 7);
 		assert(bst3.preorder().equals(Arrays.asList(40, 20, 10, 30, 60, 50, 70)));
+		
+		// constructor to create balanced BST from a given array
+		int[] arr = new int[]{30, 60, 40, 50, 10, 20, 70};
+		assert(new BST(arr).preorder().equals(Arrays.asList(40, 20, 10, 30, 60, 50, 70)));
 		
 		bst.delete(20);
 		assert(bst.inorder().equals(Arrays.asList(10, 30, 40, 50, 60, 70)));
@@ -604,11 +753,30 @@ public class ApplicationTest {
 		assert(MixStrategies.combiEmptyPlot(2) == 4);
 		assert(MixStrategies.combiEmptyPlot(3) == 28);
 		
+		arr = new int[]{-2, -3,  4, -1, -2,  1,  5,  -3};
+		assert(Arrays.equals(MixStrategies.maxSubArray1(arr), new int[]{4, -1, -2, 1, 5}));
+		assert(Arrays.equals(MixStrategies.maxSubArray2(arr), new int[]{4, -1, -2, 1, 5}));
+		assert(MixStrategies.maxSubArraySum(arr) == 7);
+		
+		assert(MixStrategies.combiClimbStairsRecursion(5) == 13);
+		assert(MixStrategies.combiClimbStairsDP(5) == 13);
+		
+		// find robot path right+down
+		/** - - -  - x -   - x - -
+			- x -  - x -   - - - -
+			- x -  - x -   - x - -    */
+		int[][] arr2 = new int[][]{{1,1,1},{1,0,1},{1,0,1}};
+		assert(MixStrategies.findPath(arr2, 3, 3).equals("(0,0) (0,1) (0,2) (1,2) (2,2) "));
+		arr2 = new int[][]{{1,0,1},{1,0,1},{1,0,1}};
+		assert(MixStrategies.findPath(arr2, 3, 3).equals("IMPOSSIBLE"));
+		arr2 = new int[][]{{1,0,1,1},{1,1,1,1},{1,0,1,1}};
+		assert(MixStrategies.findPath(arr2, 3, 4).equals("(0,0) (1,0) (1,1) (1,2) (1,3) (2,3) "));
+		
 		System.out.println("Success! Recursion breaks nicely ; )");
 	}
 
 	private static void runGraphs() {
-	    Graph g = new Graph(9);
+	    GraphUndirected g = new GraphUndirected(9);
 	    // 0,1,2,3,4,5,6,7,8
 	    // a b c d e f g h i
 	    g.addEdge(0,1);
@@ -626,20 +794,17 @@ public class ApplicationTest {
 //	    System.out.println(g);
 	    // dfs
 	    g.dfs();
-	    System.out.println(g.dfs);
 	    assert(g.dfs.toString().equals("a b c d g e f h i "));
 	    g.dfs2();
 	    assert(g.dfs.toString().equals("a b c d g h e f i "));
-	    System.out.println(g.dfs);
 	    g.dfs3();
 	    assert(g.dfs.toString().equals("a b c d g e f h i "));
-	    System.out.println(g.dfs);
 	    
 	    // bfs
 	    g.bfs2();
-	    System.out.println(g.bfs);
+	    assert(g.bfs.toString().equals("a b f i c e d g h "));
 	    g.bfs();
-	    System.out.println(g.bfs);
+	    assert(g.bfs.toString().equals("a b f i c e g d h "));
 	    
 	    // directed graph
 	    
@@ -653,10 +818,87 @@ public class ApplicationTest {
 	    g2.addEdge(3, 4);
 	    g2.addEdge(4, 2);
 	    g2.addEdge(4, 5);
-	    g2.topologicalOrder();
-	    System.out.println("Topological order");
-	    System.out.println(g2.to);
+	    java.util.ArrayList<Integer> topOrder = new java.util.ArrayList<Integer>(g2.V());
+	    for (int v : g2.topOrder())
+	    	topOrder.add(v);
+	    for (int v = 0; v < g2.V(); v++) {
+//	    	System.out.print(toChar(topOrder.get(v)) + "@" + v + " ->");
+	    	for (int w : g2.adj(topOrder.get(v))) {
+//	    		System.out.print(toChar(w) + "@" + topOrder.indexOf(w) + " ");
+	    		assert(topOrder.indexOf(w) > v);
+	    	}
+//	    	System.out.println();
+	    }
+	    
+	    // a b c d e f g h i
+	    // 0 1 2 3 4 5 6 7 8
+	    GraphWeighted g3 = new GraphWeighted(9);
+	    g3.addEdge('a', 'b', 6);
+	    g3.addEdge('a', 'i', 2);
+	    g3.addEdge('a', 'f', 4);
+	    g3.addEdge('b', 'c', 7);
+	    g3.addEdge('b', 'e', 9);
+	    g3.addEdge('c', 'd', 4);
+	    g3.addEdge('c', 'e', 3);
+	    g3.addEdge('d', 'g', 5);
+	    g3.addEdge('d', 'h', 1);
+	    g3.addEdge('g', 'e', 8);
+	    g3.addEdge('g', 'f', 2);
+	    assert(g3.E() == 11);
+	    assert(g3.minSpanTree().V() == 9);
+	    assert(g3.minSpanTree().E() == 8);
+	    
+	    GraphDirectedWeighted g4 = new GraphDirectedWeighted(5);
+	    g4.addEdge(0,1,8);
+	    g4.addEdge(0,3,9);
+	    g4.addEdge(0,4,4);
+	    g4.addEdge(1,2,1);
+	    g4.addEdge(2,1,2);
+	    g4.addEdge(2,3,3);
+	    g4.addEdge(3,2,2);
+	    g4.addEdge(3,4,7);
+	    g4.addEdge(4,2,1);
+	    assert(g4.shortest(0, 1) == 7);
+	    
+	    // dependancy projects (topological order)
+	    char[] arr = new char[]{'a', 'b', 'c', 'd', 'e', 'f'};
+	    HashMap<Character, Character> dep = new HashMap<Character, Character>();
+	    dep.put('a', 'd');
+	    dep.put('f', 'b');
+	    dep.put('b', 'd');
+	    dep.put('f', 'a');
+	    dep.put('d', 'c');
+	    arr = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+	    dep = new HashMap<Character, Character>();
+	    dep.put('a', 'e');
+	    dep.put('b', 'a');
+	    dep.put('b', 'e');
+	    dep.put('c', 'a');
+	    dep.put('d', 'g');
+	    dep.put('f', 'a');
+	    dep.put('f', 'b');
+	    dep.put('f', 'c');
+	    
+	    System.out.println("Success! Graphs are curvy : )");
+	    
 	}
+	
+	private static void runBits() {
+		// merge bit string into another
+		int N = Integer.parseInt("1000000000", 2);
+		int M = Integer.parseInt("10011", 2);
+		int x = BitManipulation.merge(N, M, 2, 6);
+		assert(Integer.toBinaryString(x).equals("1001001100"));
+		
+		// convert double to bit string
+		assert(BitManipulation.doubleToBinary(0.625).equals("0.101"));
+		
+		System.out.println("Success! with Bits & Bytes : D");
+	}
+	
+	private static char toChar(int v) {
+        return (char)('a'+v);
+    }
 	
 	@SuppressWarnings("unused")
 	private void reference() {
@@ -666,26 +908,3 @@ public class ApplicationTest {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

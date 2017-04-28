@@ -1,4 +1,9 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.queues;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.amazon.datastructures.LinkedList;
 
 public class QueueLinkedList extends Queue {
 	
@@ -24,6 +29,14 @@ public class QueueLinkedList extends Queue {
 	
 	public int front() {
 		return queue.get(queue.size()-1);
+	}
+
+	@Override
+	public List<Integer> asList() {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < queue.size(); i++)
+			list.add(queue.get(i));
+		return list;
 	}
 
 }

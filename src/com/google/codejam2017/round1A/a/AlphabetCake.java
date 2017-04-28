@@ -1,4 +1,4 @@
-package com.google.codejam2017.round1.a.A;
+package com.google.codejam2017.round1A.a;
 
 import java.util.ArrayList;
 import java.util.Scanner;

@@ -1,4 +1,7 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.queues;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class QueuePointerBased extends Queue {
 
@@ -54,6 +57,17 @@ public class QueuePointerBased extends Queue {
 			throw new EmptyQueueException("Queue is empty");
 
 		return front.item;
+	}
+
+	@Override
+	public List<Integer> asList() {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		Node f = front;
+		while (f != null) {
+			list.add(f.item);
+			f = f.next;
+		}
+		return list;
 	}
 
 }

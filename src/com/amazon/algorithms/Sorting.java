@@ -194,7 +194,7 @@ public abstract class Sorting {
 	}
 	
 	// O (m*n)
-	public static void merge(int[] A, int[] B) {
+	public static void merge1(int[] A, int[] B) {
 	    for (int unsorted = A.length - B.length, cur = 0; 
 	            unsorted < A.length && cur < B.length;
 	            unsorted++, cur++)
@@ -205,6 +205,15 @@ public abstract class Sorting {
 	            if (A[i] < A[i-1])
 	                swap(A, i, i-1);
 	    }
+	}
+	
+	public static void merge2(int[] A, int lastA, int[] B, int lastB) {
+		for (int a = lastA, b = lastB, dst = lastA + lastB + 1; b >= 0; dst--) {
+			if (A[a] > B[b])
+				A[dst] = A[a--];
+			else
+				A[dst] = B[b--];
+		}
 	}
 	
 	// O (m+n)

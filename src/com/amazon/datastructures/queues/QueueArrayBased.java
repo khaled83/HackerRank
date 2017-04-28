@@ -1,4 +1,8 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.queues;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.naming.SizeLimitExceededException;
 
@@ -59,4 +63,17 @@ public class QueueArrayBased extends Queue {
 		return items[front];
 	}
 
+	@Override
+	public List<Integer> asList() {
+		List<Integer> list = new ArrayList<Integer>();
+		for (int item : items)
+			list.add(item);
+		return list;
+	}
+
+//	@Override
+//	public String toString() {
+//		return items.toString();
+//	}
+	
 }

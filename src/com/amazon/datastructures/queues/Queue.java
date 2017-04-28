@@ -1,4 +1,6 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.queues;
+
+import java.util.List;
 
 import javax.naming.SizeLimitExceededException;
 
@@ -13,6 +15,8 @@ public abstract class Queue {
 	public abstract int dequeue() throws EmptyQueueException;
 	
 	public abstract int front();
+	
+	public abstract List<Integer> asList();
 	
 	public Queue() {}
 	

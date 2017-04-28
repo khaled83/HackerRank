@@ -1,4 +1,4 @@
-package com.google.codejam2017.round1.a.B;
+package com.google.codejam2017.round1A.b;
 
 import java.util.HashSet;
 import java.util.Scanner;

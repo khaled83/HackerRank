@@ -4,6 +4,8 @@ import java.util.EmptyStackException;
 
 import javax.naming.SizeLimitExceededException;
 
+import com.amazon.datastructures.stacks.Stack;
+
 public class StackArray extends Stack {
 
 	private static final int DEFAULT_MAX = 10;

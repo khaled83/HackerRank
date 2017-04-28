@@ -102,22 +102,22 @@ public abstract class Strings {
 	}
 
 	public static String URLify(String s, int n) {
-		int src = n - 1;
-		int dst = s.length() - 1;
-		char[] result = s.toCharArray();
-
-		for (; src >= 0; src--) {
-			if (result[src] == ' ') {
-				result[dst--] = '0';
-				result[dst--] = '2';
-				result[dst--] = '%';
-			} else {
-				result[dst--] = result[src];
-			}
-		}
-		return new String(result);
+		return URLify(s.toCharArray(), n);
 	}
-
+	
+	public static String URLify(char[] s, int n) {
+	    for (int src = n-1, dst = s.length-1; src != dst; src--) {
+	        if (s[src] == ' ') {
+	            s[dst--] = '0';
+	            s[dst--] = '2';
+	            s[dst--] = '%';
+	        } else {
+	            s[dst--] = s[src];
+	        }
+	    }
+	    return new String(s);
+	}
+	
 	/**
 	 * Works for small letters only
 	 */
@@ -195,6 +195,148 @@ public abstract class Strings {
 			}
 		}
 		return balanceSoFar == 0;
+	}
+
+	private static Comparator<String> compAnagrams1 = new Comparator<String>() {
+        
+	    public int compare(String s1, String s2) {
+	        // ASCII
+	    	char[] c1 = s1.toCharArray();
+	    	java.util.Arrays.sort(c1);
+	    	char[] c2 = s2.toCharArray();
+	    	java.util.Arrays.sort(c2);
+	    	
+	    	return new String(c1).compareTo(new String(c2));
+	    	
+//	        int[] count = new int[128];
+//	        for (char c : s1.toCharArray()) {
+//	            count[c]++;
+//	        }
+//	        
+//	        for (char c : s2.toCharArray()) {
+//	            count[c]--;
+//	            if (count[c] < 0)
+//	                return -1;
+//	        }
+//	        
+//	        return 0;
+	    }
+	    
+	};
+	
+	public static void sortAnagrams2(String[] arr) {
+	    java.util.Arrays.sort(arr, compAnagrams1);
+	    for (String s : arr)
+			System.out.print(s + " ");
+	    System.out.println();
+	}
+	
+	public static void sortAnagrams(String[] arr) {
+	    int n = arr.length;
+	    HashMap<String, List<String>> groups = new HashMap<String, List<String>>(n);
+	    for (String s : arr) {
+	        char[] chars = s.toCharArray();
+	        java.util.Arrays.sort(chars);
+	        String key = new String(chars);
+	        List<String> group = groups.get(key);
+	        if (group == null) {
+	            groups.put(key, new java.util.ArrayList<String>(n));
+	        }
+	        groups.get(key).add(s);
+	    }
+	    
+	    int indx = 0;
+	    for (String key : groups.keySet()) {
+	        for (String s : groups.get(key)) {
+	            arr[indx++] = s;
+	        }
+	    }
+	}
+
+	/**
+	 * checks if a string is a permutation of any palyndrome
+	 * works with ASCII only
+	 */
+	public static boolean isPermOfPalyndrome1(String s) {
+	    // ASCII
+	    int[] counts = new int[128];
+	    
+	    for (char c : s.toCharArray()) {
+	        counts[c]++;
+	    }
+	    
+	    
+	    int oddsAllowed = s.length() % 2;
+	    
+	    for (int count : counts) {
+	        if (count % 2 != 0 && oddsAllowed == 0)
+	            return false;
+	        else if (count %2 != 0)
+	            oddsAllowed = 0;
+	    }
+	    
+	    return true;
+	}
+	
+	/**
+	 * checks if a string is a permutation of any palyndrome
+	 * works with any type of string
+	 */
+	public static boolean isPermOfPalyndrome2(String s) {
+	    HashMap<Character, Integer> counts = new HashMap<Character, Integer>();
+	    
+	    for (char c : s.toCharArray()) {
+	        int count = 0;
+	        if (counts.containsKey(c))
+	            count = counts.get(c);
+	        counts.put(c, ++count);
+	    }
+	    
+	    int oddsAllowed = s.length() % 2;
+	    
+	    for (int count : counts.values()) {
+	        if (count % 2 == 1 && oddsAllowed == 0)
+	            return false;
+	        else if (count % 2 == 1)
+	            oddsAllowed = 0;
+	    }
+	    
+	    return true;
+	}
+	
+	public static boolean isPermOfPalyndrome3(String s) {
+	    int checker = 0;
+	    
+	    for (char c : s.toCharArray()) {
+	        int loc = c - 'a';
+	        if (loc < 0 || loc > 25)
+	            throw new IllegalArgumentException("This method only supports lower case alphabets");
+	        // flip flag for character
+	        checker = checker ^ (1 << loc);
+	    }
+	    
+	    // checker: 0 => even 1 => odd
+	    // count 1s, we can have at most one 1
+	    /** 
+	        checker: 100100
+	                 100011 c-1
+	                 ------ &
+	                 100000
+	                 011111 c-1
+	                 ------ &
+	                 000000
+	    */
+	    
+	    int oddsAllowed = s.length() % 2;
+	    if (checker > 0 && oddsAllowed == 0)
+	        return false;
+	    else if (checker > 0) {
+	        checker = checker & (checker - 1);
+	        if (checker > 0)
+	            return false;
+	    }
+	    
+	    return true;
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -23,6 +24,41 @@ public class BST<E extends Comparable<E>> {
     
     private Node<E> root;
     private int size;
+    
+    public BST() {}
+    
+    /**
+     * creates balanced binary search tree from the given array
+     */
+    public BST(int[] arr) {
+        // check sorted then sort
+    	if (!isSorted(arr))
+    		Arrays.sort(arr);
+        root = balanced(arr, 0, arr.length-1);
+    }
+    
+    private boolean isSorted(int[] arr) {
+    	boolean sorted = true;
+    	for (int i = 1; i < arr.length; i++)
+    		if (arr[i] < arr[i-1]) {
+    			sorted = false;
+    			break;
+    		}
+    	return sorted;
+    }
+    
+    private Node balanced(int[] arr, int startIndx, int lastIndx) {
+        Node root = null;
+        if (lastIndx >= startIndx) {
+            root = new Node();
+            int mid = (startIndx + lastIndx)/2;
+            root.leftChild = balanced(arr, startIndx, mid-1);
+            root.item = arr[mid];
+            root.rightChild = balanced(arr, mid+1, lastIndx);
+        }
+        
+        return root;
+    }
     
     public boolean isEmpty() {
         return size == 0;

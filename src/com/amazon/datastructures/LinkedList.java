@@ -1,5 +1,7 @@
 package com.amazon.datastructures;
 
+import java.util.HashSet;
+
 public class LinkedList {
 
 	private Node head;
@@ -112,6 +114,65 @@ public class LinkedList {
 		}
 		return "";
 	}
+
+	/**
+	 * removes duplicates from linked list in O(n) time using external hash table
+	 */
+	public void removeDuplicates1() {
+
+	    HashSet<Integer> visited = new HashSet<Integer>();
+	    
+	    Node prev = null;
+	    Node cur = head;
+	    while (cur != null) {
+	        if (visited.contains(cur.item)) {
+	            prev.next = cur.next;
+	            cur.next = null;
+	            cur = prev;
+	            size--;
+	        }
+	        else
+	            visited.add(cur.item);
+	        prev = cur;
+	        cur = cur.next;
+	    }
+	   
+	}
+
+
+	/**        =======>
+	    a => m => a => z => o => n
+	         c
+	         p                    
+	                   r                      
+	         
+	Hash    a m
+	*/
+	// O(n^2)
+	/**
+	 * removes duplicates from linked list in O(n^2) with any external data structure
+	 */
+	public void removeDuplicates2() {
+	    
+	    Node cur = head;
+	    Node prev = null, runner = null;
+	    while (cur != null) {
+	        prev = cur;
+	        runner = cur.next;
+	        while (runner != null) {
+	            if (runner.item == cur.item) {
+	                prev.next = runner.next;
+	                runner.next = null;
+	                runner = prev;
+	                size--;
+	            }
+	            prev = runner;
+	            runner = runner.next;
+	        }
+	        cur = cur.next;
+	    }
+	    
+	}
 	
 	// @TODO works for add, not for get and remove
 	private void checkIndex(int index) {
@@ -120,6 +181,34 @@ public class LinkedList {
 			throw new IndexOutOfBoundsException();
 	}
 
+	private static class Pair {
+        int first;
+        int second;
+        
+        public Pair(int first, int second) {
+            this.first = first;
+            this.second = second;
+        }
+    }
+    
+    public int KthToLast(int k) {
+        return KthToLast(head, k).second;
+    }
+    
+    private Pair KthToLast(Node head, int k) {
+        if (head == null)
+            return new Pair(0, 0);
+        else {
+        	Pair p = KthToLast(head.next, k);
+            int K = 1 + p.first;
+            p.first = K;
+            if (K == k)
+                p.second = head.item;
+            
+            return p;
+        }
+    }
+	
 	private static class Node {
 		int item;
 		Node next;

@@ -2,6 +2,8 @@ package com.amazon.datastructures;
 
 import java.util.EmptyStackException;
 
+import com.amazon.datastructures.stacks.Stack;
+
 public class StackLinkedList extends Stack {
 
 	private LinkedList items = new LinkedList();

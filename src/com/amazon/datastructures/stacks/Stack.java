@@ -1,9 +1,11 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.stacks;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import javax.naming.SizeLimitExceededException;
+
+import com.amazon.datastructures.StackLinkedList;
 
 public abstract class Stack {
 

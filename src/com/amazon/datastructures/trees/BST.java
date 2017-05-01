@@ -460,8 +460,8 @@ public class BST<E extends Comparable<E>> {
      * returns a list of linked lists, one linked list for each node at each depth with all the children nodes inside list
      * implementation uses ArrayList with duplicate references to nodes in each node's list
      */
-    public ArrayList<LinkedList<E>> listsOfRootNodesItems1() {
-    	ArrayList<LinkedList<Node<E>>> nodeLists = listsOfRootNodes1();
+    public ArrayList<LinkedList<E>> rootLevelLinkedLists1() {
+    	ArrayList<LinkedList<Node<E>>> nodeLists = currentLevelLinkedLists1();
     	ArrayList<LinkedList<E>> result = new ArrayList<LinkedList<E>>();
     	for (LinkedList<Node<E>> nodeList : nodeLists) {
     		LinkedList<E> itemList = new LinkedList<E>();
@@ -472,23 +472,23 @@ public class BST<E extends Comparable<E>> {
     	return result;
     }
     
-    public ArrayList<LinkedList<Node<E>>> listsOfRootNodes1() {
+    public ArrayList<LinkedList<Node<E>>> currentLevelLinkedLists1() {
         ArrayList<LinkedList<Node<E>>> result = new ArrayList<LinkedList<Node<E>>>(size);
-        listsOfRootNodes1(root, result);
+        currentLevelLinkedLists1(root, result);
         Collections.reverse(result);
         return result;
     }
     
-    private LinkedList<Node<E>> listsOfRootNodes1(Node<E> root, ArrayList<LinkedList<Node<E>>> result) {
+    private LinkedList<Node<E>> currentLevelLinkedLists1(Node<E> root, ArrayList<LinkedList<Node<E>>> result) {
         if (root == null)
             return null;
         
         LinkedList<Node<E>> cur = new LinkedList<Node<E>>();
-        LinkedList<Node<E>> left = listsOfRootNodes1(root.leftChild, result);
         cur.add(root);
+        LinkedList<Node<E>> left = currentLevelLinkedLists1(root.leftChild, result);
         if (left != null)
         	cur.addAll(left);
-        LinkedList<Node<E>> right = listsOfRootNodes1(root.rightChild, result);
+        LinkedList<Node<E>> right = currentLevelLinkedLists1(root.rightChild, result);
         if (right != null)
         	cur.addAll(right);
         result.add(cur);
@@ -510,8 +510,11 @@ public class BST<E extends Comparable<E>> {
         
     }
     
-    public ArrayList<LinkedList<E>> listsOfRootNodesItems2() {
-    	ArrayList<LinkedListInternal<Node<E>>> nodeLists = listsOfRootNodes2();
+    /**
+     * @Deprecated	there is bug with leaf nodes pointing to other nodes due to line <code>curList.back = right.back;</code>
+     */
+    public ArrayList<LinkedList<E>> rootLevelLinkedLists2() {
+    	ArrayList<LinkedListInternal<Node<E>>> nodeLists = currentLevelLinkedLists2();
     	ArrayList<LinkedList<E>> result = new ArrayList<LinkedList<E>>();
     	for (LinkedListInternal<Node<E>> nodeList : nodeLists) {
     		LinkedList<E> itemList = new LinkedList<E>();
@@ -526,13 +529,13 @@ public class BST<E extends Comparable<E>> {
     	return result;
     }
     
-    private ArrayList<LinkedListInternal<Node<E>>> listsOfRootNodes2() {
+    private ArrayList<LinkedListInternal<Node<E>>> currentLevelLinkedLists2() {
         ArrayList<LinkedListInternal<Node<E>>> result = new ArrayList<LinkedListInternal<Node<E>>>(size);
-        listsOfRootNodes2(root, result);
+        currentLevelLinkedLists2(root, result);
         return result;
     }
     
-    private LinkedListInternal<Node<E>> listsOfRootNodes2(Node<E> root, ArrayList<LinkedListInternal<Node<E>>> result) {
+    private LinkedListInternal<Node<E>> currentLevelLinkedLists2(Node<E> root, ArrayList<LinkedListInternal<Node<E>>> result) {
         if (root == null)
             return null;
         
@@ -540,25 +543,26 @@ public class BST<E extends Comparable<E>> {
         LinkedListInternal<Node<E>> curList = new LinkedListInternal<Node<E>>();
         curList.head = new LinkedListInternal.ListNode<Node<E>>(root);
         curList.back = curList.head;
-        LinkedListInternal<Node<E>> left = listsOfRootNodes2(root.leftChild, result);
+        LinkedListInternal<Node<E>> left = currentLevelLinkedLists2(root.leftChild, result);
         if (left != null) {
         	curList.head.next = left.head;
         	curList.back = left.back;
         }
-        LinkedListInternal<Node<E>> right = listsOfRootNodes2(root.rightChild, result);
+        LinkedListInternal<Node<E>> right = currentLevelLinkedLists2(root.rightChild, result);
         if (right != null) {
+        	curList.back.next = right.head;
         	curList.back = right.back; // progress back to the end
         }
         
         result.add(curList);
-        
-        StringBuilder sb = new StringBuilder();
-        LinkedListInternal.ListNode<Node<E>> cur = curList.head;
-        while (cur != null) {
-        	sb.append(cur.item.item + " => ");
-        	cur = cur.next;
-        }
-        System.out.println(sb);
+//        
+//        StringBuilder sb = new StringBuilder();
+//        LinkedListInternal.ListNode<Node<E>> cur = curList.head;
+//        while (cur != null) {
+//        	sb.append(cur.item.item + " => ");
+//        	cur = cur.next;
+//        }
+//        System.out.println(sb);
 		
         return curList;
     }

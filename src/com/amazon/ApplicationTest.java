@@ -608,28 +608,28 @@ public class ApplicationTest {
 		assert(bst.inorder().equals(Arrays.asList(10, 20, 30, 40, 50, 60, 70)));
 		
 		// collection of lists with one linked list for each node at each depth
-//		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.listsOfRootNodesItems1();
-		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.listsOfRootNodesItems2();
+		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.rootLevelLinkedLists1();
+		// second approach has a bug
+//		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.rootLevelLinkedLists2();
 		for (java.util.LinkedList<Integer> list : lists) {
-//			StringBuilder sb = new StringBuilder();
-//			for (int item : list)
-//				sb.append(item + " => ");
-//			sb.append("");
-//			switch (list.peekFirst()) {
-//				case 60:
-//					assert(sb.toString().equals("60 => 20 => 10 => 40 => 30 => 50 => 70 => "));
-//					break;
-//				case 20:
-//					assert(sb.toString().equals("20 => 10 => 40 => 30 => 50 => "));
-//					break;
-//				case 40:
-//					assert(sb.toString().equals("40 => 30 => 50 => "));
-//					break;
-//				case 50:
-//					assert(sb.toString().equals("50 => "));
-//					break;
-//			}
-//			System.out.println(sb);
+			StringBuilder sb = new StringBuilder();
+			for (int item : list)
+				sb.append(item + " => ");
+			sb.append("");
+			switch (list.peekFirst()) {
+				case 60:
+					assert(sb.toString().equals("60 => 20 => 10 => 40 => 30 => 50 => 70 => "));
+					break;
+				case 20:
+					assert(sb.toString().equals("20 => 10 => 40 => 30 => 50 => "));
+					break;
+				case 40:
+					assert(sb.toString().equals("40 => 30 => 50 => "));
+					break;
+				case 50:
+					assert(sb.toString().equals("50 => "));
+					break;
+			}
 		}
 		
 		
@@ -1009,6 +1009,17 @@ public class ApplicationTest {
 	    dep.put('f', 'a');
 	    dep.put('f', 'b');
 	    dep.put('f', 'c');
+	    
+	    /**
+            0  1  2  3
+		  0 1  1  0  0
+		  1 0  1  1  1
+		  2 1  1  0  0
+		  3 0  1  1  1
+	     */
+	    // find path in maze
+	    int[][] maze = new int[][] {{1,1,0,0},{0,1,1,1}, {1,1,0,0}, {0, 1, 1,1}};
+	    assert(new GraphDirected(maze, 4, 4).findPath(0, 0, 3, 3).toString().equals("[0, 1, 5, 9, 13, 14, 15]"));
 	    
 	    System.out.println("Success! Graphs are curvy : )");
 	    

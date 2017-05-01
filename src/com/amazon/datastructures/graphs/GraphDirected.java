@@ -1,8 +1,10 @@
 package com.amazon.datastructures.graphs;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
 
 import com.amazon.datastructures.queues.QueueArrayBased;
 
@@ -131,4 +133,107 @@ public class GraphDirected {
 		return sb.toString();
 	}
 	
+	// ====== 2D matrix to Graph
+	
+	public GraphDirected(int rows, int cols) {
+        this(rows*cols);
+    }
+    
+    public GraphDirected(int [][] arr, int rows, int cols) {
+        this(rows, cols);
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (arr[row][col] > 0) {
+                    if (col > 0 && arr[row][col - 1] > 0) {
+						addEdge(vertexIndx(row, col), vertexIndx(row, col - 1));
+                    }
+					if (col < cols - 1 && arr[row][col + 1] > 0) {
+						addEdge(vertexIndx(row, col), vertexIndx(row, col + 1));
+                    }
+                    if (row > 0 && arr[row - 1][col] > 0) {
+                        addEdge(vertexIndx(row, col), vertexIndx(row - 1, col));
+                    }
+                    if (row < rows - 1 && arr[row + 1][col] > 0) {
+                        addEdge(vertexIndx(row, col), vertexIndx(row + 1, col));
+                    }                    
+                }
+            }
+        }
+    }
+    
+    private int vertexIndx(int row, int col) {
+        return row * 4 + col;
+    }
+    
+    public Iterable<Integer> findPath(int srcRow, int srcCol, int dstRow, int dstCol) {
+    	return findPath(vertexIndx(srcRow, srcCol), vertexIndx(dstRow, dstCol));
+    }
+    
+    
+    /**
+
+        0  1  2  3
+      0 1  1  0  0
+      1 0  1  1  1
+      2 1  1  0  0
+      3 0  1  1  1
+        
+        0  1  2  3
+      0 0  1  2  3
+      1 4  5  6  7  
+      2 8  9  10 11 
+      3 12 13 14 15
+      
+      
+      src=0, dst=15
+      
+        stack            visited                path
+      - ---------        -------                ------
+      1 0                0                      0
+      2 1                0 1                    0      
+      3 5                0 1 5                  0 1
+      3 6 9              0 1 5 6 9              0 1 5                      
+      4 9                0 1 5 6 9              0 1 5 6   
+      4 9 7              0 1 5 6 9 7            0 1 5 6 7 
+      4 9                0 1 5 6 9 7            0 1 5 
+      5 13               0 1 5 6 9 13           0 1 5 6 9 
+      6 14               0 1 5 6 9 13 14        0 1 5 6 9 13
+      7 15               0 1 5 6 9 13 14 15     0 1 5 6 9 13 14 15
+    */
+    
+    public Iterable<Integer> findPath(int src, int dst) {
+    
+        Stack<Integer> s = new Stack<Integer>();
+        s.push(src);
+        HashSet<Integer> visited = new HashSet<Integer>(V);
+        visited.add(src);
+        Stack<Integer> path = new Stack<Integer>();
+        
+        boolean found = false;
+        while (!s.isEmpty() && !found) {
+            int v = s.pop();
+            path.push(v);
+            boolean excluded = true;
+            for (int w : adj[v]) {
+                if (!visited.contains(w)) {
+                    excluded = false;
+                    if (w == dst) {
+                        found = true;
+                        path.push(w);
+                    }
+                    s.push(w);
+                    visited.add(w);
+                }
+            }
+            if (excluded) {
+                path.pop();
+            }
+        }
+        
+        if (!found) {
+            return null;
+        }
+        
+        return path;
+    }
 }

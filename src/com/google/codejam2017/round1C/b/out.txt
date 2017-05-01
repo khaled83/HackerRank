@@ -1,0 +1,7 @@
+1 ======= numC=3 numJ=4 ======== 
+--- starting from Carmen
+Carmen works from 10 to 90 => 80
+Jamie works from 90 to 100 => 10
+Carmen works from 100 to 740 => 1400
+#exchanges Caremen = 4
+--- starting from Jamie

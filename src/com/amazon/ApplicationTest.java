@@ -23,6 +23,7 @@ import com.amazon.datastructures.graphs.GraphUndirected;
 import com.amazon.datastructures.graphs.Graph;
 import com.amazon.datastructures.graphs.GraphDirected;
 import com.amazon.datastructures.graphs.GraphWeighted;
+import com.amazon.datastructures.heaps.Heap;
 import com.amazon.datastructures.queues.Queue;
 import com.amazon.datastructures.queues.QueueArrayBased;
 import com.amazon.datastructures.queues.QueueLinkedList;
@@ -33,6 +34,8 @@ import com.amazon.datastructures.graphs.GraphDirectedWeighted;
 import com.amazon.datastructures.graphs.GraphDirectedExt;
 import com.amazon.datastructures.stacks.Stack;
 import com.amazon.datastructures.stacks.StackWithArrays;
+import com.amazon.datastructures.stacks.StackWithMax1;
+import com.amazon.datastructures.stacks.StackWithMax2;
 import com.amazon.datastructures.stacks.StackWithMin;
 import com.amazon.datastructures.trees.BST;
 import com.amazon.datastructures.trees.BSTArrayBased;
@@ -52,6 +55,7 @@ public class ApplicationTest {
 		runSorts();
 		runSortProblems();
 		runTrees();
+		runHeaps();
 		
 		runDynamicProgramming();
 		runGraphs();
@@ -138,6 +142,13 @@ public class ApplicationTest {
 		list.removeLast();
 		assert(list.size() == 1);
 		assert(list.get(0) == 18);
+		
+		// merge sorted lists
+		int[] arr1 = new int[] {2, 5, 7};
+		int[] arr2 = new int[] {3, 11};
+		assert(Arrays.equals(LinkedList.mergeSortedLists1(arr1, arr2), new int[] {2, 3, 5, 7, 11}));
+		assert(Arrays.equals(LinkedList.mergeSortedLists2(arr1, arr2), new int[] {2, 3, 5, 7, 11}));
+				
 		System.out.println("Success! LinkedList is working just nice :)");
 	}
 
@@ -208,6 +219,12 @@ public class ApplicationTest {
 		assert(Strings.isPermOfPalyndrome3("abcxcba") == true);
 		assert(Strings.isPermOfPalyndrome3("abcxycba") == false);
 		
+		// convert int to string and vice versa
+		assert(Strings.stringtoInt("304") == 304);
+		assert(Strings.stringtoInt("-304") == -304);
+		assert(Strings.intToString(304).equals("304"));
+		assert(Strings.intToString(-304).equals("-304"));
+		
 		System.out.println("Success! Strings are working fine :P");
 	}
 	
@@ -219,7 +236,7 @@ public class ApplicationTest {
 		runStacks(stack);
 		stack = new StackWithMin();
 		runStacks(stack);
-		runStackWithMin();
+		runStackWithMinMax();
 		runStacksWithArrays();
 		System.out.println("Success! Stacks are LIFO : )");
 	}
@@ -348,7 +365,8 @@ public class ApplicationTest {
 //		assert(s.pop(1) == 13);
 	}
 	
-	private static void runStackWithMin() {
+	private static void runStackWithMinMax() {
+		// min stack
 		StackWithMin s = new StackWithMin();
 		s.push(60);
 		s.push(50);
@@ -362,6 +380,58 @@ public class ApplicationTest {
 		assert(s.min() == 50);
 		s.pop();
 		assert(s.min() == 60);
+		
+		// max stack using inheritance
+		StackWithMax1 s2 = new StackWithMax1();
+		s2.push(30);
+		s2.push(20);
+		assert(s2.max() == 30);
+		s2.push(40);
+		assert(s2.max() == 40);
+		s2.push(60);
+		s2.push(60);
+		assert(s2.max() == 60);
+		s2.push(50);
+		assert(s2.max() == 60);
+		s2.peek();
+		s2.peek();
+		s2.peek();
+		assert(s2.max() == 60);
+		s2.pop();
+		s2.pop();
+		assert(s2.max() == 60);
+		s2.pop();
+		assert(s2.max() == 40);
+		s2.pop();
+		assert(s2.max() == 30);
+		s2.pop();
+		assert(s2.max() == 30);
+		
+		// max stack using composition
+		StackWithMax2 s3 = new StackWithMax2();
+		s3.push(30);
+		s3.push(20);
+		assert(s3.max() == 30);
+		s3.push(40);
+		assert(s3.max() == 40);
+		s3.push(60);
+		s3.push(60);
+		assert(s3.max() == 60);
+		s3.push(50);
+		assert(s3.max() == 60);
+		s3.peek();
+		s3.peek();
+		s3.peek();
+		assert(s3.max() == 60);
+		s3.pop();
+		s3.pop();
+		assert(s3.max() == 60);
+		s3.pop();
+		assert(s3.max() == 40);
+		s3.pop();
+		assert(s3.max() == 30);
+		s3.pop();
+		assert(s3.max() == 30);
 	}
 	
 	private static void runQueues() {
@@ -455,6 +525,10 @@ public class ApplicationTest {
 		String[] arr2 = new String[]{"ABC", "ABB", "XAB", "XYZ"};
 		Sorting.radixSort(arr2);
 		assert(Arrays.equals(arr2, new String[]{"ABB", "ABC", "XAB", "XYZ"}));
+		// dutch flag problem
+		arr = new int[]{6, 7, 5, 3, 6, 4, 5};
+		Sorting.sortDutchFlag(arr, 2);
+		assert(Arrays.equals(arr, new int[]{4, 3, 5, 5, 6, 6, 7}));
 		
 		System.out.println("Success! Sorted out : )");
 	}
@@ -522,6 +596,7 @@ public class ApplicationTest {
 //		System.out.println(bst.floor(45));
 //		assert(bst.floor(45) == 40);
 		
+		
 		BST<Integer> bst = new BST<Integer>();
 		bst.insert(60);
 		bst.insert(20);
@@ -531,6 +606,36 @@ public class ApplicationTest {
 		bst.insert(30);
 		bst.insert(50);
 		assert(bst.inorder().equals(Arrays.asList(10, 20, 30, 40, 50, 60, 70)));
+		
+		// collection of lists with one linked list for each node at each depth
+//		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.listsOfRootNodesItems1();
+		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.listsOfRootNodesItems2();
+		for (java.util.LinkedList<Integer> list : lists) {
+//			StringBuilder sb = new StringBuilder();
+//			for (int item : list)
+//				sb.append(item + " => ");
+//			sb.append("");
+//			switch (list.peekFirst()) {
+//				case 60:
+//					assert(sb.toString().equals("60 => 20 => 10 => 40 => 30 => 50 => 70 => "));
+//					break;
+//				case 20:
+//					assert(sb.toString().equals("20 => 10 => 40 => 30 => 50 => "));
+//					break;
+//				case 40:
+//					assert(sb.toString().equals("40 => 30 => 50 => "));
+//					break;
+//				case 50:
+//					assert(sb.toString().equals("50 => "));
+//					break;
+//			}
+//			System.out.println(sb);
+		}
+		
+		
+		// is balanced bst
+		assert (!bst.isBalanced1());
+		assert (!bst.isBalanced2());
 		
 		// test store and restore
 		String path = "data.txt";
@@ -571,6 +676,32 @@ public class ApplicationTest {
 		} 
 		catch (NoSuchFileException e) {} 
 		catch (IOException e) {}
+	}
+	
+	private static void runHeaps() {
+		Heap h = new Heap();
+		boolean exception = false;
+		try {
+			h.add(60);
+			h.add(50);
+			h.add(30);
+			assert(h.peek() == 60);
+			h.add(10);
+			h.add(40);
+			h.add(20);
+			h.add(70);
+			assert(h.peek() == 70);
+			assert(h.remove() == 70);
+			assert(h.remove() == 60);
+			assert(h.remove() == 50);
+			assert(h.remove() == 40);
+			assert(h.remove() == 30);
+			assert(h.remove() == 20);
+			assert(h.remove() == 10);
+		} catch (Exception e) {
+			exception = true;
+		}
+		assert(!exception);
 	}
 	
 	private static void runDynamicProgramming() {

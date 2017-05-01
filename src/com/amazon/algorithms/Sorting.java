@@ -278,4 +278,39 @@ public abstract class Sorting {
 
 	}
 	
+	public static void sortDutchFlag(int[] arr, int pIndx) {
+		int pivot = arr[pIndx];
+	    swap(arr, 0, pIndx);
+	    
+	    int p = 0, s2 = 1;
+	    for (int i = 1; i < arr.length; i++) {
+	        if (arr[i] <= pivot) {
+	            // move elm to s1
+	            swap(arr, i, s2);
+	            s2++;
+	            if (arr[s2-1] == pivot) {
+	            	// move elm from s1 to p
+	            	swap(arr, s2-1, p+1);
+	            	p++;
+	            }
+	        }
+	    }
+	    
+	    for (int lastS1 = s2-1; p >= 0; p--, lastS1--) {
+            swap(arr, lastS1, p);
+        }
+	}
+	
+	private static void printArray(Object[] arr) {
+		for (Object x : arr)
+			System.out.print(x + " ");
+		System.out.println();
+	}
+
+	private static void printArray(int[] arr) {
+		for (int x : arr)
+			System.out.print(x + " ");
+		System.out.println();
+	}
+	
 }

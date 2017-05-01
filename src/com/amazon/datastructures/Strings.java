@@ -339,4 +339,44 @@ public abstract class Strings {
 	    return true;
 	}
 	
+	public static int stringtoInt(String s) {
+	    boolean isNegative = false;
+	    if (s.charAt(0) == '-') {
+	        isNegative = true;
+	    }
+	    
+	    int res = 0;
+	    for (int i = isNegative ? 1 : 0; i < s.length(); i++) {
+	        int digit = s.charAt(i) - '0';
+	        res = 10 * res + digit;
+	    }
+	    
+	    if (isNegative)
+	        res = -res;
+	    
+	    return res;
+	}
+
+	public static String intToString(int num) {
+	    StringBuilder res = new StringBuilder();
+	    
+	    boolean isNegative = false;
+	    if (num < 0) {
+	        isNegative = true;
+	        num = -num;
+	    }
+	    
+	    while (num > 0) {
+	        char digit = (char)((num % 10) + '0');
+	        res.append(digit);
+	        num = num / 10;
+	    }
+	    
+	    if (isNegative) {
+	        res.append('-');
+	    }
+	    
+	    res.reverse();
+	    return new String(res);
+	}
 }

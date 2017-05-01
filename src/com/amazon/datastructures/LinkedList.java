@@ -139,7 +139,6 @@ public class LinkedList {
 	   
 	}
 
-
 	/**        =======>
 	    a => m => a => z => o => n
 	         c
@@ -213,6 +212,8 @@ public class LinkedList {
 		int item;
 		Node next;
 
+		Node() {}
+		
 		Node(int item) {
 			this.item = item;
 		}
@@ -230,4 +231,181 @@ public class LinkedList {
 		return sb.toString();
 	}
 
+	public static int[] mergeSortedLists1(int[] sorted1, int[] sorted2) {
+		LinkedList L1 = arrayToLinkedList(sorted1);
+		LinkedList L2 = arrayToLinkedList(sorted2);
+		Node mergedHead = sort1(L1.head, L2.head);
+		int[] res = linkedListToArray(mergedHead, sorted1.length + sorted2.length);
+		return res;
+	}
+	
+	public static int[] mergeSortedLists2(int[] sorted1, int[] sorted2) {
+		LinkedList L1 = arrayToLinkedList(sorted1);
+		LinkedList L2 = arrayToLinkedList(sorted2);
+		Node mergedHead = sort2(L1.head, L2.head);
+		int[] res = linkedListToArray(mergedHead, sorted1.length + sorted2.length);
+		return res;
+	}
+	
+	public static LinkedList arrayToLinkedList(int[] arr) {
+		LinkedList list = new LinkedList();
+		for (int i = arr.length - 1; i >= 0; i--)
+			list.addFirst(arr[i]);
+		return list;
+	}
+	
+	public static int[] linkedListToArray(LinkedList list, int n) {
+		return linkedListToArray(list.head, n);
+	}
+	
+	public static int[] linkedListToArray(Node head, int n) {
+		int[] arr = new int[n];
+		int indx = 0;
+		while (head != null) {
+			arr[indx++] = head.item;
+			head = head.next;
+		}
+		return arr;
+	}
+	
+	private static Node sort1(Node h1, Node h2) {
+	    LinkedList list = new LinkedList();
+	    Node cur = null;
+
+	    while (h1 != null && h2 != null) {
+	        // subsequent elements
+	        if (cur != null) {
+	            cur.next = new Node();
+	            cur = cur.next;
+	        }
+	        // first element
+	        else {
+	            list.head = new Node();
+	            cur = list.head;
+	        }
+	        
+	        if (h1.item < h2.item) {
+	            cur.item = h1.item;
+	            h1 = h1.next;
+	        }
+	        else {
+	            cur.item = h2.item;
+	            h2 = h2.next;
+	        }      
+	    }
+	    
+	    // finish off L1
+	    while (h1 != null) {
+	        if (cur != null) {
+	            cur.next = new Node();
+	            cur = cur.next;
+	        }
+	        // first element
+	        else {
+	            list.head = new Node();
+	            cur = list.head;
+	        }
+	        
+	        cur.item = h1.item;
+	        h1 = h1.next;
+	    }
+	    
+	    // finish off L2
+	    while (h2 != null) {
+	        if (cur != null) {
+	            cur.next = new Node();
+	            cur = cur.next;
+	        }
+	        // first element
+	        else {
+	            list.head = new Node();
+	            cur = list.head;
+	        }
+	        
+	        cur.item = h2.item;
+	        h2 = h2.next;
+	    }
+	    
+	    return list.head;
+	}
+
+	public static Node sort2(Node h1, Node h2) {
+	    Node head = null, prev = null, cur = null;
+	    
+	    while(h1 != null && h2 != null) {
+	        if (h1.item < h2.item) {
+	            cur = h1;
+	            h1 = h1.next;
+	        } else {
+	            cur = h2;
+	            h2 = h2.next;
+	        }
+	        
+	        if (prev != null) {
+	            prev.next = cur;
+	        } else {
+	            head = cur;
+	        }
+	        
+	        prev = cur;
+	    }
+	    
+	    // finish off the remaining array
+	    cur.next = h1 != null ? h1 : h2;
+	    
+	    return head;
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

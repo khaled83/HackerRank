@@ -1,5 +1,7 @@
 package com.amazon.dp;
 
+import java.util.*;
+
 public class MixStrategies {
 
 	/**
@@ -341,4 +343,23 @@ public class MixStrategies {
 	        return new String(path);
 	}
 	
+	public static List<Integer> primes(int n) {
+
+	    List<Integer> res = new ArrayList<Integer>(n);
+	    // zeros by default
+	    int[] arr = new int[n]; // 0..n-1
+	    
+	    for (int base = 2; base < n; base++) {
+	        // number is prime since its not reached from a smaller base
+	        if (arr[base] == 0) {
+	            res.add(base);
+	            // if number is not prime, ignore it, as its multipliers are covered by lower bases
+	            for (int sum = base; sum < n; sum += base) {
+	                arr[sum] = base; // sometimes overrides, can add IF statement to keep lowest base
+	            }  
+	        }
+	    }
+	    
+	    return res;
+	}
 }

@@ -71,6 +71,7 @@ public class BST<E extends Comparable<E>> {
     
     public void insert(E item) {
     	root = insert(root, item);
+    	size++;
     }
     
     private Node<E> insert(Node<E> root, E item) {
@@ -85,6 +86,7 @@ public class BST<E extends Comparable<E>> {
     
     public void delete(E item) throws NoSuchElementException {
         root = delete(root, item);
+        size--;
     }
     
     private Node<E> delete(Node<E> root, E item) throws NoSuchElementException {
@@ -455,6 +457,44 @@ public class BST<E extends Comparable<E>> {
         return true;
     }
  
+    // ====== APPROACH 2: Iterative/DP =======
+    public boolean isBalanced3() {
+        return isBalanced3(root).isBalanced;
+    }
+    
+    /**
+    n: number of nodes
+    Time: O(n)
+    Mem: O(2n+1) = O(n) due to recursion
+    */
+    private Pair isBalanced3(Node<E> root) {
+        if (root == null) {
+            return new Pair(true, 0);
+        }
+        
+        Pair left = isBalanced3(root.leftChild);
+        // optimization: stop calculation and fail earlier
+        if (!left.isBalanced) {
+            return new Pair(false, left.height + 1); // height value is inaccurate but it doesn't matter
+        }
+        Pair right = isBalanced3(root.rightChild);
+        
+        int height = 1 + Math.max(left.height, right.height);
+        boolean isBalanced = right.isBalanced && Math.abs(left.height - right.height) <= 1;
+        Pair res = new Pair(isBalanced, height);
+        return res;
+    }
+    
+    private static class Pair {
+        boolean isBalanced;
+        int height;
+        
+        Pair(boolean isBalanced, int height) {
+            this.isBalanced = isBalanced;
+            this.height = height;
+        }
+    }
+    
     // ====== APPROACH 1: Using ArrayLists with duplicate node references
     /**
      * returns a list of linked lists, one linked list for each node at each depth with all the children nodes inside list
@@ -565,6 +605,262 @@ public class BST<E extends Comparable<E>> {
 //        System.out.println(sb);
 		
         return curList;
+    }
+    
+    
+    /**
+     * number of paths from any node to any other node downwards that leads to the specified sum 
+     */
+    public int numPathSums(int x) {
+        Counter counter = new Counter();
+        try {
+        	numPathSums((Node<Integer>) root, x, counter);
+        } catch (ClassCastException e) {
+        	System.err.println("This method only works for integer trees");
+        	return 0;
+        }
+        // All combis => O(n^2) memory
+        /** int count = 0;
+        for (int sum : sums) {
+            if (sum == x) {
+                count++;
+            }
+        }**/
+        return counter.count;
+    }
+    
+    private static class Counter {
+        int count = 0;
+    }
+    
+    private List<Integer> numPathSums(Node<Integer> root, int x, Counter counter) {
+    
+        List<Integer> res = new ArrayList<Integer>();
+    
+        if (root == null)
+            return res;
+        
+        List<Integer> left = numPathSums(root.leftChild, x, counter);
+        List<Integer>  right = numPathSums(root.rightChild, x, counter);
+        
+        // path from the node to itself
+        res.add(root.item);
+        // All combis => O(n^2) memory
+        // res.addAll(left);
+        // res.addAll(right);
+        
+        // sum and add items from left subtee 
+        for (int sum : left) {
+            res.add(root.item + sum);
+        }
+        
+        // sum and add items from the right subtree
+        for (int sum : right) {
+            res.add(root.item + sum);
+        }
+        
+        // count matches
+        for (int sum : res) {
+            if (sum == x) {
+                counter.count++;
+            }    
+        }
+        
+        return res;
+    }
+ 
+    public boolean isBST() {
+        MinMax minMax = isBalanced(root);
+        return minMax.min < Integer.MAX_VALUE && minMax.max > Integer.MIN_VALUE;
+    }
+    
+    // Time: O(n) Mem: O(1), n: number of nodes
+    // Time: 2 * n * (4 compares) = 8n operations => O(n)
+    private MinMax isBalanced(Node<E> root) { // may be rename method to minMax
+        if (root == null) {
+            // values that will always validate
+            return new MinMax(Integer.MAX_VALUE, Integer.MIN_VALUE); // newSoftMinMax()
+        }
+        
+        MinMax res;
+        MinMax left = isBalanced(root.leftChild);
+        // fail early optimization: O(n) with best case O(1), avg case O(n/2)
+        if ((int) root.item < left.max) {
+            // bubble error up the tree with values that will always fail
+            res = new MinMax(Integer.MAX_VALUE, Integer.MIN_VALUE); // newHardMinMax()
+            return res;
+        }
+        
+        MinMax right = isBalanced(root.rightChild);
+        
+        if ((int) root.item < right.min) {
+            // reset min/max when set to infinity
+            int min = left.min < Integer.MAX_VALUE ? left.min : (int) root.item;
+            int max = right.max > Integer.MIN_VALUE ? right.max : (int) root.item;
+            res = new MinMax(min, max);
+        } 
+        else {
+            // bubble error up the tree with values that will always fail
+            res = new MinMax(Integer.MAX_VALUE, Integer.MIN_VALUE); // newHardMinMax()
+        }
+        
+        return res;
+
+        /**        
+        return root.item > root.leftChild 
+               && root.item < root.rightChild
+               && isBalanced(root.leftChild)
+               && isBalanced(root.rightChild);
+       */
+    }
+    
+    public void replaceValue(E oldValue, E newValue) {
+    	replaceValue(root, oldValue, newValue);
+    }
+    
+    private void replaceValue(Node<E> root, E oldValue, E newValue) {
+    	if (root == null)
+    		return;
+    	
+    	if (root.item == oldValue) {
+    		root.item = newValue;
+    		return;
+    	}
+    	
+    	replaceValue(root.leftChild, oldValue, newValue);
+    	replaceValue(root.rightChild, oldValue, newValue);
+    }
+    
+    private static class MinMax {
+        int min, max;
+        
+        MinMax() {}
+        
+        MinMax(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+        
+        // optional: convenient methods
+        static MinMax newSoftMinMax() {
+            return new MinMax(Integer.MAX_VALUE, Integer.MIN_VALUE);
+        }
+        
+        static MinMax newHardMinMax() {
+            return new MinMax(Integer.MIN_VALUE, Integer.MAX_VALUE);
+        }
+    }
+    
+    public ArrayList<int[]> combi() {
+        ArrayList<Integer> parents = new ArrayList<Integer>(size);
+        ArrayList<Integer> leaves = new ArrayList<Integer>(size);
+        // find parents and leaves nodes using preorder traversal
+        preorderFindParentsAndLeaves((Node<Integer>) root, parents, leaves);
+        // find all possible ordering of leaves values
+        Object[] leavesArrObj = leaves.toArray();
+        Integer[] leavesArr = new Integer[leavesArrObj.length];
+        int indx = 0;
+        for (Object o : leavesArrObj) {
+        	leavesArr[indx++] = (Integer) o;
+        }
+        ArrayList<int[]> combi = combi(leavesArr) ;
+        ArrayList<int[]> res = new ArrayList<int[]>();
+        // combine parents fixed arrangement with every possible leaves arrangement
+        for (int[] arr : combi) {
+            int[] comb = new int[size];
+            // copy fixed part
+            for (int i = 0; i < parents.size(); i++) {
+                comb[i] = parents.get(i);
+            }
+            // copy dynamic part
+            for (int i = parents.size(), src = 0; i < size && src < arr.length; i++, src++) {
+                comb[i] = arr[src];
+            }
+            res.add(comb);
+        }
+        return res;
+    }
+    
+    private void preorderFindParentsAndLeaves(Node<Integer> root, ArrayList<Integer> parents, ArrayList<Integer> leaves) {
+        if (root == null) {
+            return;
+        }
+        
+        if (root.leftChild == null && root.rightChild == null) {
+            leaves.add(root.item);
+        }
+        else {
+            parents.add(root.item);
+        }
+        
+        preorderFindParentsAndLeaves(root.leftChild, parents, leaves);
+        preorderFindParentsAndLeaves(root.rightChild, parents, leaves);
+    }
+    
+    /**
+          0  1  2
+    in    10 30 50
+    
+    s    first    last    cur    loc    arr            n    res
+    -    -----    ----    ---    ---    ---            -    ---
+    1    0        2       10     0..2   10 30 50       3    [30,50] => [10,30,50] [30,10,50] [50,30,10]     
+                                                            [50,30] => [10,50,30] [50,10,30] [30,50,10]
+    2    1        2       30     0..1   30 50          2    [30,50] [50,30]
+    3    2        2       50     2      50             1    [50]
+    
+    
+    Final result: [60 20 40] (as prefix) + { [10,30,50] [30,10,50] [50,30,10], [10,50,30] [50,10,30] [30,50,10] } (as postfix)
+    
+    */
+    private ArrayList<int[]> combi(Integer[] arr) {
+        return combi(arr, 0, arr.length - 1);
+    }
+    
+    private ArrayList<int[]> combi(Integer[] arr, int first, int last) {
+    
+        ArrayList<int[]> res = new ArrayList<int[]>();
+        int n = last - first + 1;
+        // base case with one element array
+        if (first == last) {
+            int[] a = new int[n];
+            a[0] = arr[first];
+            res.add(a);
+            return res;
+        }
+        
+        // find all possible combinations of subarray n-1
+        ArrayList<int[]> combi = combi(arr, first + 1, last);
+        int cur = arr[first];
+        for (int[] subarray : combi) {
+            int[] a = new int[n];
+            // copy cur to first location
+            a[0] = cur;
+            // copy all subarray elements into rest of the array
+            System.arraycopy(subarray, 0, a, 1, n - 1);
+            // place cur element into all possible locations within the array
+            for (int loc = 0; loc < n; loc++) {
+                swap(a, 0, loc);
+                res.add(Arrays.copyOf(a, n));
+                swap(a, 0, loc); // backtrack
+            }
+        }
+        
+        return res;
+        
+    }
+    
+    private static void swap(int[] arr, int x, int y) {
+    	int tmp = arr[x];
+    	arr[x] = arr[y];
+    	arr[y] = tmp;
+    }
+    
+    private static void printArray(int[] arr) {
+    	System.out.print("[");
+    	for (int x : arr) {
+    		System.out.print(x + ",");
+    	}
+    	System.out.println("]");
     }
     
 }

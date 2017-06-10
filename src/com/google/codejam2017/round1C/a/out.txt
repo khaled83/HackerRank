@@ -1,0 +1,15 @@
+Success! LinkedList is working just nice :)
+Success! ArrayList is working brilliantly :)
+Success! Strings are working fine :P
+Success! Stacks are LIFO : )
+Success! Queues are FIFO : )
+Success! Queues are FIFO : )
+Success! Queues are FIFO : )
+Success! Queues are FIFO : )
+Success! Sorted out : )
+Success! Sort problems are sorted out ;)
+Success! Trees are balanced : )
+Success! Recursion breaks nicely ; )
+Success! Graphs are curvy : )
+Success! Hashing is quick!
+Success! with Bits & Bytes : D

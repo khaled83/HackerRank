@@ -6,6 +6,13 @@ public class LinkedList {
 
 	private Node head;
 	private int size;
+	
+	public LinkedList() {}
+	
+	public LinkedList(int[] arr) {
+		for (int x : arr)
+			this.addLast(x);
+	}
 
 	public boolean isEmpty() {
 		return head == null;
@@ -227,7 +234,6 @@ public class LinkedList {
 			sb.append(cur.item).append(" ");
 			cur = cur.next;
 		}
-		sb.append("\n");
 		return sb.toString();
 	}
 
@@ -354,6 +360,63 @@ public class LinkedList {
 	    cur.next = h1 != null ? h1 : h2;
 	    
 	    return head;
+	}
+	
+	public void partition1(int x) {
+		partition1(head, x);
+	}
+	
+	public void partition2(int x) {
+		partition2(head, x);
+	}
+	
+	public static void partition2(Node head, int x) {
+	    if (head == null)
+	        return;
+	    
+	    Node left = head;
+	    Node right = head;
+	    
+	    while (right != null) {
+	        if (right.item < x) {
+	            // do swapping
+	            int tmp = left.item;
+	            left.item = right.item;
+	            right.item = tmp;
+	            left = left.next;
+	        }
+	        right = right.next;
+	    }
+	}
+	
+	private static void partition1(Node head, int x) {
+	    if (head == null)
+	        return;
+	        
+	    // count elements 
+	    int n = 0;
+	    Node cur = head;
+	    while (cur != null) {
+	        n++;
+	        cur = cur.next;
+	    }
+	    
+	    for (int pass = 1; pass <= n - 1; pass++) {
+	        Node prev = head;
+	        cur = head.next;
+	        int loc = 1;
+	        while(cur != null && loc < (n - pass + 1)) {
+	            if (cur.item  < x && prev.item >= x) {
+	                int tmp = prev.item;
+	                prev.item = cur.item;
+	                cur.item = tmp;
+	            }
+	            prev = cur;
+	            cur = cur.next;
+	            loc++;
+	        }
+	    }
+	    
 	}
 	
 }

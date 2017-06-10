@@ -17,7 +17,7 @@ public class StackLinkedList extends Stack {
 		return size;
 	}
 
-	public void push(int value) {
+	public void push(Integer value) {
 		items.addFirst(value);
 		++size;
 	}

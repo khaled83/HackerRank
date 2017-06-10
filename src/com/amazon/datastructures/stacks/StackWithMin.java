@@ -9,7 +9,7 @@ public class StackWithMin extends Stack {
     private int min = Integer.MAX_VALUE;
     
     @Override
-    public void push(int item) {    
+    public void push(Integer item) {    
         items.addLast(item);
         // check min
         if (item < min) {

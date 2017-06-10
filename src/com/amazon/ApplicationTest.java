@@ -1,5 +1,6 @@
 package com.amazon;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,11 +9,14 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import javax.naming.LimitExceededException;
 import javax.naming.SizeLimitExceededException;
 
 import com.amazon.algorithms.BitManipulation;
+import com.amazon.algorithms.Searching;
+import com.amazon.algorithms.Searching.Listy;
 import com.amazon.algorithms.Sorting;
 import com.amazon.datastructures.ArrayList;
 import com.amazon.datastructures.LinkedList;
@@ -23,6 +27,11 @@ import com.amazon.datastructures.graphs.GraphUndirected;
 import com.amazon.datastructures.graphs.Graph;
 import com.amazon.datastructures.graphs.GraphDirected;
 import com.amazon.datastructures.graphs.GraphWeighted;
+import com.amazon.datastructures.graphs.problems.Color;
+import com.amazon.datastructures.graphs.problems.GraphBlackenizeEnclosed;
+import com.amazon.datastructures.graphs.problems.GraphFlipBlackWhite;
+import com.amazon.datastructures.hashtable.HashTable;
+import com.amazon.datastructures.hashtable.Hashing;
 import com.amazon.datastructures.heaps.Heap;
 import com.amazon.datastructures.queues.Queue;
 import com.amazon.datastructures.queues.QueueArrayBased;
@@ -32,6 +41,7 @@ import com.amazon.datastructures.queues.QueueWithStacks;
 import com.amazon.datastructures.queues.Queue.EmptyQueueException;
 import com.amazon.datastructures.graphs.GraphDirectedWeighted;
 import com.amazon.datastructures.graphs.GraphDirectedExt;
+import com.amazon.datastructures.stacks.SetOfStacks;
 import com.amazon.datastructures.stacks.Stack;
 import com.amazon.datastructures.stacks.StackWithArrays;
 import com.amazon.datastructures.stacks.StackWithMax1;
@@ -53,6 +63,7 @@ public class ApplicationTest {
 		runStacks();
 		runQueues();
 		runSorts();
+		runSearching();
 		runSortProblems();
 		runTrees();
 		runHeaps();
@@ -60,7 +71,13 @@ public class ApplicationTest {
 		runDynamicProgramming();
 		runGraphs();
 		
+		runHashing();
+		
 		runBits();
+		
+		new StringTokenizer("");
+		new StringBuilder();
+		new java.util.ArrayList<Integer>().remo
 	}
 	
 	private static void runArrayList() {
@@ -148,6 +165,14 @@ public class ApplicationTest {
 		int[] arr2 = new int[] {3, 11};
 		assert(Arrays.equals(LinkedList.mergeSortedLists1(arr1, arr2), new int[] {2, 3, 5, 7, 11}));
 		assert(Arrays.equals(LinkedList.mergeSortedLists2(arr1, arr2), new int[] {2, 3, 5, 7, 11}));
+		
+		// partition linked list to left and right around value x
+		list = new LinkedList(new int[] {3, 5, 8, 5, 10, 2, 1});
+		list.partition1(5);
+		assert(list.toString().equals("3 2 1 5 8 5 10 "));
+		list = new LinkedList(new int[] {3, 5, 8, 5, 10, 2, 1});
+		list.partition2(5);
+		assert(list.toString().equals("3 2 1 5 10 5 8 "));
 				
 		System.out.println("Success! LinkedList is working just nice :)");
 	}
@@ -225,6 +250,23 @@ public class ApplicationTest {
 		assert(Strings.intToString(304).equals("304"));
 		assert(Strings.intToString(-304).equals("-304"));
 		
+		// is it possible to perform at most one edit, add, replace char for s2 to equal s1?
+		assert(Strings.equalWithOneCharEditAscii("pale", "ple"));
+		assert(Strings.equalWithOneCharEditAscii("pale", "pales"));
+		assert(Strings.equalWithOneCharEditAscii("pale", "bale"));
+		assert(!Strings.equalWithOneCharEditAscii("pale", "bae"));
+		assert(Strings.equalWithOneCharEdit("pale", "ple"));
+		assert(Strings.equalWithOneCharEdit("pale", "pales"));
+		assert(Strings.equalWithOneCharEdit("pale", "bale"));
+		assert(!Strings.equalWithOneCharEdit("pale", "bae"));
+		
+		// compress string
+		assert(Strings.compress("aabcccccaaa").equals("a2b1c5a3"));
+		assert(Strings.compress("aabccaaa").equals("aabccaaa"));
+		assert(Strings.compress("aabccaaa").equals("aabccaaa"));
+		assert(Strings.compress("aabccaaaa").equals("a2b1c2a4"));
+		assert(Strings.compress("aabccaabc").equals("aabccaabc"));
+		
 		System.out.println("Success! Strings are working fine :P");
 	}
 	
@@ -236,8 +278,19 @@ public class ApplicationTest {
 		runStacks(stack);
 		stack = new StackWithMin();
 		runStacks(stack);
+		stack = new SetOfStacks<Integer>();
+		runStacks(stack);
 		runStackWithMinMax();
 		runStacksWithArrays();
+		
+		// static methods
+		assert(Stack.RPN("34+2x1+") == 15);
+		assert(Stack.RPN2("34+2x1+") == 15);
+		assert(Stack.RPN("11+2x") == 4);
+		assert(Stack.RPN2("11+2x") == 4);
+		assert(Stack.RPN("88+4/4/") == 1);
+		assert(Stack.RPN2("88+4/4/") == 1);
+		
 		System.out.println("Success! Stacks are LIFO : )");
 	}
 	
@@ -533,6 +586,52 @@ public class ApplicationTest {
 		System.out.println("Success! Sorted out : )");
 	}
 	
+	private static void runSearching() {
+		// magic indx is where index and value are the same
+		int[] arr = new int[]{-40, 20, -1, 1, 2, 3, 5, 7, 9, 12, 13};
+		assert(Searching.magicIndxDist(arr, 11) == 7);
+		arr = new int[]{-10, -5, 2, 2, 2, 3, 4, 7, 9, 12, 13};
+		assert(Searching.magicIndx(arr, 11) == 2);
+		
+		// search rotated array
+//		arr = new int[]{15, 16, 19, 20, 25, 1, 3, 4, 5, 7, 10, 14};
+//		System.out.println(Searching.searchRotatedArray(arr, 7));
+//		assert(Searching.searchRotatedArray(arr, 7) == 9);
+		
+		// search in a sorted list without given size
+		// case 1: normal
+		Listy<Integer> list = new Listy<Integer>();
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		list.add(6);
+		list.add(7);
+		assert(Searching.sortedSearchNoSize(list, 7) == 6);
+		// case 2: key before expected index 
+		list = new Listy<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		list.add(7);
+		assert(Searching.sortedSearchNoSize(list, 7) == 4);
+		// case 3: key after expected index
+		list = new Listy<Integer>();
+		list.add(1);
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		list.add(5);
+		list.add(5);
+		list.add(6);
+		list.add(7);
+		assert(Searching.sortedSearchNoSize(list, 7) == 9);
+	}
+	
 	private static void runSortProblems() {
 		// Sort Problems
 		// merge B into A
@@ -596,7 +695,6 @@ public class ApplicationTest {
 //		System.out.println(bst.floor(45));
 //		assert(bst.floor(45) == 40);
 		
-		
 		BST<Integer> bst = new BST<Integer>();
 		bst.insert(60);
 		bst.insert(20);
@@ -606,6 +704,23 @@ public class ApplicationTest {
 		bst.insert(30);
 		bst.insert(50);
 		assert(bst.inorder().equals(Arrays.asList(10, 20, 30, 40, 50, 60, 70)));
+		
+		// all possible insertions of bst
+		for (int[] arr : bst.combi()) {
+//			System.out.print("[");
+//			for (int x : arr) {
+//				System.out.print(x + ",");
+//			}
+//			System.out.println("]");
+		}
+		
+		// number of paths from any node to any other node that lead to designated sum
+		assert(bst.numPathSums(90) == 3);
+		assert(bst.numPathSums(70) == 2);
+		assert(bst.numPathSums(30) == 2);
+		assert(bst.numPathSums(170) == 1);
+		assert(bst.numPathSums(1000) == 0);
+		assert(bst.numPathSums(0) == 0);
 		
 		// collection of lists with one linked list for each node at each depth
 		java.util.ArrayList<java.util.LinkedList<Integer>> lists = bst.rootLevelLinkedLists1();
@@ -632,11 +747,6 @@ public class ApplicationTest {
 			}
 		}
 		
-		
-		// is balanced bst
-		assert (!bst.isBalanced1());
-		assert (!bst.isBalanced2());
-		
 		// test store and restore
 		String path = "data.txt";
 		File file = new File(path);
@@ -661,6 +771,25 @@ public class ApplicationTest {
 		// constructor to create balanced BST from a given array
 		int[] arr = new int[]{30, 60, 40, 50, 10, 20, 70};
 		assert(new BST(arr).preorder().equals(Arrays.asList(40, 20, 10, 30, 60, 50, 70)));
+		
+		// is balanced bst
+		assert (!bst.isBalanced1());
+		assert (!bst.isBalanced2());
+		assert (!bst.isBalanced3());
+		
+		// check binary tree is balanced
+		assert(bst.isBST());
+		bst.insert(55);
+		bst.replaceValue(55, 80);
+		assert(!bst.isBST());
+		bst.replaceValue(80, 55);
+		bst.delete(55);
+		
+		bst.insert(80);
+//		assert (bst.isBalanced1());
+		assert (bst.isBalanced2());
+		assert (bst.isBalanced3());
+		bst.delete(80);
 		
 		bst.delete(20);
 		assert(bst.inorder().equals(Arrays.asList(10, 30, 40, 50, 60, 70)));
@@ -903,6 +1032,9 @@ public class ApplicationTest {
 		arr2 = new int[][]{{1,0,1,1},{1,1,1,1},{1,0,1,1}};
 		assert(MixStrategies.findPath(arr2, 3, 4).equals("(0,0) (1,0) (1,1) (1,2) (1,3) (2,3) "));
 		
+		// return all primes up to number n
+		assert(Arrays.equals(MixStrategies.primes(18).toArray(), new Integer[]{2, 3, 5, 7, 11, 13, 17}));
+		
 		System.out.println("Success! Recursion breaks nicely ; )");
 	}
 
@@ -1021,6 +1153,64 @@ public class ApplicationTest {
 	    int[][] maze = new int[][] {{1,1,0,0},{0,1,1,1}, {1,1,0,0}, {0, 1, 1,1}};
 	    assert(new GraphDirected(maze, 4, 4).findPath(0, 0, 3, 3).toString().equals("[0, 1, 5, 9, 13, 14, 15]"));
 	    
+	    // flip black / white
+	    Color B = Color.BLACK;
+	    Color W = Color.WHITE;
+	    Color[][] matrix = new  Color[][] {
+	    	{B, W, W, B},
+	    	{B, W, W, B},
+	    	{B, B, B, W},
+	    	{B, W, B, W}
+	    };
+	    GraphFlipBlackWhite g5 = new GraphFlipBlackWhite(matrix, 4, 4);
+	    g5.flip(0, 0);
+	    assert(g5.getColor(0, 0) == W);
+	    assert(g5.getColor(1, 0) == W);
+	    assert(g5.getColor(2, 0) == W);
+	    assert(g5.getColor(3, 0) == W);
+	    assert(g5.getColor(2, 1) == W);
+	    assert(g5.getColor(2, 2) == W);
+	    assert(g5.getColor(3, 2) == W);
+	    assert(g5.getColor(0, 3) == B);
+	    assert(g5.getColor(1, 3) == B);
+	    
+	    matrix = new  Color[][] {
+	    	{B, B, B, B},
+	    	{W, B, W, B},
+	    	{B, W, W, B},
+	    	{B, B, B, B}
+	    };
+	    GraphBlackenizeEnclosed g6 = new GraphBlackenizeEnclosed(matrix, 4, 4);
+	    g6.blackizeEnclosedRegions();
+	    for (int row = 0; row < 4; row++) {
+	    	for (int col = 0; col < 4; col++) {
+	    		if (row == 1 && col == 0) {
+	    			assert(g6.getColor(row, col) == W);
+	    		} else {
+	    			assert(g6.getColor(row, col) == B);
+	    		}
+	    	}
+	    }
+	    
+	    matrix = new  Color[][] {
+	    	{B, B, B, B},
+	    	{W, W, B, B},
+	    	{B, B, W, B},
+	    	{B, B, B, B}
+	    };
+	    g6 = new GraphBlackenizeEnclosed(matrix, 4, 4);
+	    g6.blackizeEnclosedRegions();
+	    for (int row = 0; row < 4; row++) {
+	    	for (int col = 0; col < 4; col++) {
+	    		if ((row == 1 && col == 0) || (row == 1 && col == 1)) {
+	    			assert(g6.getColor(row, col) == W);
+	    		} else {
+	    			assert(g6.getColor(row, col) == B);
+	    		}
+	    	}
+	    }
+	    
+	    
 	    System.out.println("Success! Graphs are curvy : )");
 	    
 	}
@@ -1035,7 +1225,90 @@ public class ApplicationTest {
 		// convert double to bit string
 		assert(BitManipulation.doubleToBinary(0.625).equals("0.101"));
 		
+		// convert one 0 to 1 to produce the longest stream of 1s
+		x = Integer.parseInt("11011101", 2);
+		assert(BitManipulation.flipOneZeroToProduceLongestAdjacent1sStream1(x) == Integer.parseInt("11111101", 2));
+		assert(BitManipulation.flipOneZeroToProduceLongestAdjacent1sStream2(x) == Integer.parseInt("11111101", 2));
+		x = Integer.parseInt("11011101111", 2);
+		assert(BitManipulation.flipOneZeroToProduceLongestAdjacent1sStream1(x) == Integer.parseInt("11011111111", 2));
+		assert(BitManipulation.flipOneZeroToProduceLongestAdjacent1sStream2(x) == Integer.parseInt("11011111111", 2));
+		
+		// find the next min and max numbers that are larger than given positive integer with the same number of 1s
+		x = Integer.parseInt("00110", 2);
+		assert(Arrays.equals(BitManipulation.minAndMaxLarger(x), new int[]{ Integer.parseInt("01010", 2), Integer.parseInt("1100000000000000000000000000000", 2) }));
+		x = Integer.parseInt("1000110000000000000000110000000", 2);
+		assert(Arrays.equals(BitManipulation.minAndMaxLarger(x),
+				new int[]{ Integer.parseInt("1001010000000000000000110000000", 2), 
+						Integer.parseInt("1111100000000000000000000000000", 2) }));
+		
+		x = Integer.parseInt("1110011000000000000000110000011", 2);
+//		for (int i = 30; i>=0; i--)
+//			System.out.print(i % 10);
+//		System.out.println();
+//		System.out.println(Integer.toBinaryString(x));
+//		for (int num : BitManipulation.minAndMaxLarger(x))
+//			System.out.println(Integer.toBinaryString(num));
+		assert(Arrays.equals(BitManipulation.minAndMaxLarger(x),
+				new int[]{ Integer.parseInt("1110101000000000000000110000011", 2), 
+						Integer.parseInt("1111111110000000000000000000000", 2) }));
+		
+		// multiply only using bit operators
+		assert(BitManipulation.mul(3, 3) == 9);
+		assert(BitManipulation.mul(3, 4) == 12);
+		assert(BitManipulation.mul(4, 4) == 16);
+		assert(BitManipulation.mul(13, 9) == 117);
+		
+		// divide only using plus, minus, and bit operators
+		// fails
+//		assert(BitManipulation.div(15, 3) == 5);
+//		assert(BitManipulation.div(15, 4) == 3);
+//		assert(BitManipulation.div(12, 4) == 3);
+//		assert(BitManipulation.div(20, 4) == 5);
+//		assert(BitManipulation.div(100, 3) == 33);
+		
 		System.out.println("Success! with Bits & Bytes : D");
+	}
+	
+	private static void runHashing() {
+		HashTable<String, String> table = new HashTable<String, String>(3);
+		table.put("ID01", "Khaled");
+		table.put("ID02", "Radi");
+		table.put("ID03", "Yusuf");
+		assert(table.get("ID01").equals("Khaled"));
+		table.put("ID03", "Malik");
+		table.put("ID05", "Yazeed");
+		assert(table.get("ID03").equals("Malik"));
+		assert(table.get("ID05").equals("Yazeed"));
+		assert(table.size() == 4);
+		
+		// find K most frequent strings in a list of strings
+		String path = "/Users/khaledabbas/Documents/workspace/Hacker Rank/src/com/amazon/datastructures/hashtable/data.txt";
+		java.util.ArrayList<String> list = null;
+		try (BufferedReader reader = Files.newBufferedReader(Paths.get(path))) {
+			list = new java.util.ArrayList<String>();
+			String line = "";
+			while ((line = reader.readLine()) != null) {
+				list.add(line);
+			}
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
+		java.util.List<String> freq = Hashing.mostFrequent(2, list);
+		assert(freq.contains("select *"));
+		assert(freq.contains("insert one"));
+		assert(!freq.contains("update three"));
+		
+		freq = Hashing.mostFrequent(3, list);
+		assert(freq.contains("select *"));
+		assert(freq.contains("insert one"));
+		assert(freq.contains("update three"));
+		
+		// distance between closest matching pair of words
+		String[] arr = new String[] {"All", "work", "and", "no", "play", "makes", "for", "no", "work", "no", "fun", "and", "no", "results"};
+		assert(Hashing.closestMatch(arr) == 2);
+		
+		
+		System.out.println("Success! Hashing is quick!");
 	}
 	
 	private static char toChar(int v) {

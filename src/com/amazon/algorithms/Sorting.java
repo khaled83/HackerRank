@@ -1,9 +1,8 @@
 package com.amazon.algorithms;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
+
+import com.khaledabbas.datastructures.arrays.ArrayUtils;
 
 public abstract class Sorting {
 
@@ -222,7 +221,7 @@ public abstract class Sorting {
 	     }
 	}
 
-	private static void swap(int[] arr, int x, int y) {
+	public static void swap(int[] arr, int x, int y) {
 	    int tmp = arr[x];
 	    arr[x] = arr[y];
 	    arr[y] = tmp;
@@ -269,4 +268,259 @@ public abstract class Sorting {
 
 	}
 	
+	public static void sortDutchNationalFlag(int[] arr, int pIndx) {
+	    int p = arr[pIndx];
+	    int lastPivotIndx = -1;
+	    // move pivots to the beginning
+	    for (int i=0; i<arr.length; i++) {
+	        if (arr[i] == p) {
+	            swap(arr, i, ++lastPivotIndx);
+	        }    
+	    }
+	    
+	    // split elements after pivot into s1(smaller) and s2(larger)
+	    // s1 is defined as range [lastPivotIndx+1, s2-1]
+	    int s2 = lastPivotIndx+1;
+	    for (int i=lastPivotIndx+1; i<arr.length; i++) {
+	        if (arr[i] < p) {
+	            swap(arr, s2, i);
+	            s2++;
+	        }
+	    }
+	}
+
+/**
+arr		["Ian,Botham", "David,Gower", "Ian,Bell", "Ian,Chappell"]
+sorted  ["Ian,Botham", "Ian,Bell", "Ian,Chappell", "David,Gower"]	n log(n) { n: number of words, k: number of letters (in first word only)
+									curName >>						n k
+
+src		dst		cur		prev	arr
+---		---		---		----	---
+0		0		Ian		""		["Ian,Botham", "Ian,Bell", "Ian,Chappell", "David,Gower"]
+1		1		Ian		Ian
+2		1		Ian		Ian
+3		2		David	David	["Ian,Botham", "David,Gower", null, null]
+
+*/
+	
+	public static void removeDuplicateFirstNames(String[] arr) {
+		Arrays.sort(arr, new Comparator<String>() {
+			
+			public int compare(String s1, String s2) {
+				String name1 = s1.substring(0, s1.indexOf(","));
+				String name2 = s2.substring(0, s2.indexOf(","));
+				return name1.compareTo(name2);
+			}
+			
+		});
+		
+		String prev = "";
+		int src, dst;
+		for (src = 0, dst = 0; src < arr.length; src++) {
+			String cur = arr[src].substring(0, arr[src].indexOf(",")); // first name
+			if (!cur.equals(prev)) {
+				arr[dst++] = arr[src];
+				prev = cur;
+			}
+		}
+		
+		while (dst < arr.length) {
+			arr[dst++] = null;
+		}
+	}
+	
+	public static void sortUpDownArray(int[] arr, int k) {
+	    int n = arr.length;
+	    int[] tmp = new int[n];
+	    
+	    // find regions
+	    // int[] p = new int[k];
+	    // int cur = -1;
+	    
+	    // copy first increment region into tmp
+	    int first = 0, last = 1;
+	    int sorted = -1;
+	    for (int i = 0; i < n - 1; i++) {
+	        if (arr[i] > arr[i + 1]) {
+	            first = i + 1;
+	            sorted = i;
+	            break;
+	        }
+	    }
+	    
+	    // copy elements from tmp to array
+	    System.out.println("*** Copy first region");
+	    ArrayUtils.printArray(arr);
+	    
+	    boolean inc = false;
+	    while (sorted < (n - 1)) {
+	        // possible to avoid duplicate code by reversing desc area, and executing the first logic as for asc
+	        if (inc) {
+	            // find last elm of asc region
+	            for (int i = sorted + 1; i < n; i++) {
+	                // continue merging desc region
+	                if (i == (n - 1) || arr[i] > arr[i + 1]) {
+	                    last = i;
+	                    break;
+	                }
+	            }
+	            
+	            int i, j, dst;
+	            for (i = 0, j = sorted + 1, dst = 0; i < first && j <= last; dst++) {
+	                if (arr[i] < arr[j]) {
+	                    tmp[dst] = arr[i];
+	                    i++;
+	                }
+	                else {
+	                    tmp[dst] = arr[j];
+	                    j++;
+	                }
+	            }
+	            
+	            // finish off first region
+	            while (i < first) {
+	                tmp[dst++] = arr[i++];
+	            }
+	            
+	            // finish off second region
+	            while (j <= last) {
+	                tmp[dst++] = arr[j++];
+	            }
+	            
+	            sorted = last;
+	            System.out.println("last="+last);
+	            
+	            // copy sorted elements from tmp to arr
+	            System.arraycopy(tmp, 0, arr, 0, sorted + 1);
+	            System.out.println("*** Asscending");
+	            ArrayUtils.printArray(arr);
+	        }
+
+	/**
+	f    l    s    i        j          arr                               tmp                    dst
+	-    -    -    -        -          ---                               ---                    ---
+	                                   0  1   2   3   4   5   6   7
+	0    1    -1   0..2                57 131 493 294 221 339 418 452    
+	3    1    2    0..2                57 131 493 294 221 339 418 452    57 131 493
+	3    4    2    3..4                57 131 493 294 221 339 418 452    57 131 493
+	3    4    2    0..3     4..3       57 131 493 294 221 339 418 452    57 131 493             0
+	3    4    2    0        4          57 131 493 294 221 339 418 452    57 131 493             0
+	3    4    2    1        4          57 131 493 294 221 339 418 452    57 131 493             1
+	3    4    2    2        4          57 131 493 294 221 339 418 452    57 131 493             2
+	3    4    2    2        3          57 131 493 294 221 339 418 452    57 131 221             3
+	3    4    2    2        2          57 131 493 294 221 339 418 452    57 131 221 294         4
+	3    4    4    2..3                57 131 493 294 221 339 418 452    57 131 221 294 493     5         // finish off first region
+	3    4    4    2..3                57 131 221 294 493 339 418 452    57 131 221 294 493     5         // copy elemts back to arr
+
+	*/
+	        else {
+	            // find last elm of desc region
+	            for (int i = sorted + 1; i < n; i++) {
+	                // continue merging desc region
+	                if (i == (n - 1) || arr[i] < arr[i + 1]) {
+	                    last = i;
+	                    break;
+	                }
+	            }
+	            
+	            int i, j, dst;
+	            for (i = 0, j = last, dst = 0; i < first && j >= first; dst++) {
+	                if (arr[i] < arr[j]) {
+	                    tmp[dst] = arr[i];
+	                    i++;
+	                }
+	                else {
+	                    tmp[dst] = arr[j];
+	                    j--;
+	                }
+	            }
+	            
+	            // finish off first region
+	            while (i < first) {
+	                tmp[dst++] = arr[i++];
+	            }
+	            
+	            // finish off second region
+	            while (j >= first) {
+	                tmp[dst++] = arr[j--];
+	            }
+	            
+	            sorted = last;
+	            
+	            // copy sorted elements from tmp to arr
+	            System.arraycopy(tmp, 0, arr, 0, sorted + 1);
+	            System.out.println("*** Descending");
+	            ArrayUtils.printArray(arr);
+	        }
+	        
+	        // flip inc
+	        inc = !inc;
+	    }
+	    
+	    /**     0   1   2   3   4   5   6   7   8   9
+	            +   +   +   -   -   +   +   +   -   -
+	    arr    57 131 493 294 221 339 418 452 442 190
+	    tmp    57 131 493 -   -   -  
+	                    f
+	                    s
+	                    s
+	    **/
+	    
+	    /***
+	    private static void copy(int[] arr, int[] tmp, int sorted) {
+	        // copy elements from tmp to array
+	        for (int i = 0; i <= sorted; i++) {
+	            arr[i] = tmp[i];
+	        }
+	    }
+	    ***/
+	    
+	}
+
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

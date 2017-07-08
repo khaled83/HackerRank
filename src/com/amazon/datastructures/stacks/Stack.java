@@ -1,4 +1,4 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.stacks;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -125,5 +125,46 @@ public abstract class Stack {
 	    }
 	    return result;
 	}
-	
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

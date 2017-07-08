@@ -62,12 +62,12 @@ public class Graph {
 		dfs(0, visited);
 	}
 
-	private void dfs(int v, HashSet<Integer> visisted) {
+	private void dfs(int v, HashSet<Integer> visited) {
 		System.out.println(toChar(v));
-		visisted.add(v);
+		visited.add(v);
 		for (Integer w : adj[v]) {
-			if (!visisted.contains(w))
-				dfs(w, visisted);
+			if (!visited.contains(w))
+				dfs(w, visited);
 		}
 	}
 	

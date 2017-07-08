@@ -11,6 +11,7 @@ import java.util.EmptyStackException;
 import javax.naming.LimitExceededException;
 import javax.naming.SizeLimitExceededException;
 
+import com.amazon.algorithms.BitManipulation2;
 import com.amazon.algorithms.Sorting;
 import com.amazon.datastructures.ArrayList;
 import com.amazon.datastructures.LinkedList;
@@ -19,32 +20,47 @@ import com.amazon.datastructures.Queue.EmptyQueueException;
 import com.amazon.datastructures.QueueArrayBased;
 import com.amazon.datastructures.QueueLinkedList;
 import com.amazon.datastructures.QueuePointerBased;
-import com.amazon.datastructures.Stack;
-import com.amazon.datastructures.StackArray;
-import com.amazon.datastructures.StackLinkedList;
 import com.amazon.datastructures.Strings;
 import com.amazon.datastructures.graphs.Graph;
+import com.amazon.datastructures.stacks.Stack;
+import com.amazon.datastructures.stacks.StackArray;
+import com.amazon.datastructures.stacks.StackLinkedList;
+import com.amazon.datastructures.stacks.StackProblems;
 import com.amazon.datastructures.trees.BST;
 import com.amazon.datastructures.trees.BSTArrayBased;
+import com.amazon.datastructures.trees.BinaryTree;
+import com.amazon.datastructures.trees.BinaryTree.Node;
 import com.amazon.datastructures.trees.Tree;
 import com.amazon.dp.MixStrategies;
 import com.amazon.dp.Recursion;
+import com.khaledabbas.datastructures.arrays.ArrayUtils;
 
 public class ApplicationTest {
 
 	public static void main(String[] args) {
 		
 		runLinkedList();
-		runArrayList();
+//		runArrayList();
 		runStrings();
 		runStacks();
 		runQueues();
 		runSorts();
 		runSortProblems();
-		runTrees();
+		runBSTs();
+		runBinaryTrees();
+		
+		runBits();
 		
 		runDynamicProgramming();
 		runGraphs();
+	}
+	
+	private static void runBits() {
+		long x = Long.parseLong("01001001", 2);
+		assert(BitManipulation2.swap(x, 0, 7) == Long.parseLong("11001000", 2));
+		x = Long.parseLong("11001000", 2);
+		assert(BitManipulation2.swap(x, 0, 7) == Long.parseLong("01001001", 2));
+		System.out.println("Bits work!");
 	}
 	
 	private static void runArrayList() {
@@ -103,6 +119,18 @@ public class ApplicationTest {
 		list.removeLast();
 		assert(list.size() == 1);
 		assert(list.get(0) == 18);
+		
+		// find cyclic linked list
+		list = new LinkedList();
+		list.addFirst(3);
+		list.addFirst(12);
+		list.addLast(18);
+		list.addLast(25);
+		list.addLast(27);
+		list.addLastWithCycle(30, 18);
+//		assert(list.hasCycle1() == 30);
+//		assert(list.hasCycle2() == 30);
+		
 		System.out.println("Success! LinkedList is working just nice :)");
 	}
 
@@ -159,6 +187,8 @@ public class ApplicationTest {
 		runStacks(stack);
 		stack = new StackLinkedList();
 		runStacks(stack);
+		runStackProblems();
+		
 	}
 	
 	private static void runStacks(Stack stack) {
@@ -231,6 +261,14 @@ public class ApplicationTest {
 		System.out.println("Success! Stacks are LIFO : )");
 	}
 	
+	private static void runStackProblems() {
+		assert(StackProblems.isWellFormed("[()[]{()()}]"));
+		assert(StackProblems.isWellFormed("([]){()}"));
+		assert(!StackProblems.isWellFormed("{)"));
+		assert(!StackProblems.isWellFormed("()[]{()()"));
+		System.out.println("Success! Stack problems solved!");
+	}
+	
 	private static void runQueues() {
 		Queue queue = new QueuePointerBased();
 		runQueues(queue);
@@ -297,6 +335,7 @@ public class ApplicationTest {
 	private static void runSorts() {
 		int[] arr = {29, 10, 14, 37, 13};
 		int[] sorted = {10, 13, 14, 29, 37};
+		"".hashCode();
 		// selection sort
 		Sorting.selectionSort(arr);
 		assert(Arrays.equals(arr, sorted));
@@ -320,6 +359,21 @@ public class ApplicationTest {
 		String[] arr2 = new String[]{"ABC", "ABB", "XAB", "XYZ"};
 		Sorting.radixSort(arr2);
 		assert(Arrays.equals(arr2, new String[]{"ABB", "ABC", "XAB", "XYZ"}));
+		
+		arr = new int[] {0, 1, 2, 0, 2, 1, 1};
+		Sorting.sortDutchNationalFlag(arr, 3);
+//		for (int x:arr)
+//			System.out.print(x + " ");
+//		assert(Arrays.equals(arr, new int[]{0,0,1,2,2,1,1}));
+		
+		arr2 = new String[] {"Ian,Botham", "David,Gower", "Ian,Bell", "Ian,Chappell"};
+		Sorting.removeDuplicateFirstNames(arr2);
+		assert(Arrays.equals(arr2, new String[]{"David,Gower", "Ian,Botham", null, null}));
+		
+		arr = new int[] {57, 131, 493, 294, 221, 339, 418, 452, 442, 190};
+		ArrayUtils.printArray(arr);
+		Sorting.sortUpDownArray(arr, 4);
+		ArrayUtils.printArray(arr);
 		
 		System.out.println("Success! Sorted out : )");
 	}
@@ -355,7 +409,7 @@ public class ApplicationTest {
 		assert(Arrays.equals(arr, new String[]{"ABC", "CBA", "ADD", "XYZ", "YZX"}));
 	}
 
-	private static void runTrees() {
+	private static void runBSTs() {
 		Tree<Integer> bstArray = new BSTArrayBased(20);
 		boolean thrown = false;
 		try {
@@ -412,6 +466,47 @@ public class ApplicationTest {
 		bst.delete(60);
 		assert(bst.inorder().equals(Arrays.asList(10, 30, 40, 50, 70)));
 		System.out.println("Success! Trees are balanced : )");
+		
+	}
+	
+	private static void runBinaryTrees() {
+		BinaryTree bt = new BinaryTree();
+		Node root = bt.addRoot(314);
+		Node n6l = root.addLeft(6);
+		Node n6r = root.addRight(6);
+		Node n5l = n6l.addLeft(5);
+		Node n5r = n6r.addRight(5);
+		Node n2l = n6l.addRight(2);
+		Node n2r = n6r.addLeft(2);
+		Node n3l = n2l.addRight(3);
+		Node n3r = n2r.addLeft(3);
+		assert(bt.isSymmetric());
+		assert(bt.isSymmetric2());
+		Node n1l = n2l.addLeft(1);
+		assert(!bt.isSymmetric());
+		assert(!bt.isSymmetric2());
+		
+		bt = new BinaryTree();
+		root = bt.addRoot(1);
+		Node B = root.addLeft(0);
+		Node C = B.addLeft(0);
+		Node D = C.addLeft(0);
+		Node E = C.addLeft(1);
+		Node F = B.addRight(1);
+		Node G = F.addRight(1);
+		Node H = G.addLeft(0);
+		Node I = root.addRight(1);
+		Node J = I.addLeft(0);
+		Node O = I.addRight(0);
+		Node K = J.addRight(0);
+		Node L = K.addLeft(1);
+		Node N = K.addRight(0);
+		Node M = L.addRight(1);
+		Node P = O.addRight(0);
+		for (int x : bt.findSumOfPaths()) {
+			System.out.print(Integer.toBinaryString(x) + " ");
+		}
+		System.out.println();
 		
 	}
 	
@@ -599,13 +694,37 @@ public class ApplicationTest {
 		assert(MixStrategies.shortestPath5(cost, 3, 2) == 7);
 		
 		// empty pot combi
-		assert(MixStrategies.combiEmptyPlot(1) == 1);
-		assert(MixStrategies.combiEmptyPlot(2) == 4);
-		assert(MixStrategies.combiEmptyPlot(3) == 28);
+		assert(MixStrategies.combiTilesDistinct(1) == 1);
+		assert(MixStrategies.combiTilesDistinct(2) == 4);
+		assert(MixStrategies.combiTilesDistinct(3) == 28);
+		
+		// 1 2 3 4 5  6
+		// 1 2 3 5 8 13
+		assert(MixStrategies.combiTiles1(1) == 1);
+		assert(MixStrategies.combiTiles1(2) == 2);
+		assert(MixStrategies.combiTiles1(6) == 13);
+		
+		assert(MixStrategies.combiTiles2(1) == 1);
+		assert(MixStrategies.combiTiles2(2) == 2);
+		assert(MixStrategies.combiTiles2(6) == 13);
+		
+		assert(MixStrategies.combiTiles3(1) == 1);
+		assert(MixStrategies.combiTiles3(2) == 2);
+		assert(MixStrategies.combiTiles3(6) == 13);
+		
+		assert(MixStrategies.combiTripleTiles(2) == 3);
+		assert(MixStrategies.combiTripleTiles(4) == 7);
+		assert(MixStrategies.combiTripleTiles(6) == 15);
+		assert(MixStrategies.combiTripleTiles(8) == 31);
+		
+		assert(MixStrategies.combiTripleTilesDP(2) == 3);
+		assert(MixStrategies.combiTripleTilesDP(4) == 7);
+		assert(MixStrategies.combiTripleTilesDP(6) == 15);
+		assert(MixStrategies.combiTripleTilesDP(8) == 31);
 		
 		System.out.println("Success! Recursion breaks nicely ; )");
 	}
-
+	
 	private static void runGraphs() {
 	    Graph g = new Graph(9);
 	    // 0,1,2,3,4,5,6,7,8
@@ -622,14 +741,15 @@ public class ApplicationTest {
 	    g.addEdge(3,6);
 	    g.addEdge(3,7);
 	    
-	    System.out.println(g);
-	    System.out.println("recursive dfs");
-	    g.dfs();
-	    System.out.println("iterative dfs");
-	    g.dfs2();
+//	    System.out.println(g);
+//	    System.out.println("recursive dfs");
+//	    g.dfs();
+//	    System.out.println("iterative dfs");
+//	    g.dfs2();
 	}
 	
 	@SuppressWarnings("unused")
+	
 	private void reference() {
 		// === READ/WRITE TO FILES
 		new BST<Integer>().storeTree("");

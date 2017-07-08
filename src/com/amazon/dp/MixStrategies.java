@@ -1,5 +1,7 @@
 package com.amazon.dp;
 
+import java.util.ArrayList;
+
 public class MixStrategies {
 
 	/**
@@ -142,7 +144,7 @@ public class MixStrategies {
 	    return memo[y][x];
 	}
 	
-	public static int combiEmptyPlot(int n) {
+	public static int combiTilesDistinct(int n) {
 	    int combi = 1;
 	    for (int col=2; col<=n; col++) {
 	        // number of possible placements for 1 tile within #col
@@ -152,4 +154,182 @@ public class MixStrategies {
 	    
 	    return combi;
 	}
+
+	public static int combiTiles1(int n) {
+		int[] memo = new int[n];
+		return combiTiles1(n, memo);
+	}
+
+	private static int combiTiles1(int n, int[] memo) {
+		if (memo[n-1] != 0)
+			return memo[n-1];
+
+		if (n == 0)
+			memo[n-1] = 0;
+		else if (n == 1)
+			memo[n-1] = 1;
+		else if (n == 2)
+			memo[n-1] = 2;
+		else
+			memo[n-1] = combiTiles1(n - 1, memo) + combiTiles1(n - 2, memo);
+
+		return memo[n-1];
+	}
+
+	public static int combiTiles2(int n) {
+		
+		if (n == 0)
+			return 0;
+		else if (n == 1)
+			return 1;
+		else if (n == 2)
+			return 2;
+		
+		int[] result = new int[n];
+		result[0] = 1;
+		result[1] = 2;
+		/**
+		 * 1 2 3 5 f s r 5
+		 */
+		//
+		//
+		for (int i = 2; i < n; i++) {
+			result[i] = result[i - 1] + result[i - 2];
+		}
+		return result[n - 1];
+	}
+
+	public static int combiTiles3(int n) {
+		if (n == 0)
+			return 0;
+		else if (n == 1)
+			return 1;
+		else if (n == 2)
+			return 2;
+
+		int first = 1;
+		int second = 2;
+		int result = 0;
+
+		for (int i = 3; i <= n; i++) {
+			result = first + second;
+			first = second;
+			second = result;
+		}
+
+		return result;
+	}
+	
+	public static int combiTripleTiles(int n) {
+	    if (n % 2 == 1)
+	        throw new IllegalArgumentException("n="+n);
+	    if (n == 0)
+	        return 0;
+	    else if (n == 2)
+	        return 3;
+	    else
+	        return 2 * combiTripleTiles(n-2) + 1;
+	}
+
+	public static int combiTripleTilesDP(int n) {
+	    if (n % 2 == 1)
+	        throw new IllegalArgumentException();
+	    if (n == 0)
+	        return 0;
+	    else if (n == 2)
+	        return 3;
+	        
+	    int result = 3;
+	    /**
+	    2 4 6 8
+	   [0 1 2 3]
+	        i    
+	    r=15
+	    3 7 15 31
+	    
+	    */
+	    for (int i=1; i < n/2; i++) {
+	        result = 2 * result + 1;
+	    }
+	    
+	    return result;
+	    
+	    /***
+	    int[] result = new int[n/2];
+	    result[0] = 3;
+	    for (int i=1; i < n/2; i++) {
+	        result[i] = 2 * result[n-1] + 1;
+	    }
+	    **/
+	}
+
+	/**
+	N     combi                        combi vals          
+	-     -----                        ---------
+	3     1                        
+	5     1
+	10    2 (5,5) (10)                (5,5) (10)
+	13    3 (5,5,3) (5,3,5)           (5,5,3) (10,3)
+	        (3,5,5) (10,3) (3,10)
+	23                                (5,5,3,5,5) (5,5,3,10) (10,3,5,5) (10,3,10)
+
+	3,5,10
+
+
+	3,6,9,12,15,18,21,24
+	3,8,13,18,23,28
+	3,13,23
+
+	5,8,11,14,17,20,23
+	5,10,15,20,25
+	5,15,25
+
+	10,13,16,19,22,25
+	10,15,20,25
+	10,20,30
+
+
+	arr       0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+	---      [                                                             ]
+	         *      1   1 1   2 1 2  1  1  3  2  3  1  1  2  1  4  1  1  3
+	         
+	3               1     1     1       1        1        1        1
+	+5                        1            1              1              1
+	+10                                    1                             1
+
+	5                   1         1              1              1        
+	+3                        1      1        1        1        1        1
+	+10                                       1                                           
+
+	10                            1                             1
+	+3                                     1        1        1         1
+	+5                                           1              1   
+
+	*/
+
+	public static int combi(int N, ArrayList<Integer> steps) {
+	    
+	    
+	    int[] arr = new int[N+1];
+	    
+	    for (int step : steps) {
+	        for (int i = step; i <= N; i = i + step) {
+	            arr[i]++;
+	        }        
+	    }
+	    
+	    for (int i = 0; i <= N; i++) {
+	        if (arr[i] != 0) {
+	            for (int step : steps) {
+	                for (int j = i; j <= N; j = j + step)
+	                    arr[j]++;
+	            }
+	        }
+	    }
+	    
+	    return arr[N];
+	    
+	}
+
+	
 }

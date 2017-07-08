@@ -1,4 +1,4 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.stacks;
 
 import java.util.EmptyStackException;
 

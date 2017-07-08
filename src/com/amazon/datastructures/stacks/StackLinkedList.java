@@ -3,6 +3,7 @@ package com.amazon.datastructures.stacks;
 import java.util.EmptyStackException;
 
 import com.amazon.datastructures.LinkedList;
+import com.amazon.datastructures.stacks.Stack;
 
 public class StackLinkedList extends Stack {
 
@@ -17,7 +18,7 @@ public class StackLinkedList extends Stack {
 		return size;
 	}
 
-	public void push(int value) {
+	public void push(Integer value) {
 		items.addFirst(value);
 		++size;
 	}

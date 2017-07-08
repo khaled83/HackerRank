@@ -1,0 +1,2 @@
+numCases C=1
+OUTPUT => 10

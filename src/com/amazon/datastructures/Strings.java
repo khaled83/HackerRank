@@ -102,22 +102,22 @@ public abstract class Strings {
 	}
 
 	public static String URLify(String s, int n) {
-		int src = n - 1;
-		int dst = s.length() - 1;
-		char[] result = s.toCharArray();
-
-		for (; src >= 0; src--) {
-			if (result[src] == ' ') {
-				result[dst--] = '0';
-				result[dst--] = '2';
-				result[dst--] = '%';
-			} else {
-				result[dst--] = result[src];
-			}
-		}
-		return new String(result);
+		return URLify(s.toCharArray(), n);
 	}
-
+	
+	public static String URLify(char[] s, int n) {
+	    for (int src = n-1, dst = s.length-1; src != dst; src--) {
+	        if (s[src] == ' ') {
+	            s[dst--] = '0';
+	            s[dst--] = '2';
+	            s[dst--] = '%';
+	        } else {
+	            s[dst--] = s[src];
+	        }
+	    }
+	    return new String(s);
+	}
+	
 	/**
 	 * Works for small letters only
 	 */
@@ -195,6 +195,287 @@ public abstract class Strings {
 			}
 		}
 		return balanceSoFar == 0;
+	}
+
+	private static Comparator<String> compAnagrams1 = new Comparator<String>() {
+        
+	    public int compare(String s1, String s2) {
+	        // ASCII
+	    	char[] c1 = s1.toCharArray();
+	    	java.util.Arrays.sort(c1);
+	    	char[] c2 = s2.toCharArray();
+	    	java.util.Arrays.sort(c2);
+	    	
+	    	return new String(c1).compareTo(new String(c2));
+	    	
+//	        int[] count = new int[128];
+//	        for (char c : s1.toCharArray()) {
+//	            count[c]++;
+//	        }
+//	        
+//	        for (char c : s2.toCharArray()) {
+//	            count[c]--;
+//	            if (count[c] < 0)
+//	                return -1;
+//	        }
+//	        
+//	        return 0;
+	    }
+	    
+	};
+	
+	public static void sortAnagrams2(String[] arr) {
+	    java.util.Arrays.sort(arr, compAnagrams1);
+	    for (String s : arr)
+			System.out.print(s + " ");
+	    System.out.println();
+	}
+	
+	public static void sortAnagrams(String[] arr) {
+	    int n = arr.length;
+	    HashMap<String, List<String>> groups = new HashMap<String, List<String>>(n);
+	    for (String s : arr) {
+	        char[] chars = s.toCharArray();
+	        java.util.Arrays.sort(chars);
+	        String key = new String(chars);
+	        List<String> group = groups.get(key);
+	        if (group == null) {
+	            groups.put(key, new java.util.ArrayList<String>(n));
+	        }
+	        groups.get(key).add(s);
+	    }
+	    
+	    int indx = 0;
+	    for (String key : groups.keySet()) {
+	        for (String s : groups.get(key)) {
+	            arr[indx++] = s;
+	        }
+	    }
+	}
+
+	/**
+	 * checks if a string is a permutation of any palyndrome
+	 * works with ASCII only
+	 */
+	public static boolean isPermOfPalyndrome1(String s) {
+	    // ASCII
+	    int[] counts = new int[128];
+	    
+	    for (char c : s.toCharArray()) {
+	        counts[c]++;
+	    }
+	    
+	    
+	    int oddsAllowed = s.length() % 2;
+	    
+	    for (int count : counts) {
+	        if (count % 2 != 0 && oddsAllowed == 0)
+	            return false;
+	        else if (count %2 != 0)
+	            oddsAllowed = 0;
+	    }
+	    
+	    return true;
+	}
+	
+	/**
+	 * checks if a string is a permutation of any palyndrome
+	 * works with any type of string
+	 */
+	public static boolean isPermOfPalyndrome2(String s) {
+	    HashMap<Character, Integer> counts = new HashMap<Character, Integer>();
+	    
+	    for (char c : s.toCharArray()) {
+	        int count = 0;
+	        if (counts.containsKey(c))
+	            count = counts.get(c);
+	        counts.put(c, ++count);
+	    }
+	    
+	    int oddsAllowed = s.length() % 2;
+	    
+	    for (int count : counts.values()) {
+	        if (count % 2 == 1 && oddsAllowed == 0)
+	            return false;
+	        else if (count % 2 == 1)
+	            oddsAllowed = 0;
+	    }
+	    
+	    return true;
+	}
+	
+	public static boolean isPermOfPalyndrome3(String s) {
+	    int checker = 0;
+	    
+	    for (char c : s.toCharArray()) {
+	        int loc = c - 'a';
+	        if (loc < 0 || loc > 25)
+	            throw new IllegalArgumentException("This method only supports lower case alphabets");
+	        // flip flag for character
+	        checker = checker ^ (1 << loc);
+	    }
+	    
+	    // checker: 0 => even 1 => odd
+	    // count 1s, we can have at most one 1
+	    /** 
+	        checker: 100100
+	                 100011 c-1
+	                 ------ &
+	                 100000
+	                 011111 c-1
+	                 ------ &
+	                 000000
+	    */
+	    
+	    int oddsAllowed = s.length() % 2;
+	    if (checker > 0 && oddsAllowed == 0)
+	        return false;
+	    else if (checker > 0) {
+	        checker = checker & (checker - 1);
+	        if (checker > 0)
+	            return false;
+	    }
+	    
+	    return true;
+	}
+	
+	public static int stringtoInt(String s) {
+	    boolean isNegative = false;
+	    if (s.charAt(0) == '-') {
+	        isNegative = true;
+	    }
+	    
+	    int res = 0;
+	    for (int i = isNegative ? 1 : 0; i < s.length(); i++) {
+	        int digit = s.charAt(i) - '0';
+	        res = 10 * res + digit;
+	    }
+	    
+	    if (isNegative)
+	        res = -res;
+	    
+	    return res;
+	}
+
+	public static String intToString(int num) {
+	    StringBuilder res = new StringBuilder();
+	    
+	    boolean isNegative = false;
+	    if (num < 0) {
+	        isNegative = true;
+	        num = -num;
+	    }
+	    
+	    while (num > 0) {
+	        char digit = (char)((num % 10) + '0');
+	        res.append(digit);
+	        num = num / 10;
+	    }
+	    
+	    if (isNegative) {
+	        res.append('-');
+	    }
+	    
+	    res.reverse();
+	    return new String(res);
+	}
+
+	public static boolean equalWithOneCharEdit(String s1, String s2) { 
+	    HashMap<Character, Integer> count = new HashMap<Character, Integer>();
+	    for (char c : s1.toCharArray()) {
+	        int curCount = count.containsKey(c) ? count.get(c) : 0;
+	        count.put(c, curCount+1);
+	    }
+	    
+	    for (char c : s2.toCharArray()) {
+	        int curCount = count.containsKey(c) ? count.get(c) : 0;
+	        count.put(c, curCount-1);
+	        // optimization: fail earlier
+	        if (curCount < -1) {
+	            return false;
+	        }
+	    }
+	    
+	    int more = 0, less = 0;
+	    for (char c : count.keySet()) {
+	        int charCount = count.get(c);
+	        if (charCount > 0) {
+	            less += charCount;
+	        }
+	        else if (charCount < 0) {
+	            more += charCount;
+	        }
+	        if (more > 1 || less > 1) {
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+
+	public static boolean equalWithOneCharEditAscii(String s1, String s2) {
+	    // assuming ASCII
+	    int[] count = new int[128];
+	    for (char c : s1.toCharArray()) {
+	        count[c]++;
+	    }
+	    
+	    for (char c : s2.toCharArray()) {
+	        count[c]--;
+	        // optimization: fail earlier
+	        if (count[c] < -1) {
+	            return false;
+	        }
+	    }
+	    
+	    int more = 0, less = 0;
+	    for (int charCount : count) {
+	        if (charCount > 0) {
+	            less += charCount;
+	        }
+	        else if (charCount < 0) {
+	            more += charCount;
+	        }
+	        if (more > 1 || less > 1) {
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+
+	public static String compress(String s) {
+	    int n = s.length();
+	    char[] res = new char[n];
+	    
+	    char last = s.charAt(0);
+	    int count = 1;
+	    int src, dst;
+	    // dst >= n means compressed string is longer than original, so we terminate loop
+	    for (src = 1, dst = 0; src < n && dst < (n - 1); src++) {
+	        char c = s.charAt(src);
+	        if (c != last) {
+	            res[dst++] = last;
+	            res[dst++] = (char)(count + '0');
+	            last = c;
+	            count = 1;
+	        }
+	        else {
+	            count++;
+	        }
+	    }
+	    
+	    // transfer the last squence in source array, this requires room for 2 locations: char and count
+	    // if dst + 2 >= n then compressed string is equal or larger than original, so we don't compress
+	    if (dst < (n - 2)) {
+	        res[dst++] = last;
+	        res[dst++] = (char)(count + '0');
+	        return new String(res, 0, dst);
+	    }
+	    // compressed is larger than input
+	    else {
+	        return s;
+	    }
 	}
 	
 }

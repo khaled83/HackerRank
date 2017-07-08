@@ -4,6 +4,8 @@ import java.util.EmptyStackException;
 
 import javax.naming.SizeLimitExceededException;
 
+import com.amazon.datastructures.stacks.Stack;
+
 public class StackArray extends Stack {
 
 	private static final int DEFAULT_MAX = 10;
@@ -34,7 +36,7 @@ public class StackArray extends Stack {
 		return top == (MAX_SIZE - 1);
 	}
 
-	public void push(int value) throws SizeLimitExceededException {
+	public void push(Integer value) throws SizeLimitExceededException {
 		if (isFull())
 			throw new SizeLimitExceededException("Stack is full");
 		items[++top] = value;

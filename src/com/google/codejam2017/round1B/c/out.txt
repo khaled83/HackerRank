@@ -1,0 +1,3 @@
+Exception in thread "main" java.lang.NullPointerException
+	at com.google.codejam2017.round1B.c.C$Graph.shortest(C.java:150)
+	at com.google.codejam2017.round1B.c.C.main(C.java:36)

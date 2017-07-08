@@ -2,6 +2,7 @@ package com.khaledabbas.combinatorics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import com.khaledabbas.datastructures.arrays.ArrayUtils;
@@ -27,9 +28,26 @@ public class Combinatorics {
 		System.out.println( combi2("abcdef", 2).size() );
 		System.out.println("callbacks=" + callbacks2);
 		 */
-		combi5(4, 2);
+//		combi5(4, 2);
 		perm("abc");
-
+		
+		for (String s : permNonUnique("ABC"))
+			System.out.print(s + ",");
+		System.out.println();
+		for (String s : permNonUnique("ABA"))
+			System.out.print(s + ",");
+		System.out.println();
+		
+		System.out.println();
+		System.out.println("ALL SUBSETS");
+		System.out.println("-----------");
+		for (String s : subsets("ABC"))
+			System.out.print(s + ", ");
+		System.out.println();
+		for (String s : subsets("ABCD"))
+			System.out.print(s + ", ");
+		System.out.println();
+		
 	}
 	
 
@@ -202,4 +220,62 @@ public class Combinatorics {
 	}
 	
 
+	public static List<String> subsets(String s) {
+	    return subsets(s.toCharArray(), 0, s.length() - 1);
+	}
+
+	private static List<String> subsets(char[] arr, int first, int last) {
+	    ArrayList<String> res = new ArrayList<String>();
+
+	    if (first == last) {
+	        // single character
+	        res.add(arr[first] + "");
+	        return res;
+	    }
+	    
+	    List<String> left = subsets(arr, first, first);
+	    List<String> right = subsets(arr, first+1, last);
+	    
+	    res.addAll(left);
+	    res.addAll(right);
+	    
+	    String s1 = left.get(0);
+	    
+	    // union result sets into new combis
+	    for (String s2 : right) {
+	        res.add(s1 + s2);
+	    }
+	    
+	    return res;
+	}
+	
+	public static Iterable<String> permNonUnique(String s) {
+	    return perm4(s.toCharArray(), 0, s.length() - 1);
+	}
+
+
+	private static HashSet<String> perm4(char[] arr, int first, int last) {
+
+	    char cur = arr[first];
+	    HashSet<String> res = new HashSet<String>();
+	    
+	    if (first == last) {
+	        res.add(Character.toString(cur));
+	        return res;
+	    }
+	    
+	    HashSet<String> subresult = perm4(arr, first + 1, last);
+	    for (String perm : subresult) {
+	        int n = last - first + 1;
+	        char[] s = (cur + perm).toCharArray();
+	        for (int loc = 0; loc < n; loc++) {
+                swap(s, 0, loc);
+                res.add(new String(s));
+                swap(s, 0, loc); // backtrack
+	        }
+	    }
+	    
+	    return res;
+	}
+	
 }

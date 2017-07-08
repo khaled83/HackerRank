@@ -10,7 +10,7 @@ public abstract class Stack {
 	public abstract boolean isEmpty();
 	public abstract boolean isFull();
 	public abstract int size();
-	public abstract void push(int value) throws SizeLimitExceededException;
+	public abstract void push(Integer value) throws SizeLimitExceededException;
 	public abstract int pop();
 	public abstract int top();
 	
@@ -44,7 +44,7 @@ public abstract class Stack {
 	    
 	    Stack stack = Stack.newInstance();
 	    for (int i=0; i<=leftEnd; i++) {
-	        stack.push(s.charAt(i));
+	        stack.push(Integer.valueOf(s.charAt(i)));
 	    }
 	    
 	    int rightStart = (n/2)+(n%2);
@@ -124,6 +124,84 @@ public abstract class Stack {
 	        result = x / y;
 	    }
 	    return result;
+	}
+	
+	public static int RPN2(String rpn) {
+	    Stack s = newInstance();
+	    for (char c : rpn.toCharArray()) {
+	        Integer digit = Character.getNumericValue(c);
+	        // digit is a numeric operand in range 0..9
+	        if (digit >= 0 && digit <= 9) {
+	            try {
+					s.push(digit);
+				} catch (SizeLimitExceededException e) {
+					e.printStackTrace();
+				}
+	        }
+	        else {
+	            if (s.size() < 2) {
+	                throw new IllegalArgumentException("RPN expression is invalid!");
+	            }
+	            int res = 0;
+	            int B = s.pop();
+	            int A = s.pop();
+	            switch (c) {
+	                case 'x': res = A * B;
+	                          break;
+	                case '/': res = A / B;
+	                          break;
+	                case '+': res = A + B;
+	                          break;
+	                case '-': res = A - B;
+	                          break;
+	                default: throw new IllegalArgumentException("RPN expression is invalid!");
+	            }
+	            try {
+					s.push(res);
+				} catch (SizeLimitExceededException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }
+	    
+	    if (s.isEmpty() || s.size() > 1) {
+	        throw new IllegalArgumentException("RPN expression is invalid!");
+	    }
+	    
+	    return s.pop();
+	}
+
+
+	// Time: O(n) Space: O(1), n: number of characters
+	public static int RPN(String rpn) {
+	    Integer A = null;
+	    Integer B = null;
+	    String o = null;
+	    
+	    for (char c : rpn.toCharArray()) {
+	        if (A == null) {
+	            A = Character.getNumericValue(c); // assuming value of c - '0'
+	        }
+	        else if (B == null) {
+	            B = Character.getNumericValue(c);
+	        }
+	        else {
+	            switch (c) {
+	                case 'x': A = A * B;
+	                          break;
+	                case '/': A = A / B;
+	                          break;
+	                case '+': A = A + B;
+	                          break;
+	                case '-': A = A - B;
+	                          break;
+	                default: throw new IllegalArgumentException("RPN expression is invalid!");
+	            }
+	            B = null;
+	        }
+	    }
+	    
+	    return A;
 	}
 
 }

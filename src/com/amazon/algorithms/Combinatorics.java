@@ -135,4 +135,73 @@ public class Combinatorics {
 	    return res;
 	}
 
+	/**
+	(()) ()()
+	(())) (()()) (())() ()(()) ()()()
+
+	1 => ()
+	2 => ()()              (())
+	3 => (()())  ()()()    ((()))    (())()    ()(())
+
+	1 => 1    ~1
+	2 => 2    ~3
+	3 => 5    ~9
+	4 => 13   ~27
+
+	n * 3^(n - 1) => n 3^n
+	
+	[((())), ()(()), (())(), (()()), ()()(), ()()(), (()()), ()()(), ()()()]
+	
+	*/
+	public static List<String> generateParen(int n) {
+	    return generateParen(n, new HashSet<String>());
+	}
+
+	/**
+	n    sub          sym            s       res
+	-    ---          ---            -       ---
+	3    (())         (),()()        ((()))  [((())),]
+	                                 ()(())  [((())),()(())]
+	                                 (())()  [((())),()(()),(())()]
+	     ()()         (),()()        (()())  [((())),()(()),(())(),(()())]
+	                  (),()(),()()() ()()()  [((())),()(()),(())(),(()()),()()()]
+	         
+	2    ()           ()             (())    [(()),]
+	                  (),()()        ()()    [(()),()(),]
+	1    [()]                        [(),]
+
+	*/
+
+	private static List<String> generateParen(int n, HashSet<String> sym) {
+	    List<String> res = new ArrayList<String>();
+	    if (n == 0) {
+	        return res;
+	    }
+	    else if (n == 1) {
+	        String s = "()";
+	        res.add(s);
+	        sym.add(s);
+	        return res;
+	    }
+	        
+	    for (String subset : generateParen(n - 1, sym)) {
+	        // surround subset with paren: "(${subset})"
+	        String s = "(" + subset + ")";
+	        res.add(s);
+	        // concatenate from left and right: "()${subset}" "${subset}()"
+	        s = "()" + subset;
+	        res.add(s);
+	        // if string is not summetrical, concatenation from right gives another distinct result
+	        if (!sym.contains(subset)) {
+	            s = subset + "()";
+	            res.add(s);
+	        }
+	        else {
+	            sym.add(s);
+	        }
+	    }
+	    
+	    return res;
+	}
+	
 }

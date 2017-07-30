@@ -15,15 +15,14 @@ import javax.naming.LimitExceededException;
 import javax.naming.SizeLimitExceededException;
 
 import com.amazon.algorithms.BitManipulation2;
+import com.amazon.algorithms.Combinatorics;
 import com.amazon.algorithms.Sorting;
 import com.amazon.datastructures.ArrayList;
-import com.amazon.datastructures.LinkedList;
 import com.amazon.algorithms.BitManipulation;
 import com.amazon.algorithms.Searching;
 import com.amazon.algorithms.Searching.Listy;
 import com.amazon.algorithms.Sorting;
 import com.amazon.datastructures.ArrayList;
-import com.amazon.datastructures.LinkedList;
 import com.amazon.datastructures.Strings;
 import com.amazon.datastructures.graphs.GraphUndirected;
 import com.amazon.datastructures.graphs.Graph;
@@ -39,6 +38,7 @@ import com.amazon.datastructures.graphs.problems.GraphFlipBlackWhite;
 import com.amazon.datastructures.hashtable.HashTable;
 import com.amazon.datastructures.hashtable.Hashing;
 import com.amazon.datastructures.heaps.Heap;
+import com.amazon.datastructures.linkedlist.LinkedList;
 import com.amazon.datastructures.queues.Queue;
 import com.amazon.datastructures.queues.QueueArrayBased;
 import com.amazon.datastructures.queues.QueueLinkedList;
@@ -81,14 +81,20 @@ public class ApplicationTest {
 		runHeaps();
 		
 		runDynamicProgramming();
+		runCombinatorics();
+		
 		runGraphs();
 		
-		runHashing();
+//		runHashing();
 		
 		runBits();
 		
 		new StringTokenizer("");
 		new StringBuilder();
+	}
+	
+	private static void runCombinatorics() {
+		System.out.println(Combinatorics.generateParen(3));
 	}
 	
 	private static void runArrayList() {

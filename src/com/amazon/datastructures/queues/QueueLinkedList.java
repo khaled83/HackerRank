@@ -3,7 +3,7 @@ package com.amazon.datastructures.queues;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.amazon.datastructures.LinkedList;
+import com.amazon.datastructures.linkedlist.LinkedList;
 
 public class QueueLinkedList extends Queue {
 	

@@ -1,4 +1,4 @@
-package com.amazon.datastructures;
+package com.amazon.datastructures.linkedlist;
 
 import java.util.HashSet;
 

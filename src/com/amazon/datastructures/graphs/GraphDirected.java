@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.amazon.datastructures.queues.QueueArrayBased;
+import com.khaledabbas.datastructures.arrays.ArrayUtils;
 
 /**
  * Directed unweighted graph
@@ -112,6 +113,49 @@ public class GraphDirected {
         return result;
     }
 	
+	// just another implementation repeated
+	public List<Integer> topOrder2() {
+        // final result: vertices in topological order
+        List<Integer> res = new ArrayList<Integer>();
+        
+        // clone adj
+        HashSet<Integer>[] adjClone = (HashSet<Integer>[]) new HashSet[V];
+        for (int v = 0; v < V; v++) {
+            adjClone[v] = new HashSet<Integer>();
+            for (int w : adj[v]) {
+                adjClone[v].add(w);
+            }
+        }
+         
+        // hash of vertices remaining to be processed  
+        HashSet<Integer> h = new HashSet<Integer>();
+        for (int v = 0; v < V; v++) {
+            h.add(v);
+        }
+        System.out.println("h="+h);
+        
+        // repeat V times
+        for (int i = 0; i < V; i++) {
+            int w = -1;
+            for (int candidate : h) {
+            		System.out.println(adjClone[candidate].size() + " : " + adjClone[candidate].size() + " => " + adjClone[candidate]);
+                if (adjClone[candidate].size() == 0) {
+                    w = candidate;
+                    break;
+                }
+            }
+            res.add(w);
+            h.remove(w);
+            // remove all edges leading to w
+            for (int v : h) {
+                adjClone[v].remove(w);
+            }
+        }
+        
+        Collections.reverse(res);
+        return res;
+    }
+	
 	protected void visit(int v, StringBuilder sb) {
 		sb.append(toChar(v)).append(' ');
 	}
@@ -169,6 +213,44 @@ public class GraphDirected {
     	return findPath(vertexIndx(srcRow, srcCol), vertexIndx(dstRow, dstCol));
     }
     
+    public boolean hasDeadlock() {
+        
+        for (int start = 0; start < V; start++ ) {
+            HashSet<Integer> visited = new HashSet<Integer>();   
+            Stack<Integer> s = new Stack<Integer>();
+            s.push(start);
+            visited.add(start);
+            // traverse graph starting from node v
+            while (!s.isEmpty()) {
+                int v = s.pop();
+                for (int w : adj[v]) {
+                    if (w == start) {
+                        // deadlock detected!
+                        return true;
+                    }
+                    else if (!visited.contains(w)) {
+                        s.push(w);
+                        visited.add(w);
+                    }
+                }
+            }
+        }
+        
+        return false;
+        
+        /**
+        for (int v : vertices) {
+            for (int w : adj[v]) {
+                if (visited.contains(w)) {
+                    // deadlock detected
+                    // error: doesn't mean deadlock
+                    return false;
+                }
+                visited.add(v);
+            }
+        }
+        */
+    }
     
     /**
 
@@ -236,4 +318,39 @@ public class GraphDirected {
         
         return path;
     }
+
+    public int longestPath() {
+    		
+    		HashSet<Integer>[] adj = new HashSet[2];
+    	
+        int max = Integer.MIN_VALUE;
+        HashSet<Integer> visited = new HashSet<Integer>();
+        for (int start = 0; start < V; start++) {
+            // being part of path is better than starting from that vertex
+            if (visited.contains(start)) {
+                continue;
+            }
+            Stack<Integer> s = new Stack<Integer>();
+            s.add(start);
+            int length = 0;
+            while (!s.isEmpty()) {
+                int v = s.pop();
+                visited.add(v);
+                length++;
+                boolean foundAdjacent = false;
+                for (int w : adj[v]) {
+                    s.add(w);
+                    foundAdjacent = true;                
+                }
+                // backtracking
+                if (!foundAdjacent) {
+                    max = Math.max(max, length);
+                    length--;
+                }
+            }
+        }
+        return max;
+    }
+
+    
 }

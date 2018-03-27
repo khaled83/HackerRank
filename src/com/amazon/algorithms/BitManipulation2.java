@@ -27,4 +27,17 @@ public class BitManipulation2 {
 	    return x;
 	}
 	
+	public static int numBitsConverstion(int a, int b) {
+	    // 1s where a and b have different bits
+	    int xor = a ^ b;
+	    // count number of 1s
+	    int count = 0;
+	    while (xor > 0) {
+	        int mask = xor - 1;
+	        xor = xor & mask;
+	        count++;
+	    }
+	    return count;
+	}
+	
 }

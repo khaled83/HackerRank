@@ -197,6 +197,17 @@ public class ArrayUtils {
 		return new String(sb);
 	}
 	
+	public static String printMatrix(Object[][] matrix) {
+		StringBuilder sb = new StringBuilder();
+		for( int row = 0; row < matrix.length; row++) {
+			for( int col = 0; col < matrix[0].length; col++) {
+				sb.append(matrix[row][col] + "  ");
+			}
+			sb.append("\n");
+		}
+		return new String(sb);
+	}
+	
 	public static void printArray( int[] arr ) {
 		StringBuilder sb = new StringBuilder();
 //		System.out.println(arr.length);

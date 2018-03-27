@@ -1,15 +1,164 @@
-Success! LinkedList is working just nice :)
+mid=2
+left=2 mid=3 right=2
+mid=2
+left=2 mid=2 right=2
+mid=4
+left=4 mid=3 right=2
+023102310232302323Success! LinkedList is working just nice :)
 Success! ArrayList is working brilliantly :)
+{ 2 3 5 7 11 13 11 11 13 }
+
+Success! Arrays are in bound and neat : )
 Success! Strings are working fine :P
+Success! Stack problems solved!
 Success! Stacks are LIFO : )
 Success! Queues are FIFO : )
 Success! Queues are FIFO : )
 Success! Queues are FIFO : )
 Success! Queues are FIFO : )
+Success! Queues are FIFO : )
+Success! Queues are FIFO : )
+Success! Queues are FIFO : )
+{ (A,9),(B,0),(C,4),(D,7),(E,1),(F,2),(G,4),(H,7),(I,1),}
+{ (B,0),(E,1),(I,1),(F,2),(C,4),(G,4),(D,7),(H,7),(A,9),}
+first1=0 last1=1 a=1 leftA=0 first2=0 last2=1 b=2 leftB=0
+left of 2 =1
+first1=1 last1=1 a=4 leftA=0 first2=1 last2=1 b=3 leftB=0
+left of 4 =1
+MEDIAN=4.0
+{ 60 20 70 10 50 30 40 }
+{ 40 20 10 50 30 60 70 }
+{ 40 20 10 50 30 60 70 }
+{ 40 20 10 50 30 60 70 }
+{ 40 20 10 50 30 60 70 }
+{ 30 20 10 40 50 60 70 }
+{ 30 20 10 40 50 60 70 }
+{ 30 20 10 40 50 60 70 }
+{ 30 20 10 40 50 60 70 }
+{ 10 20 30 40 50 60 70 }
+{ 10 20 30 40 50 60 70 }
+{ 10 20 30 40 50 60 70 }
 Success! Sorted out : )
+firstIndx = 1 lastIndx=3
+RANGE: 0 => 4
+RANGE: 6 => 8
+5
+Success! Searched and found : )
 Success! Sort problems are sorted out ;)
+left=1 right=3
+BALANCED BST ====
 Success! Trees are balanced : )
-Success! Recursion breaks nicely ; )
+[5, 6, 1, 2, 3, 314, 6, 5]
+Adding left child 1 to 0
+Adding right child 1 to 0
+Adding right child 2 to 0
+Adding left child 2 to 1
+Adding right child 2 to 1
+Adding left child 2 to 0
+Adding left child 2 to 1
+Adding right child 2 to 1
+PREORDER MARKER DATA:
+= = = = = TREE
+H => B,C
+B => F,E
+F => ,
+E => A,
+A => ,
+C => ,D
+D => ,G
+G => I,
+I => ,
+
+Success! Binary trees are dancing on two legs : D
+Success! with Bits & Bytes : D
+Success! Math is logic!
+Success! Thanks Heaps!! : )
+Recursion circles gracefully!
+Palyndromic Decomp:
+'0' '2' '0' '4' '4' '5' '1' '8' '8' '1' 
+'02' '0' '4' '4' '5' '1' '8' '8' '1' 
+'020' '4' '4' '5' '1' '8' '8' '1' 
+'02' '04' '4' '5' '1' '8' '8' '1' 
+'020' '44' '5' '1' '8' '8' '1' 
+'02' '04' '45' '1' '8' '8' '1' 
+'020' '44' '51' '8' '8' '1' 
+'02' '04' '45' '18' '8' '1' 
+'020' '44' '51' '88' '1' 
+'02' '04' '45' '18' '81' 
+{ 9 13 16 16 23 25 28 }
+4
+{ 9 13 16 16 23 25 28 }
+Success! DB breaks nicely ; )
+Success! Combinatorics play well ; )
+h=[0, 1, 2, 3, 4, 5, 6]
+2 : 2 => [1, 3]
+2 : 2 => [2, 4]
+0 : 0 => []
+2 : 2 => [1, 3]
+1 : 1 => [4]
+1 : 1 => [4]
+1 : 1 => [5]
+0 : 0 => []
+2 : 2 => [1, 3]
+1 : 1 => [4]
+1 : 1 => [4]
+0 : 0 => []
+2 : 2 => [1, 3]
+0 : 0 => []
+1 : 1 => [3]
+0 : 0 => []
+0 : 0 => []
+0 : 0 => []
+topOrder=[6, 0, 3, 1, 4, 5, 2]
+DIJSTRA ALGORITHM LONGEST PATH:
+{ 0 8 11 9 16 }
+****************  
 Success! Graphs are curvy : )
+A=>[90, 90]
+B=>[60, 80]
+C=>[90]
+D=>[80, 90]
+maxAvg=90
+SUM 4:
+[-1, 0]
+[-1, 0]
+[-1, 0]
+[-1, 0, 2]
+[0]
+[-1, 0]
+[0]
+[-2, 0]
+[0, 2, 4]
+[-2, 0]
+[-2, 0]
+[-2, 0, 2, 3]
+[0, 2]
+[-1, 0, 2]
+[0, 2]
+[-2, 0, 2, 3]
+[-2, -1, 0, 2]
+[-2, 0]
+[-2, 0]
+[-2, 0, 2, 3]
+[-2, 2]
+[-2, 0, 2]
+[-2, -1, 0, 2]
+[-2, 0, 2]
+[-2, 2]
+[-2, 2, 4]
+[-1, 0, 2]
+[-1, 2]
+[-1, 0, 2]
+[-2, -1, 0, 2]
+[0, 2]
+[-1, 0, 2]
+[0, 2]
+[-2, 0, 2, 3]
+[-2, 0, 2]
+[-2, -1, 0, 2]
+[-2, 0, 2]
+[-2, 2]
+[-2, 2, 4]
+[-2, 2]
 Success! Hashing is quick!
 Success! with Bits & Bytes : D

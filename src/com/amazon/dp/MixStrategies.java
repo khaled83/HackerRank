@@ -539,4 +539,27 @@ public class MixStrategies {
 	    return res;
 	}
 	
+	public static int numOfWaysThroughMatrix(int rows, int cols) {
+	    int[][] res = new int[rows][cols];
+	    
+	    // initialize origin
+	    res[0][0] = 1;
+	    
+	    for (int row = 0; row < rows; row++) {
+	        for (int col = 0; col < cols; col++) {
+	            int left = col - 1;
+	            int up = row - 1;
+	            int x = res[row][col];
+	            if (left >= 0) {
+	                x += res[row][left];
+	            }
+	            if (up >= 0) {
+	                x += res[up][col];
+	            }
+	            res[row][col] = x;
+	        }
+	    }
+	    
+	    return res[rows - 1][cols - 1];
+	}
 }

@@ -1,7 +1,6 @@
 package com.amazon.dp;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class Recursion {
 
@@ -32,7 +31,7 @@ public class Recursion {
 		if (n <= 0)
 			return;
 		towersOfHanoi(src, buf, dst, n - 1);
-		System.out.println("Move " + n + " from " + src + " to " + dst);
+//		System.out.println("Move " + n + " from " + src + " to " + dst);
 		towersOfHanoi(buf, dst, src, n - 1);
 	}
 
@@ -53,7 +52,7 @@ public class Recursion {
 				swap(arr, i, i + 1);
 		}
 	}
-
+	
 	private static void swap(int[] arr, int x, int y) {
 		int tmp = arr[x];
 		arr[x] = arr[y];
@@ -344,8 +343,110 @@ public class Recursion {
 
 		return values[n].get(k);
 	}
+
+	public static ArrayList<int[]> powerset(int[] arr) {
+	    return powerset(arr, 0, arr.length - 1);
+	}
+
+	private static ArrayList<int[]> powerset(int[] arr, int first, int last) {
+	    ArrayList<int[]> res = new ArrayList<int[]>();
+	    
+	    if (first > last) {
+	        int[] set = new int[0];
+	        res.add(set);
+	        return res;
+	    }
+	    
+	    int x = arr[first];
+	    for (int[] subset : powerset(arr, first + 1, last)) {
+	        res.add(subset);
+	        // each set is a combination of x plus subset
+	        // int n = last - first + 1;
+	        int n = subset.length + 1;
+	        // we don't need permutations
+	        // for (int loc = 0; loc < n; loc++) {
+	        // redefine array to add a new copy as its added to res by reference
+	        int[] set = new int[n];
+	        if (n > 1) {
+	            System.arraycopy(subset, 0, set, 1, n - 1);
+	        }
+	        // place x into first location within set
+	        // unstable: ordering is not maintained with swapping, to keep it stable we need to arraycopy or shifting // obsolete: we don't do premutation
+	        set[0] = x;
+	        res.add(set);
+	        // }
+	    }
+	    
+	    return res;
+	}
 	
+	public static ArrayList<ArrayList<Integer>> powerset2(int[] arr) {
+	    int n = arr.length;
+	    int mask = (int) (Math.pow(n,2) - 1);
+	    ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+	    while (mask > 0) {
+	        ArrayList<Integer> set = new ArrayList<Integer>();
+	        // construct set from mask 1s
+	        for (int indx = 0; indx < n; indx++) {
+	            int shift = n - indx - 1;
+	            if ((mask & (1 << shift)) > 0) {
+	                set.add(arr[indx]);
+	            }
+	        }
+	        res.add(set);
+	        mask = mask - 1;
+	    }
+	    return res;
+	}
+	
+	
+	/** 70% correct */
+	public static List<List<String>> palydromicDecomp(String s) {
+	    List<List<String>> res = new ArrayList<List<String>>();
+	    // initialize with first char
+	    List<String> def = new ArrayList<String>();
+	    def.add(s.charAt(0) + "");
+	    res.add(def);
+	    
+	    for (int i = 1; i < s.length(); i++) {
+	        char c  = s.charAt(i);
+	        List<String> newDecomp = null;
+	        for (List<String> decomp : res) {
+	            // concatenate elem if it creates a new palyndrome
+	            int lastIndx = decomp.size() - 1;
+	            String last = decomp.get(lastIndx);
+	            if (isConcatenatesToPalyndrome(last, c)) {
+	                newDecomp = new ArrayList<String>(decomp);
+	                newDecomp.set(lastIndx, last + c);
+	            }
+	            // add elem
+	            decomp.add(c + "");
+	        }
+	        if (newDecomp != null) {
+	        		res.add(newDecomp);
+	        }
+	    }
+	    return res;
+	}
+
+	private static boolean isConcatenatesToPalyndrome(String s, char c) {
+	    if (s.length() < 2) {
+	        return true;
+	    }
+	    String conc = s + c;
+	    for (int left = 0, right = conc.length() - 1; 
+	            left < right;
+	            left++, right--) {
+	        if (conc.charAt(left) != conc.charAt(right)) {
+	            return false;
+	        }        
+	    }
+	    
+	    return true;
+	}
+
 }
+
 
 
 

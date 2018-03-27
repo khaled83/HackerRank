@@ -1,5 +1,7 @@
 package com.amazon.algorithms;
 
+import java.lang.Math;
+
 public class BitManipulation {
 	
 	/**
@@ -318,4 +320,49 @@ public class BitManipulation {
 	    }
 	    return x;
 	}
+
+	public static long reverse(long x) {
+	    long res = 0;
+        // process 32 bits of integer, shift bits up to 31 times
+        int n = 32;
+        while (x > 0) {
+        	res = res << 1;
+            // check LSB
+            long lsb = x & 1;
+            // set LSB in res if its set in x
+            res = res | lsb;
+            x   = x   >> 1;
+            n--;
+        }
+        
+        
+        // no more set bits in x, shift res to the far end left
+        if (n > 0) {
+        	res = res << 1;
+        	res = res << (n - 1);
+        }
+        
+        return res;
+	}
+	
+	private static final int INTEGER_BIT_SIZE = 32;
+	
+	public static int[] nextSmallestAndLargestInt(int x) {
+	    int mask = 1;
+	    int ones = 0;
+	    for (int i = 0; i < (INTEGER_BIT_SIZE - 1); i++) {
+	        if ((x & mask) > 0) {
+	            ones++;
+	        }
+	        mask = mask << 1;
+	    }
+	    
+	    // 1 << 3 => 1000 - 1 => 111
+	    int min = (1 << ones) - 1;
+	    // int(8): 111 << (7 - 3) => 0|1110000
+	    int max = min << ((INTEGER_BIT_SIZE - 1) - ones);
+	    
+	    return new int[] {min, max};
+	}
+
 }

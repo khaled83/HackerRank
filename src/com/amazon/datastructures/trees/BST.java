@@ -16,15 +16,34 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
+import com.amazon.Utils;
+
 public class BST<E extends Comparable<E>> {
 	
-	private static class Node<E> {
+	private static class Node<E extends Comparable<E>> {
         E item;
-        Node<E> leftChild, rightChild;    
+        Node<E> left, right;    
         
         private Node() {}
         
         private Node(E item) { this.item = item; }
+        
+        private Node<E> addChild(E val) {
+        		Node<E> n = null;
+            if (val.compareTo(item) < 0 && left == null) {
+                n = left = new Node<E>(val);
+            } else if (val.compareTo(item) < 0) {
+                n = left.addChild(val);
+            }
+            else if (right == null) {
+                n = right = new Node<E>(val);
+            } 
+            else {
+                n = right.addChild(val);
+            }
+            
+            return n;
+        }
     }
     
     private Node<E> root;
@@ -42,6 +61,10 @@ public class BST<E extends Comparable<E>> {
         root = balanced(arr, 0, arr.length-1);
     }
     
+    private BST(Node<E> root) {
+    		this.root = root;
+    }
+    
     private boolean isSorted(int[] arr) {
     	boolean sorted = true;
     	for (int i = 1; i < arr.length; i++)
@@ -57,9 +80,9 @@ public class BST<E extends Comparable<E>> {
         if (lastIndx >= startIndx) {
             root = new Node();
             int mid = (startIndx + lastIndx)/2;
-            root.leftChild = balanced(arr, startIndx, mid-1);
+            root.left = balanced(arr, startIndx, mid-1);
             root.item = arr[mid];
-            root.rightChild = balanced(arr, mid+1, lastIndx);
+            root.right = balanced(arr, mid+1, lastIndx);
         }
         
         return root;
@@ -78,9 +101,9 @@ public class BST<E extends Comparable<E>> {
         if (root == null)
             root = new Node<E>(item);
         else if (item.compareTo(root.item) < 0)
-            root.leftChild = insert(root.leftChild, item);
+            root.left = insert(root.left, item);
         else
-            root.rightChild = insert(root.rightChild, item);
+            root.right = insert(root.right, item);
         return root;
     }
     
@@ -95,29 +118,29 @@ public class BST<E extends Comparable<E>> {
         else if (item.equals(root.item))
             root = deleteNode(root);
         else if (item.compareTo(root.item) < 0)
-            root.leftChild = delete(root.leftChild, item);
+            root.left = delete(root.left, item);
         else
-            root.rightChild = delete(root.rightChild, item);
+            root.right = delete(root.right, item);
         return root;
     }
     
     private Node<E> deleteNode(Node<E> delNode) {
         // no children
-        if (delNode.leftChild == null && delNode.rightChild == null)
+        if (delNode.left == null && delNode.right == null)
             delNode = null;
         // two children
-        else if (delNode.leftChild != null && delNode.rightChild != null) {
+        else if (delNode.left != null && delNode.right != null) {
             // find inorder successor
-            E inorderNext = first(delNode.rightChild);
+            E inorderNext = first(delNode.right);
             delete(inorderNext);
             delNode.item = inorderNext;
         }
         // left child only
-        else if (delNode.leftChild != null)
-            delNode = delNode.leftChild;
+        else if (delNode.left != null)
+            delNode = delNode.left;
         // right child only
-        else if (delNode.rightChild != null)
-            delNode = delNode.rightChild;
+        else if (delNode.right != null)
+            delNode = delNode.right;
         
         return delNode;
     }
@@ -127,8 +150,8 @@ public class BST<E extends Comparable<E>> {
     }
     
     private E first(Node<E> root) {
-        while (root.leftChild != null)
-            root = root.leftChild;
+        while (root.left != null)
+            root = root.left;
         return root.item;
     }
     
@@ -142,9 +165,9 @@ public class BST<E extends Comparable<E>> {
         else if (item.equals(root.item))
             return true;
         else if (item.compareTo(root.item) < 0)
-            return contains(root.leftChild, item);
+            return contains(root.left, item);
         else 
-            return contains(root.rightChild, item);
+            return contains(root.right, item);
     }
 
     public Iterable<E> inorder() {
@@ -155,9 +178,9 @@ public class BST<E extends Comparable<E>> {
     
     private void inorder(Node<E> root, List<E> result) {
     	if(root != null) {
-    		inorder(root.leftChild, result);
+    		inorder(root.left, result);
     		result.add(root.item);
-    		inorder(root.rightChild, result);
+    		inorder(root.right, result);
     	}
     }
     
@@ -170,8 +193,22 @@ public class BST<E extends Comparable<E>> {
     private void preorder(Node<E> root, List<E> result) {
     	if (root != null) {
     		result.add(root.item);
-    		preorder(root.leftChild, result);
-    		preorder(root.rightChild, result);
+    		preorder(root.left, result);
+    		preorder(root.right, result);
+    	}
+    }
+    
+    public Iterable<E> postorder() {
+    	List<E> result = new ArrayList<E>();
+    	postorder(root, result);
+    	return result;
+    }
+    
+    private void postorder(Node<E> root, List<E> result) {
+    	if (root != null) {
+    		postorder(root.left, result);
+    		postorder(root.right, result);
+    		result.add(root.item);
     	}
     }
     
@@ -183,10 +220,10 @@ public class BST<E extends Comparable<E>> {
     	if(root != null) {
 			System.out.println(
 					root.item + ": <"
-					+ (root.leftChild != null ? root.leftChild.item : "") + " " 
-					+ (root.rightChild != null ? root.rightChild.item  : "" ) + ">");
-			preorderAdvanced(root.leftChild);
-			preorderAdvanced(root.rightChild);
+					+ (root.left != null ? root.left.item : "") + " " 
+					+ (root.right != null ? root.right.item  : "" ) + ">");
+			preorderAdvanced(root.left);
+			preorderAdvanced(root.right);
     	}
     }
 
@@ -238,7 +275,7 @@ public class BST<E extends Comparable<E>> {
         	root.item = x;
         }
         else {
-            root.leftChild = restoreBalanced3(root.leftChild, n/2, reader);
+            root.left = restoreBalanced3(root.left, n/2, reader);
             Integer value; 
             try {
             	value = Integer.valueOf(reader.readLine());
@@ -246,7 +283,7 @@ public class BST<E extends Comparable<E>> {
             	value = null;
             }
             root.item = value; 
-            root.rightChild = restoreBalanced3(root.rightChild, n/2, reader);
+            root.right = restoreBalanced3(root.right, n/2, reader);
         }
         
         return root;
@@ -304,9 +341,9 @@ public class BST<E extends Comparable<E>> {
              3		1		0			0			2
              3		1		4			4			
              * */
-            root.leftChild = insert(root.leftChild, items, first, n/2);
+            root.left = insert(root.left, items, first, n/2);
             root = insert(root, items, mid, 1);
-            root.rightChild = insert(root.rightChild, items, mid+1, n/2);
+            root.right = insert(root.right, items, mid+1, n/2);
         }
         
         return root;
@@ -355,9 +392,9 @@ public class BST<E extends Comparable<E>> {
     	if (balanceMemo.containsKey(root.item))
     		return balanceMemo.get(root.item);
 
-        boolean isBalanced = Math.abs(height(root.leftChild) - height(root.rightChild)) <= 1
-                                && isBalanced1(root.leftChild)
-                                && isBalanced1(root.rightChild);
+        boolean isBalanced = Math.abs(height(root.left) - height(root.right)) <= 1
+                                && isBalanced1(root.left)
+                                && isBalanced1(root.right);
                                 
         balanceMemo.put(root.item, isBalanced);
         return balanceMemo.get(root.item);
@@ -375,7 +412,7 @@ public class BST<E extends Comparable<E>> {
         if (heightMemo.containsKey(root.item))
         	return heightMemo.get(root.item);
         
-    	int height = 1 + Math.max(height(root.leftChild), height(root.rightChild));
+    	int height = 1 + Math.max(height(root.left), height(root.right));
     	
     	heightMemo.put(root.item, height);
     	return heightMemo.get(root.item);
@@ -429,8 +466,8 @@ public class BST<E extends Comparable<E>> {
         // post order traversal prcesses all subtrees before processing root
         while (!visiting.isEmpty()) {
             Node<E> cur = visiting.peek();
-            Node<E> leftChild = cur.leftChild;
-            Node<E> rightChild = cur.rightChild;
+            Node<E> leftChild = cur.left;
+            Node<E> rightChild = cur.right;
             
             // 1. node is a leaf, both left and right are null
             // 2. both left and right are visisted
@@ -472,12 +509,12 @@ public class BST<E extends Comparable<E>> {
             return new Pair(true, 0);
         }
         
-        Pair left = isBalanced3(root.leftChild);
+        Pair left = isBalanced3(root.left);
         // optimization: stop calculation and fail earlier
         if (!left.isBalanced) {
             return new Pair(false, left.height + 1); // height value is inaccurate but it doesn't matter
         }
-        Pair right = isBalanced3(root.rightChild);
+        Pair right = isBalanced3(root.right);
         
         int height = 1 + Math.max(left.height, right.height);
         boolean isBalanced = right.isBalanced && Math.abs(left.height - right.height) <= 1;
@@ -525,10 +562,10 @@ public class BST<E extends Comparable<E>> {
         
         LinkedList<Node<E>> cur = new LinkedList<Node<E>>();
         cur.add(root);
-        LinkedList<Node<E>> left = currentLevelLinkedLists1(root.leftChild, result);
+        LinkedList<Node<E>> left = currentLevelLinkedLists1(root.left, result);
         if (left != null)
         	cur.addAll(left);
-        LinkedList<Node<E>> right = currentLevelLinkedLists1(root.rightChild, result);
+        LinkedList<Node<E>> right = currentLevelLinkedLists1(root.right, result);
         if (right != null)
         	cur.addAll(right);
         result.add(cur);
@@ -583,12 +620,12 @@ public class BST<E extends Comparable<E>> {
         LinkedListInternal<Node<E>> curList = new LinkedListInternal<Node<E>>();
         curList.head = new LinkedListInternal.ListNode<Node<E>>(root);
         curList.back = curList.head;
-        LinkedListInternal<Node<E>> left = currentLevelLinkedLists2(root.leftChild, result);
+        LinkedListInternal<Node<E>> left = currentLevelLinkedLists2(root.left, result);
         if (left != null) {
         	curList.head.next = left.head;
         	curList.back = left.back;
         }
-        LinkedListInternal<Node<E>> right = currentLevelLinkedLists2(root.rightChild, result);
+        LinkedListInternal<Node<E>> right = currentLevelLinkedLists2(root.right, result);
         if (right != null) {
         	curList.back.next = right.head;
         	curList.back = right.back; // progress back to the end
@@ -640,8 +677,8 @@ public class BST<E extends Comparable<E>> {
         if (root == null)
             return res;
         
-        List<Integer> left = numPathSums(root.leftChild, x, counter);
-        List<Integer>  right = numPathSums(root.rightChild, x, counter);
+        List<Integer> left = numPathSums(root.left, x, counter);
+        List<Integer>  right = numPathSums(root.right, x, counter);
         
         // path from the node to itself
         res.add(root.item);
@@ -683,7 +720,7 @@ public class BST<E extends Comparable<E>> {
         }
         
         MinMax res;
-        MinMax left = isBalanced(root.leftChild);
+        MinMax left = isBalanced(root.left);
         // fail early optimization: O(n) with best case O(1), avg case O(n/2)
         if ((int) root.item < left.max) {
             // bubble error up the tree with values that will always fail
@@ -691,7 +728,7 @@ public class BST<E extends Comparable<E>> {
             return res;
         }
         
-        MinMax right = isBalanced(root.rightChild);
+        MinMax right = isBalanced(root.right);
         
         if ((int) root.item < right.min) {
             // reset min/max when set to infinity
@@ -727,8 +764,8 @@ public class BST<E extends Comparable<E>> {
     		return;
     	}
     	
-    	replaceValue(root.leftChild, oldValue, newValue);
-    	replaceValue(root.rightChild, oldValue, newValue);
+    	replaceValue(root.left, oldValue, newValue);
+    	replaceValue(root.right, oldValue, newValue);
     }
     
     private static class MinMax {
@@ -786,15 +823,15 @@ public class BST<E extends Comparable<E>> {
             return;
         }
         
-        if (root.leftChild == null && root.rightChild == null) {
+        if (root.left == null && root.right == null) {
             leaves.add(root.item);
         }
         else {
             parents.add(root.item);
         }
         
-        preorderFindParentsAndLeaves(root.leftChild, parents, leaves);
-        preorderFindParentsAndLeaves(root.rightChild, parents, leaves);
+        preorderFindParentsAndLeaves(root.left, parents, leaves);
+        preorderFindParentsAndLeaves(root.right, parents, leaves);
     }
     
     /**
@@ -849,6 +886,77 @@ public class BST<E extends Comparable<E>> {
         
     }
     
+    /** Elements Of Programming Interviews - Problem 14.4: COMPUTE THE LCA IN A BST */
+    public int lca(int first, int second) {
+    		Node firstNode = findNode(first);
+    		Node secondNode = findNode(second);
+    		Node lca = lca(firstNode, secondNode);
+    		if (lca != null) {
+    			return (int) lca.item;
+    		}
+    		else {
+    			return Integer.MIN_VALUE;
+    		}
+    }
+    
+    private Node findNode(int key) {
+	    	if (root == null)
+	    		return null;
+	    	
+    		Node cur = root;
+    		
+    		while (cur != null && (int) cur.item != key) {
+			if (key < (int) cur.item) {
+				cur = cur.left;
+			} else {
+				cur = cur.right;
+			}
+    		}
+    		return cur;
+    }
+    
+    /** Problem 14.4 LCA */
+    private Node lca(Node first, Node second) {
+    		if (first == null || second == null)
+    			return null;
+    		
+        Node lca = root;
+        
+        Utils<E> utils = new Utils<E>();
+        
+        while (lca != null) {
+            if (utils.forallGreaterThan((E) lca.item, (E) first.item, (E) second.item)) {
+                lca = lca.right;
+            }    
+            else if (utils.forallSmallerThan((E) lca.item, (E) first.item, (E) second.item)) {
+                lca = lca.left;
+            }
+            else {
+                break;
+            }
+        }
+        
+        return lca;
+    }
+    
+//    private Node lca2(Node first, Node second) {
+//        if (first == null || second == null) {
+//            return null;
+//        }
+//    
+//        Node left = first.item < second.item ? first : second;
+//        Node right = first.item < second.item ? second : first;
+//        
+//        Node cur = left;
+//        Node parent = left.parent;
+//        while (parent != null && parent.item < right.item) {
+//            cur = parent;
+//            parent = parent.parent;
+//        }
+//        
+//        return cur;
+//    }
+    
     private static void swap(int[] arr, int x, int y) {
     	int tmp = arr[x];
     	arr[x] = arr[y];
@@ -861,6 +969,114 @@ public class BST<E extends Comparable<E>> {
     		System.out.print(x + ",");
     	}
     	System.out.println("]");
+    }
+    
+    public static BST<Integer> createFromPreorderSeq(int[] arr) {
+        BST<Integer> bst = new BST<Integer>();
+        for (int x : arr) {
+            bst.insert(x);
+        }
+        return bst;
+    }
+
+    public static BST<Integer> createFromPostOrderSeq(int[] arr) {
+        BST<Integer> bst = new BST<Integer>();
+        for (int indx = arr.length - 1; indx >= 0; indx--) {
+            bst.insert(arr[indx]);
+        }
+        return bst;
+    }
+    
+    // 10, 20, 30, 40, 50, 60, 70
+    public static BST<Integer> createFromInOrderSeq(int[] arr) {
+        BST<Integer> bst = new BST<Integer>();
+        insert(bst, arr, 0, arr.length - 1);
+        return bst;
+    }
+    
+/**
+
+          40(1)
+       /         \
+      20(2)       60(5)
+     /  \        /    \
+  (3)10  30(4)  50(6) 70(7)
+    
+indx:   0  1  2  3  4  5  6
+arr:    10 20 30 40 50 60 70
+
+first    last    mid    arr[mid]
+-----    ----    ---    --------
+0        6       3      40
+0        2       1      20
+0        0       0      10
+2        2       2      30
+4        6       5      60
+4        4       4      50
+6        6       6      70
+*/
+    
+    private static void insert(BST<Integer> bst, int[] arr, int first, int last) {
+        if (last < first) {
+            return;
+        }
+        
+        int mid = (first + last) / 2;
+        bst.insert(arr[mid]);
+        insert(bst, arr, first, mid - 1);
+        insert(bst, arr, mid + 1, last);
+    }
+    
+    public String printInorderIterative() {
+    		return printInorderIterative(root);
+    }
+    
+    public String printInorderIterative(Node cur) {
+        Stack<Node> s = new Stack<Node>();
+        StringBuilder res = new StringBuilder();
+        
+        while (cur != null || !s.isEmpty()) {
+            if (cur != null) {
+                s.push(cur);        
+                cur = cur.left;
+            }
+            else {
+                cur = s.pop();
+                visit(cur, res);
+                cur = cur.right;
+            }
+        }
+        
+        return res.toString();
+    }
+
+    private void visit(Node node, StringBuilder sb) {
+        sb.append(node.item).append(" ");
+    }
+    
+    // 	Elements of Programming Interviews in Java - Problem 14.3
+    public BST buildFromPreorder(E[] arr) {
+        Stack<Node<E>> s = new Stack<Node<E>>();
+        Node<E> root = new Node<E>(arr[0]);
+        BST<E> bst = new BST<E>(root);
+        s.push(root);
+        
+        for (int i = 1; i < arr.length; i++) {
+        		E val = arr[i];
+            root = s.peek();
+            if (val.compareTo(root.item) < 0) {
+                Node<E> left = root.addChild(val); // TODO method
+                s.push(left);
+            } else {
+                do {
+                    root = s.pop();
+                } while(!s.isEmpty() && val.compareTo(s.peek().item) > 0);
+                Node<E> right = root.addChild(val);
+                s.push(right);
+            }
+        }
+        
+        return bst;
     }
     
 }

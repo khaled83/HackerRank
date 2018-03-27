@@ -2,6 +2,8 @@ package com.amazon.datastructures.graphs;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Weighted directed graph
@@ -110,7 +112,6 @@ public class GraphDirectedWeighted {
             	g.addEdge(minV, minW, minE);
             }
         }
-        
         return g;
     }
 	
@@ -127,7 +128,7 @@ public class GraphDirectedWeighted {
 		return sb.toString();
 	}
 	
-	public int shortest(int v, int dst) {
+	public int shortestPath(int v, int dst) {
 	    
         int[] weight = new int[V];
         for (int w = 0; w < V; w++) {
@@ -196,6 +197,39 @@ public class GraphDirectedWeighted {
         return weight[dst];
     }
 	
+	
+	public int shortestPath2(int start, int end) {
+        // stores vertices for traversal
+        Queue<Integer> q = new LinkedList<Integer>();
+        HashSet<Integer> visited = new HashSet<Integer>(V);
+        // stores weights from start to each vertex
+        int[] weights = new int[V];
+        // initialize to MAX value as undefined yet
+        for (int v = 0; v < V; v++) {
+        		weights[v] = Integer.MAX_VALUE;
+        }
+        weights[start] = 0;
+        
+        q.add(start);
+        visited.add(start);
+        
+        while (!q.isEmpty()) {
+            int v = q.poll();
+            // distance to end
+            int fromStart = adj[start].getOrDefault(v, Integer.MAX_VALUE);
+            weights[v] = Math.min(fromStart, weights[v]);
+            for (int w : adj[v].keySet()) {
+                if (!visited.contains(w)) {
+                    visited.add(w);
+                    q.add(w);
+                }
+                // reevaluate weight through v to w
+                weights[w] = Math.min(weights[w], weights[v] + adj[v].get(w));
+            }
+        }
+        
+        return weights[end];
+    }
 }
 
 

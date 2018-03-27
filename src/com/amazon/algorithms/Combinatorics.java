@@ -8,6 +8,10 @@ public class Combinatorics {
 		String in = "ABC";
 		for (String s : perm(in))
 			System.out.println(s);
+		
+		System.out.println("PERMUTATION 2:");
+		for (String s : perm2(in))
+			System.out.println(s);
 	}
 	
 	public static List<String> perm(String s) {
@@ -50,6 +54,29 @@ public class Combinatorics {
 	    }
 	    
 	    System.out.println(res);
+	    return res;
+	}
+	
+	public static List<String> perm2(String s) {
+	    return perm2(s, 0, s.length() - 1);
+	}
+
+	private static List<String> perm2(String s, int first, int last) {
+	    List<String> res = new ArrayList<String>();
+	    if (first == last) {
+	        res.add(s.charAt(first) + "");
+	        return res;
+	    }
+	    
+	    char c = s.charAt(first);
+	    for (String subset : perm2(s, first + 1, last)) {
+	        int length = last - first + 1;
+	        // position c into different locations withing subset
+	        for (int i = 0; i < length; i++) {
+	            String set = subset.substring(0, i) + c + subset.substring(i, length - 1);
+	            res.add(set);
+	        }
+	    }
 	    return res;
 	}
 	
@@ -135,4 +162,62 @@ public class Combinatorics {
 	    return res;
 	}
 
+	public static List<int[]> perm(int[] arr) {
+	    return perm(arr, 0, arr.length - 1);
+	}
+
+	/**
+	       0 1 2
+	arr    2 3 5
+
+	f    l    partCombi                 loc    combi                                res
+	-    -    ---------                 ---    -----                                ---
+	0    2    [3,5]                     0      [2,3,5]                              {[2,3,5],}
+	0    2    [3,5]                     1      [3,2,5]                              {[2,3,5],[3,2,5] }
+	0    2    [3,5]                     2      [5,3,2]                              {[2,3,5],[3,2,5],[5,3,2]}
+	0    2    [5,3]                     0      [2,5,3]                              {[2,3,5],[3,2,5],[5,3,2], [2,5,3], [5,2,3]}
+	0    2    [5,3]                     1      [5,2,3]                              {[2,3,5],[3,2,5],[5,3,2], [2,5,3], [5,2,3]}
+	0    2    [5,3]                     2      [3,5,2]                              {[2,3,5],[3,2,5],[5,3,2], [2,5,3],[5,2,3],[3,5,2]}
+	1    2    [5]                       0      [3,5]                                {[3,5]}
+	          [5]                       1      [5,3]                                {[3,5], [5,3]}
+	2    2                                     [5]                                  {[5]}    (1)
+
+	Complexity =====
+	n=1    => 1
+	n=2    => 2
+	n=3    => 2  x n = 2 x 3 = 6
+	n=4    => 6  x n = 6 x 4 = 24
+	n=5    => 24 x n = 24 x 5 = 120
+
+	Time: O(n!)
+	Space: O(n n!)
+	*/
+	private static List<int[]> perm(int[] arr, int first, int last) {
+	    List<int[]> res = new ArrayList<int[]>();
+	    if (first == last) {
+	        int[] combi = new int[1];
+	        combi[0] = arr[first];
+	        res.add(combi);
+	    } 
+	    else {
+	        // get the permutations of elements after first
+	        List<int[]> partialCombis = perm(arr, first + 1, last);
+	        // merge first into permutations of sub by placing first into all possible locations
+	        for (int[] partialCombi : partialCombis) {
+	            // new combi size
+	            int n = last - first + 1;
+	            // create one new combi for each different location
+	            for (int loc = 0; loc < n; loc++) {
+	                // combi is one element larger than partial combi
+	                int[] combi = new int[n];
+	                System.arraycopy(partialCombi, 0, combi, 1, n - 1);
+	                combi[0] = combi[loc];
+	                combi[loc] = arr[first];
+	                res.add(combi);
+	            }            
+	        }
+	    }
+	    return res;
+	}
+	
 }

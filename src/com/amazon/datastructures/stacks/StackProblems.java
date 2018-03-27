@@ -55,4 +55,16 @@ s	loc		cur		stack
 		return s.isEmpty();
 	}
 	
+	// Problem 8.6: Compute Building with a Sunset View
+	public static Iterable<Integer> sunsetView(int[] heights) {
+	    Stack<Integer> s = new Stack<Integer>();
+	    for (int h : heights) {
+            while (!s.isEmpty() && h >= s.peek()) {
+                s.pop();
+            }
+	        s.push(h);
+	    }
+	    return s;
+	}
+	
 }

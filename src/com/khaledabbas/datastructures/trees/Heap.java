@@ -1,5 +1,9 @@
 package com.khaledabbas.datastructures.trees;
 
+import java.util.*;
+
+import com.amazon.datastructures.heaps.Point3D;
+
 public class Heap<E extends Comparable<E>> {
 	
 	private int size = 0;
@@ -159,6 +163,64 @@ public class Heap<E extends Comparable<E>> {
 			sb.append(o).append(" ");
 		sb.append("}");
 		return new String(sb);
+	}
+	
+	public static List<Point3D> closestK(Point3D[] arr, int k) {
+	    PriorityQueue<Point3D> h = new PriorityQueue<Point3D>(Collections.reverseOrder());
+	    
+	    for (Point3D p : arr) {
+	        if (h.size() < k) {
+	            h.add(p);
+	        }
+	        // p is smaller than max in heap
+	        else if(p.compareTo(h.peek()) < 0) {
+	            h.remove();
+	            h.add(p);
+	        }
+	    }
+	    
+	    return new ArrayList<Point3D>(h);
+	}
+
+	public static Iterable<Star> closestK2(Star[] arr, int k) {
+	    // max pq
+	    PriorityQueue<Star> pQ = new PriorityQueue<Star>(Collections.reverseOrder());
+	    for (Star s : arr) {
+	        if (pQ.size() < k) {
+	            pQ.add(s);
+	        }
+	        else if (s.distance() < pQ.peek().distance()) {
+	            pQ.remove(); // remove old max
+	            pQ.add(s); // add new close star
+	        }
+	    }
+	    
+	    return pQ;
+	}
+	
+	public static class Star implements Comparable<Star> {
+
+	    int x, y, z;    
+	    
+	    public Star(int x, int y, int z) {
+	    		this.x = x;
+	    		this.y = y;
+	    		this.z = z;
+	    }
+	    
+	    public int distance() {
+	        return x + y + z;
+	    }
+	    
+	    public int compareTo(Star o) {
+	        return Integer.valueOf(this.distance()).compareTo(o.distance());
+	    }
+	    
+	    @Override
+	    public boolean equals(Object obj) {
+	    		return ((Star) obj).distance() == this.distance();
+	    }
+	    
 	}
 	
 }

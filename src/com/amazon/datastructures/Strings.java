@@ -478,4 +478,200 @@ public abstract class Strings {
 	    }
 	}
 	
+	public static int convertRomanToDecimal(String s) throws IllegalArgumentException {
+	    // initialize hash
+		Map<Character, Integer> h = new HashMap<Character, Integer>() {
+			{
+				put('I', 1);
+				put('V', 5);
+				put('X', 10);
+				put('L', 50);
+				put('C', 100);
+				put('D', 500);
+				put('M', 1000);
+
+			}
+		};
+		    
+	    Map<Character, Character> e = new HashMap<Character, Character>() {
+		    	{
+		    		put('V', 'I');
+		    		put('X', 'I');
+		    		put('L', 'X');
+		    		put('C', 'X');
+		    		put('D', 'C');
+		    		put('M', 'C');
+		    		
+		    	}
+	    };
+	    
+	    int res = 0;
+	    int prev = -1, cur = -1, next = -1;
+	    char curChar = '0', nextChar = '0';
+	    
+	    int i = 0;
+	    for (i = 0; i < s.length() - 1; i++) {
+	        curChar = s.charAt(i);
+	        nextChar = s.charAt(i + 1);
+	        prev = cur;
+	        cur = h.get(curChar);
+	        next = h.get(nextChar);
+	        
+	        if (cur >= next) {
+	            res += cur;
+	        }
+	        else {
+	            // check for invalid exception
+	            // only some character pair exceptions are allowed
+	            if (e.get(nextChar) != curChar) {
+	                throw new IllegalArgumentException("Invalid Roman number: char " + curChar + " can't prceded char " + nextChar);
+	            }
+	            // don't allow back to back exceptions
+	            if (i < s.length() - 2 && h.get(s.charAt(i + 2)) > next) {
+	                throw new IllegalArgumentException("Invalid Roman number: back to back exceptions not allowed");
+	            }
+	            // valid exception case
+	            res += next - cur;
+	            i++; // skip next char
+	        }
+	    }
+	    
+	    // handle last char
+	    // else last char was part of exception case
+	    if (i == s.length() - 1) {
+		    	res += cur;
+	    }
+	    
+	    return res;
+	}
+
+	public static int convertRomanToDecimal2(String s) {
+	    // initialize hash
+		Map<Character, Integer> h = new HashMap<Character, Integer>() {
+			{
+				put('I', 1);
+				put('V', 5);
+				put('X', 10);
+				put('L', 50);
+				put('C', 100);
+				put('D', 500);
+				put('M', 1000);
+
+			}
+		};
+	    
+	    int res = 0;
+	    int prev = -1, cur = -1, next = -1;
+	    char curChar = '0', nextChar = '0';
+	    
+	    int i = 0;
+	    for (i = 0; i < s.length() - 1; i++) {
+	        curChar = s.charAt(i);
+	        nextChar = s.charAt(i + 1);
+	        prev = cur;
+	        cur = h.get(curChar);
+	        next = h.get(nextChar);
+	        
+	        if (cur >= next) {
+	            res += cur;
+	        }
+	        else {
+	            // valid exception case
+	            res += next - cur;
+	            i++; // skip next char
+	        }
+	    }
+	    
+	    // handle last char
+	    // else last char was part of exception case
+	    if (i == s.length() - 1) {
+		    	res += cur;
+	    }
+	    
+	    return res;
+	}
+
+	public static String sinusoidally(String s) {
+	    int n = s.length();
+	    char[] arr = new char[n];
+	    
+	    // first line
+	    int dst = 0;
+	    for (int src = 1; src < n; src += 4, dst++) {
+	        arr[dst] = s.charAt(src);
+	    }
+	    
+	    // second line
+	    for (int src = 0; src < n; src += 2, dst++) {
+	        arr[dst] = s.charAt(src);
+	    }
+	    
+	    // third line
+	    for (int src = 3; src < n; src += 4, dst++) {
+	        arr[dst] = s.charAt(src);
+	    }
+	    
+	    return new String(arr);
+	}
+	
+	public static String encodeRLE(String s) {
+	    StringBuilder sb = new StringBuilder();
+	    char cur = s.charAt(0);
+	    int count = 1;
+	    for (int i = 1; i < s.length(); i++, count++) {
+	        if (s.charAt(i) != cur) {
+	            sb.append(count).append(cur);
+	            cur = s.charAt(i);
+	            count = 0;
+	        }
+	    }
+	    // append last result
+	    sb.append(count).append(cur);
+	    
+	    return sb.toString();
+	}
+	
+	public static String decodeRLE(String s) {
+	    StringBuilder res = new StringBuilder();
+	    StringBuilder numChars = new StringBuilder();
+	    for (char cur : s.toCharArray()) {
+	        if (isNum(cur)) {
+	            numChars.append(cur);
+	        }
+	        else {
+	            // decode characters
+	            // convert number
+	            int count = Integer.parseInt(numChars.toString());
+	            for (int i = 0; i < count; i++) {
+	                res.append(cur);
+	            }
+	            numChars = new StringBuilder();
+	        }
+	    }
+	    return res.toString();
+	}
+	
+	private static boolean isNum(char c) {
+		return c >= '0' && c <= '9';
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,6 +14,18 @@ public class LinkedList {
 			this.addLast(x);
 	}
 
+	public LinkedList(Node head) {
+		this.head = head;
+        Node cur = this.head;
+        int count = 0;
+        while (cur != null) {
+        		count++;
+	        	System.out.print(cur.item);
+	        	cur = cur.next;
+        }
+		this.size = count;
+	}
+	
 	public boolean isEmpty() {
 		return head == null;
 	}
@@ -234,6 +246,65 @@ public class LinkedList {
         }
     }
 	
+    /**
+    Optional improvements:
+    (1) return boolean wheather delete is successful or not
+    (2) return the value of the node deleted
+    
+    Time: O(n)
+    Space: O(1) + rec stack
+    */
+    public void removeKthFromLast(int k) {
+    	removeKthFromLast(head, k);
+    }
+    
+    private int removeKthFromLast(Node head, int target) {
+        if (head == null) {
+            return 0;
+        }
+        
+        // k value for the next node
+        int k = removeKthFromLast(head.next, target);
+        
+        // delete node
+        if (k == target) {
+            head.next = head.next.next;
+            // optional: return special value to trigger method to terminate earlier in previous nodes
+        }
+        
+        return 1 + k;
+    }
+    
+    public void removeKthFromLast2(int k) {
+    	// 3 5 8 10 1
+        Node cur = head;
+        Node runner = head.next;
+        // move runner k steps forward
+        int step = 1;
+        for (step = 1; step <= k && runner != null; step++) {
+            runner = runner.next;
+        }
+        
+        // special case: we are removing head element
+        if (runner == null && step == k) {
+            head = head.next;
+            return;
+        }
+        // if step < (k - 1), that means we don't have kth to last elements due to short linked list
+        else if (runner == null) {
+        	return;
+        }
+        
+        while (runner != null) {
+            cur = cur.next;
+            runner = runner.next;
+        }
+        
+        // when runner is null, cur points at k+1 from last
+        // remove kth element
+        cur.next = cur.next.next;
+    }
+    
 	private static class Node {
 		int item;
 		Node next;
@@ -545,6 +616,321 @@ public class LinkedList {
 	    
 	}
 	
+	// alternative: set next pointer to the next distinct node
+	public void removeDuplicatesFromSortedList() {
+        Node dst = head;
+        Node src = head.next;
+        
+        while (src != null) {
+            if (src.item != dst.item) {
+                dst.next.item = src.item;
+                dst = dst.next;
+            }
+            src = src.next;
+        }
+        
+        // detach the rest of the list to delete repeated nodes
+        dst.next = null;
+    }
+	
+	public void removeDuplicatesFromSortedList2() {
+        Node cur = head;
+        Node runner = head.next;
+        
+        while (runner != null) {
+            if (runner.item != cur.item) {
+                cur.next = runner;
+                cur = cur.next;
+            }
+            runner = runner.next;
+        }
+        cur.next = null;
+    }
+	
+	public void shiftRightCyclic(int k) {
+		PairNodeWithInteger resPrev = kthNode(head, k + 1);
+		Node prev = resPrev.node;
+	    if (resPrev.k < k) {
+	        k = k % resPrev.k;
+	        prev = kthNode(k + 1);
+	    }
+	    Node first = prev.next;
+	    Node last = kthNode(1);
+	    last.next = head;
+	    head = first;
+	    prev.next = null;    
+	}
+
+	public Node kthNode(int k) {
+		PairNodeWithInteger res = kthNode(head, k);
+	    if (res.k == k) {
+	        return res.node;
+	    }
+	    else {
+	        return null;
+	    }
+	}
+
+	private PairNodeWithInteger kthNode(Node cur, int k) {
+	    if (cur == null) {
+	        return new PairNodeWithInteger(null, 0);
+	    }
+	    
+	    PairNodeWithInteger next = kthNode(cur.next, k);
+	    if (next.k == k) {
+	        return next;
+	    }
+	    else {
+	        return new PairNodeWithInteger(cur, next.k + 1);
+	    }
+	}
+
+	private static class PairNodeWithInteger {
+	    public PairNodeWithInteger(Node node, int k) {
+	        this.node = node;
+	        this.k = k;
+	    }
+
+	    private Node node;
+	    private int k;
+	}
+	
+	public void shiftRightBy(int k) {
+        Node cur = head;
+        if (cur == null) {
+            return;
+        }
+        
+        Node oldLast = null;
+        
+        int n = 1;
+        for (int i = 0; i < k - 1; i++) {
+            if (cur.next == null) {
+                oldLast = cur;
+                cur = head;
+                n = i + 1;
+                break;
+            } 
+            else {
+                cur = cur.next;
+            }
+        }
+        
+
+        k = k % n;
+        
+        for (int i = 0; i < k - 1; i++) {
+            cur = cur.next;
+        }
+        
+        if (cur.next == null) {
+            return;
+        }
+        
+        if (oldLast == null) {
+            oldLast = cur;    
+        }
+        while (oldLast.next != null) {
+            oldLast = oldLast.next;
+        }
+        
+        oldLast.next = head;
+        head = cur.next;
+        cur.next = null;
+    }
+
+	public void evenOddMege() {
+        if (head == null) {
+            return;
+        }
+    
+        Node even = head;
+        Node odd = head.next;
+        Node firstOdd = head.next;
+        
+        while (even != null && odd != null && odd.next != null) {
+            // next even
+            Node next = even.next != null ? even.next.next : null;
+            even.next = next;
+            even = next;
+            // next odd
+            next = odd.next != null ? odd.next.next : null;
+            odd.next = next;
+            odd = next;
+        }
+        
+        even.next = firstOdd;
+    }
+	
+	public boolean isPalyndrome() {
+        // find mid point
+        // find size
+        int size = 0;
+        Node head = this.head;
+        while (head != null) {
+            size++;
+            head = head.next;
+        }
+        int indx = 0, midIndx = size / 2;
+        Node mid = this.head;
+        while (indx < (midIndx - 1)) {
+            mid = mid.next;
+            indx++;
+        }
+        System.out.println("mid="+mid.item);
+        boolean isOdd = size % 2 == 1;
+        Node left = mid;
+        mid = isOdd ? mid.next : mid;
+        Node right = mid.next;
+        System.out.println("left=" + left.item + " mid="+mid.item + " right=" + right.item);
+        return isPalyndrome(this.head, left, right);
+    }
+    
+	// {1, 2, 3, 2, 1}
+    private boolean isPalyndrome(Node head, Node left, Node right) {
+        if (head == left) {
+            boolean res = (head.item == right.item);
+            right = right.next;
+            return res;
+        }
+        boolean res = isPalyndrome (head.next, left, right);
+        right = right.next;
+        res = res && head.item == right.item;
+        return res;
+    }
+	
+    public void pivot(int k) {
+        // last node in smaller, defaults to dummy
+    		Node firstSmaller = null;
+        Node lastSmaller = new Node();
+        // last node in equal,, defaults to dummy
+        Node firstEqual = null;
+        Node lastEqual = new Node();
+        lastSmaller.next = firstEqual;
+        // last node in larger
+        Node firstLarger = null;
+        Node lastLarger = new Node();
+        lastEqual.next = firstLarger;
+        
+        Node cur = head;
+        while (cur != null) {
+            if (cur.item < k) {
+	            	if (firstSmaller == null) {
+	        			firstSmaller = lastSmaller;
+	        		}
+                lastSmaller.next = cur;
+                lastSmaller = cur;
+            }
+            else if (cur.item == k) {
+	            	if (firstEqual == null) {
+	        			firstEqual = lastEqual;
+	        		}
+                lastEqual.next = cur;
+                lastEqual = cur;
+            }
+            else {
+	            	if (firstLarger == null) {
+	        			firstLarger = lastLarger;
+	        		}
+                lastLarger.next = cur;
+                lastLarger = cur;
+            }
+            cur = cur.next;
+        }
+        
+        // HEAD
+        Node dummy = firstSmaller;
+        if (firstSmaller != null) {
+        		head = firstSmaller.next;
+        		while (dummy != null) {
+        			dummy = dummy.next;
+        		}
+        }
+        // SMALLER <> EQUAL
+        dummy = firstEqual;
+        if (firstEqual != null) {
+        		lastSmaller.next  = firstEqual.next;
+        		if (head == null) {
+        			head = firstEqual.next;
+        		}
+        } else {
+        		lastSmaller.next = firstLarger != null ? firstLarger.next : null; 
+        }
+        
+        // EQUAL <> LARGER
+        dummy = firstLarger;
+        if (firstLarger != null) {
+        		lastEqual.next = firstLarger.next;
+        		if (head == null) {
+        			head = firstLarger.next;
+        		}
+        }
+        else {
+        		lastEqual.next = null;
+        }
+        lastLarger.next = null;
+    }
+ 
+ // Elements of Programming Interviews 7.13: ADD LIST-BASED INTEGERS
+    public static LinkedList sum(LinkedList l1, LinkedList l2) {
+        Node h1 = l1.head, h2 = l2.head;
+        Node dummy = new Node();
+        Node head = dummy;
+        int sum = 0, carry = 0;
+        while (h1 != null && h2 != null) {
+            sum = h1.item + h2.item + carry;
+            carry = sum / 10;
+            head.next = new Node(sum % 10);
+            h1 = h1.next;
+            h2 = h2.next;
+            head = head.next;
+        }
+        
+        while (h1 != null) {
+        		sum = h1.item + carry;
+        		carry = sum / 10;
+            head.next = new Node(sum % 10);
+            head = head.next;
+            h1 = h1.next;
+        }
+        
+        while (h2 != null) {
+	    		sum = h2.item + carry;
+	    		carry = sum / 10;
+	        head.next = new Node(sum % 10);
+	        head = head.next;
+	        h2 = h2.next;
+	    }
+        
+        if (carry > 0) {
+        		head.next = new Node(carry);
+        		head = head.next;
+        }
+        
+        return new LinkedList(dummy.next);
+    }
+    
+    // 	Elements of Programming Interviews 7.13: ADD LIST-BASED INTEGERS
+    // just shorter code
+    public static LinkedList sum2(LinkedList l1, LinkedList l2) {
+        Node h1 = l1.head, h2 = l2.head;
+        Node dummy = new Node();
+        Node head = dummy;
+        int sum = 0, carry = 0;
+        while (h1 != null || h2 != null || carry > 0) {
+        		int item1 = h1 != null ? h1.item : 0;
+        		int item2 = h2 != null ? h2.item : 0;
+            sum = item1 + item2 + carry;
+            carry = sum / 10;
+            head.next = new Node(sum % 10);
+            h1 = h1 != null ? h1.next : h1;
+            h2 = h2 != null ? h2.next : h2;
+            head = head.next;
+        }
+        
+        return new LinkedList(dummy.next);
+    }
+    
 }
 
 

@@ -48,6 +48,16 @@ public class Combinatorics {
 			System.out.print(s + ", ");
 		System.out.println();
 		
+		System.out.println("IP ADDRESSES:");
+		for(int i = 0; i < 8; i++) {
+			System.out.print(i);
+		}
+		System.out.println();
+		System.out.println(19216811);
+		for (String s : com.khaledabbas.combinatorics.Combinatorics.ipCombi(19216811)) {
+			System.out.println(s);
+		}
+		
 	}
 	
 
@@ -276,6 +286,48 @@ public class Combinatorics {
 	    }
 	    
 	    return res;
+	}
+
+	public static List<String> ipCombi(int num) {
+	    char[] chars = String.valueOf(num).toCharArray();
+	    return ipCombi(chars, 0, chars.length - 1, 4);
+	}
+
+	private static List<String> ipCombi(char[] chars, int first, int last, int count) {
+	    List<String> res = new ArrayList<String>();
+	    if (count < 1) {
+	        return res;
+	    }
+	    else if (count == 1 ) {
+	    		// invalid last part
+	    		if((last - first) > 2 || first > last) {
+	    			return res;
+	    		}
+	    		String part2 = new String(chars, first, last - first + 1);
+	    		int val = Integer.valueOf(part2);
+	        if (!checkIpPart(val)) {
+	            return res;
+	        }
+	    		res.add(new String(chars, first, last - first + 1));
+		    	return res;
+	    } 
+	    
+	    for (int i = first; i <= last && i <= (first + 2); i++) {
+	        String part1 = new String(chars, first, (i - first + 1));
+	        int val = Integer.valueOf(part1);
+	        if (!checkIpPart(val)) {
+	            break;
+	        }
+	        	for (String part2 : ipCombi(chars, i + 1, last, count - 1)) {
+	        		String ip = part1 + "." + part2;
+	        		res.add(ip);
+	        	}
+	    }
+	    return res;
+	}
+
+	private static boolean checkIpPart(int x) {
+	    return x >= 0 && x <= 255;
 	}
 	
 }

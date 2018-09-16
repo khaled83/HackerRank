@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author khaledabbas
+ *
+ */
+module HackerRank {
+}
